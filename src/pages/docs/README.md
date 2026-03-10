@@ -53,13 +53,7 @@ curl http://localhost:8085/
 
 | Topic                                                          | Description                           |
 | -------------------------------------------------------------- | ------------------------------------- |
-| **[Padi CLI](02-core-concepts/CLI_INTERFACE.md)**              | Pusat kendali & command interface     |
-| **[Authentication](02-core-concepts/AUTHENTICATION.md)**       | JWT authentication & security         |
-| **[Models](02-core-concepts/MODELS.md)**                       | Database models & CRUD operations     |
-| **[Controllers](02-core-concepts/CONTROLLERS.md)**             | Request handling & responses          |
-| **[Routing](02-core-concepts/ROUTING.md)**                     | Route mapping & groups                |
-| **[Middleware](02-core-concepts/MIDDLEWARE.md)**               | Authentication & filtering            |
-| **[Code Generator](02-core-concepts/CODE_GENERATOR.md)**       | Auto-generate CRUD code               |
+| **[CLI & Generator](02-core-concepts/CLI_INTERFACE.md)**       | Auto-generate CRUD code & CLI control |
 | **[Query Builder](02-core-concepts/QUERY_BUILDER.md)**         | Advanced database queries             |
 | **[API Resources](02-core-concepts/RESOURCES.md)**             | Transformation layer & formatting     |
 | **[Email](02-core-concepts/EMAIL.md)**                         | SMTP & Queued emails                  |
@@ -128,7 +122,7 @@ curl http://localhost:8085/
 
 1. [Installation](01-getting-started/INSTALLATION.md) - 15 min
 2. [Configuration](01-getting-started/CONFIGURATION.md) - 10 min
-3. [Code Generator](02-core-concepts/CODE_GENERATOR.md) - 15 min
+3. [CLI & Generator](02-core-concepts/CLI_INTERFACE.md) - 20 min
 4. [Controllers](02-core-concepts/CONTROLLERS.md) - 20 min
 5. [Routing](02-core-concepts/ROUTING.md) - 10 min
 6. [Middleware](02-core-concepts/MIDDLEWARE.md) - 15 min

@@ -17,6 +17,7 @@
             <q-img :src="logoIcon" />
           </q-avatar>
           <span class="text-weight-bold">Padi REST API</span>
+          <q-badge color="primary" class="q-ml-sm text-weight-bold" outline label="v2.0.5" />
         </q-toolbar-title>
 
         <div class="gt-sm q-gutter-md">

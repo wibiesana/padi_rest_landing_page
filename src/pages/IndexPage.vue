@@ -6,7 +6,7 @@
     <div class="mesh-blob mesh-3"></div>
 
     <!-- Hero Section -->
-    <section class="hero-section text-center flex flex-center">
+    <section class="hero-section text-center flex flex-center reveal">
       <div class="container relative-position">
         <div class="column items-center">
           <div class="hero-icon-container q-mb-lg">
@@ -50,7 +50,7 @@
     </section>
 
     <!-- Philosophy (P.A.D.I) Section -->
-    <section class="q-py-xl container relative-position z-top">
+    <section class="q-py-xl container relative-position z-top reveal delay-1">
       <div class="row q-col-gutter-xl items-center">
         <div class="col-12 col-md-5">
           <div class="text-h3 text-weight-bolder text-white q-mb-lg leading-tight">
@@ -90,15 +90,22 @@
     </section>
 
     <!-- Features Bento Grid -->
-    <section id="features" class="q-py-100 container">
+    <section id="features" class="q-py-100 container reveal">
       <div class="text-center q-mb-100">
         <h2 class="text-h3 text-weight-bolder text-white">Advanced Core Systems</h2>
         <div class="h-line-gradient q-mx-auto q-mt-md"></div>
       </div>
 
       <div class="row q-col-gutter-xl">
-        <div v-for="feature in features" :key="feature.title" class="col-12 col-sm-6 col-md-4">
-          <div class="feature-box glass-card q-pa-xl text-white full-height flex column">
+        <div
+          v-for="(feature, idx) in features"
+          :key="feature.title"
+          class="col-12 col-sm-6 col-md-4"
+        >
+          <div
+            class="feature-box glass-card q-pa-xl text-white full-height flex column"
+            :class="'delay-' + ((idx % 4) + 1)"
+          >
             <div class="feature-icon-wrapper q-mb-xl">
               <q-icon :name="feature.icon" size="48px" color="primary" />
             </div>
@@ -122,7 +129,7 @@
     </section>
 
     <!-- Stats Visual Section -->
-    <section class="q-py-100 bg-premium-dark relative-position">
+    <section class="q-py-100 bg-premium-dark relative-position reveal">
       <div class="mesh-blob mesh-4"></div>
       <div class="container row q-col-gutter-xl items-center">
         <div class="col-12 col-md-6 text-white">
@@ -156,7 +163,7 @@
     </section>
 
     <!-- Quick Start Terminal Section -->
-    <section id="quickstart" class="q-py-100 container">
+    <section id="quickstart" class="q-py-100 container reveal">
       <div class="row q-col-gutter-xl items-center">
         <div class="col-12 col-lg-5">
           <h2 class="text-h3 text-weight-bolder text-white q-mb-lg">
@@ -175,7 +182,7 @@
         </div>
 
         <div class="col-12 col-lg-7">
-          <div class="terminal-window shadow-24">
+          <div class="terminal-window shadow-24 reveal delay-2">
             <div class="terminal-header flex items-center q-px-md">
               <div class="flex q-gutter-x-xs">
                 <div class="t-dot dot-red"></div>
@@ -216,7 +223,7 @@
     </section>
 
     <!-- Learning Path Section -->
-    <section id="docs" class="q-py-100 bg-premium">
+    <section id="docs" class="q-py-100 bg-premium reveal">
       <div class="container">
         <div class="text-center q-mb-100">
           <h2 class="text-h3 text-weight-bolder text-white">Guided Mastery</h2>
@@ -226,8 +233,11 @@
         </div>
 
         <div class="row q-col-gutter-xl">
-          <div v-for="path in learningPaths" :key="path.title" class="col-12 col-md-4">
-            <div class="path-card glass-card hover-glow flex column">
+          <div v-for="(path, idx) in learningPaths" :key="path.title" class="col-12 col-md-4">
+            <div
+              class="path-card glass-card hover-glow flex column reveal"
+              :class="'delay-' + (idx + 1)"
+            >
               <div class="q-pa-xl flex-grow-1">
                 <div class="flex items-center q-mb-xl">
                   <div class="path-icon-box q-mr-md">
@@ -238,8 +248,8 @@
                 <p class="text-body2 text-grey-5 q-mb-xl line-height-1-8">{{ path.description }}</p>
                 <q-list dark>
                   <q-item
-                    v-for="(step, idx) in path.steps"
-                    :key="idx"
+                    v-for="(step, idx2) in path.steps"
+                    :key="idx2"
                     dense
                     padding
                     class="q-px-none"
@@ -270,7 +280,7 @@
     </section>
 
     <!-- CTA Finale -->
-    <section class="q-py-100 text-center relative-position overflow-hidden">
+    <section class="q-py-100 text-center relative-position overflow-hidden reveal">
       <div class="mesh-blob mesh-1" style="bottom: -200px; top: auto; right: 0"></div>
       <div class="container relative-position">
         <h2 class="text-h2 text-weight-bolder text-white q-mb-lg leading-tight">
@@ -295,12 +305,35 @@
 </template>
 
 <script setup>
+import { onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import heroImage from 'assets/brand/padi_menunduk.png'
 
 const router = useRouter()
 const $q = useQuasar()
+
+// Animation Logic: Intersection Observer
+let observer = null
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-active')
+        }
+      })
+    },
+    { threshold: 0.1 },
+  )
+
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
+})
+
+onUnmounted(() => {
+  if (observer) observer.disconnect()
+})
 
 const stats = [
   { label: 'Security Score', value: '9.0', color: 'text-primary' },
@@ -436,6 +469,33 @@ php padi serve`
 </script>
 
 <style lang="scss" scoped>
+/* Base Animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: blur(10px);
+}
+
+.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.delay-1 {
+  transition-delay: 0.1s;
+}
+.delay-2 {
+  transition-delay: 0.2s;
+}
+.delay-3 {
+  transition-delay: 0.3s;
+}
+.delay-4 {
+  transition-delay: 0.4s;
+}
+
 .shadow-glow {
   filter: drop-shadow(0 0 15px rgba(46, 125, 50, 0.6));
 }
@@ -452,7 +512,7 @@ php padi serve`
   padding: 0 40px;
 }
 
-/* Mesh Backgrounds */
+/* Enhanced Mesh Backgrounds with Breathing */
 .mesh-blob {
   position: absolute;
   width: 800px;
@@ -462,73 +522,75 @@ php padi serve`
   pointer-events: none;
   z-index: 0;
   filter: blur(100px);
+  animation: breathing 15s ease-in-out infinite alternate;
+}
+
+@keyframes breathing {
+  from {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.2) translate(50px, -30px);
+    opacity: 0.4;
+  }
 }
 
 .mesh-1 {
   top: -200px;
   right: -200px;
+  animation-duration: 20s;
 }
 .mesh-2 {
   top: 40%;
   left: -300px;
   background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+  animation-duration: 25s;
 }
 .mesh-3 {
   bottom: 10%;
   right: -200px;
-}
-.mesh-4 {
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1200px;
+  animation-duration: 18s;
 }
 
 /* Hero Styling */
 .hero-section {
   min-height: 90vh;
   padding-top: 100px;
+  position: relative;
 }
 
 .hero-icon-container {
   background: radial-gradient(circle, rgba(46, 125, 50, 0.2) 0%, transparent 70%);
   padding: 40px;
   border-radius: 50%;
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(46, 125, 50, 0);
+  }
+  50% {
+    box-shadow: 0 0 60px rgba(46, 125, 50, 0.3);
+  }
 }
 
 .text-h2 {
   font-size: 3.5rem;
   line-height: 0.9;
   letter-spacing: -4px;
-  @media (max-width: 600px) {
-    font-size: 4rem;
-    letter-spacing: -2px;
-  }
-}
-
-.tracking-tighter {
-  letter-spacing: -4px;
-}
-.letter-spacing-2 {
-  letter-spacing: 2px;
-}
-.tracking-widest {
-  letter-spacing: 4px;
-}
-
-.border-left-primary {
-  border-left: 6px solid var(--q-primary);
 }
 
 .premium-btn {
   border-radius: 12px;
   font-weight: 800;
   padding: 10px 40px;
-  text-transform: none;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   &:hover {
-    transform: scale(1.05) translateY(-5px);
-    box-shadow: 0 20px 40px rgba(46, 125, 50, 0.4);
+    transform: scale(1.08) translateY(-8px);
+    box-shadow: 0 20px 50px rgba(46, 125, 50, 0.5);
   }
 }
 
@@ -537,12 +599,13 @@ php padi serve`
   border-width: 2px;
   font-weight: 800;
   padding: 10px 40px;
-  text-transform: none;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
   &:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateY(-5px);
+    border-color: white;
   }
 }
 
@@ -553,11 +616,15 @@ php padi serve`
   position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  z-index: 1;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   &:hover {
-    border-color: rgba(46, 125, 50, 0.5);
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-10px);
+    border-color: var(--q-primary);
+    background: rgba(46, 125, 50, 0.05);
+    transform: translateY(-15px);
+    .philosophy-watermark {
+      opacity: 0.4;
+      transform: scale(1.1);
+    }
   }
 }
 
@@ -568,30 +635,36 @@ php padi serve`
   font-size: 130px;
   font-weight: 900;
   color: var(--q-primary);
-  opacity: 0.2;
-  line-height: 1;
+  opacity: 0.15;
+  transition: all 0.5s ease;
   z-index: -1;
-  user-select: none;
 }
 
 /* Feature Boxes */
 .feature-box {
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.4s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   .feature-icon-wrapper {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background: rgba(46, 125, 50, 0.1);
-    border-radius: 20px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
   }
   &:hover {
-    background: rgba(46, 125, 50, 0.05);
+    background: rgba(46, 125, 50, 0.08);
     border-color: var(--q-primary);
-    transform: scale(1.02);
+    transform: translateY(-10px);
+    .feature-icon-wrapper {
+      background: var(--q-primary);
+      .q-icon {
+        color: white !important;
+      }
+    }
   }
 }
 
@@ -601,44 +674,11 @@ php padi serve`
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.terminal-header {
-  height: 45px;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.t-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-.dot-red {
-  background: #ff5f56;
-}
-.dot-yellow {
-  background: #ffbd2e;
-}
-.dot-green {
-  background: #27c93f;
-}
-
-.font-mono {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-}
-.t-dim {
-  opacity: 0.4;
-}
-.t-prompt {
-  color: var(--q-primary);
-  font-weight: bold;
-}
-.t-cmd {
-  color: #818cf8;
-}
-.t-arg {
-  color: #4ade80;
+  transition: all 0.3s ease;
+  &:hover {
+    border-color: var(--q-primary);
+    box-shadow: 0 0 30px rgba(46, 125, 50, 0.2);
+  }
 }
 
 .cursor-blink {
@@ -655,60 +695,32 @@ php padi serve`
 /* Path Cards */
 .path-card {
   border-radius: 24px;
-  height: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  .path-icon-box {
-    width: 48px;
-    height: 48px;
-    background: rgba(46, 125, 50, 0.1);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  transition: all 0.5s ease;
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    .path-icon-box {
+      background: var(--q-primary);
+      .q-icon {
+        color: white !important;
+      }
+    }
   }
 }
 
-.step-bullet {
-  width: 8px;
-  height: 8px;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
   background: var(--q-primary);
-  border-radius: 50%;
-  box-shadow: 0 0 10px var(--q-primary);
-}
-
-.hover-glow:hover {
-  box-shadow: 0 0 50px rgba(46, 125, 50, 0.2);
-  border-color: rgba(46, 125, 50, 0.3);
-}
-
-/* Utils */
-.line-height-1 {
-  line-height: 1;
-}
-.line-height-1-8 {
-  line-height: 1.8;
-}
-.line-height-2 {
-  line-height: 2;
-}
-.q-py-100 {
-  padding-top: 140px;
-  padding-bottom: 140px;
-}
-.q-mb-100 {
-  margin-bottom: 100px;
-}
-.h-line-gradient {
-  width: 80px;
-  height: 6px;
-  background: linear-gradient(90deg, var(--q-primary), transparent);
-  border-radius: 3px;
-}
-.border-dashed {
-  border: 2px dashed rgba(255, 255, 255, 0.1);
-}
-.border-top-light {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .animate-float {
@@ -725,13 +737,18 @@ php padi serve`
   }
 }
 
-.transition-all {
-  transition: all 0.3s ease;
+.q-py-100 {
+  padding-top: 140px;
+  padding-bottom: 140px;
 }
-.max-width-800 {
-  max-width: 800px;
+
+.leading-tight {
+  line-height: 1.1;
 }
-.max-width-900 {
-  max-width: 900px;
+.text-gradient {
+  background: linear-gradient(135deg, var(--q-primary) 0%, #fff 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 </style>

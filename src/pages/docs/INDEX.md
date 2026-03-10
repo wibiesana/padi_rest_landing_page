@@ -99,14 +99,15 @@ Perfect for developers new to Padi REST API or setting up a new project.
 
 Essential knowledge for building with Padi REST API.
 
-### Padi CLI (Console)
+### Padi CLI & Code Generator
 
-**[📄 CLI_INTERFACE.md](02-core-concepts/CLI_INTERFACE.md)** ✨ NEW
+**[📄 CLI_INTERFACE.md](02-core-concepts/CLI_INTERFACE.md)** ✨ UPDATED
 
-- Overview & sentralisasi perintah
-- Daftar perintah (App, Make, Migrate, Generate)
-- Opsi & parameter global (`--write`, `--overwrite`, dll)
-- Contoh alur kerja pengembangan
+- Unified control engine & industrial CRUD generation
+- Full command list (App, Make, Migrate, Generate)
+- Global options & flags (`--write`, `--overwrite`, etc.)
+- Deep dive into Base vs. Concrete architecture
+- Smart relationship detection & Postman collection
 
 ### Authentication & Security
 
@@ -488,7 +489,7 @@ Concise overview with links to:
 
 1. [INSTALLATION.md](01-getting-started/INSTALLATION.md) - 15 min
 2. [CONFIGURATION.md](01-getting-started/CONFIGURATION.md) - 10 min
-3. [CODE_GENERATOR.md](02-core-concepts/CODE_GENERATOR.md) - 15 min
+3. [CLI_INTERFACE.md](02-core-concepts/CLI_INTERFACE.md) - 20 min
 4. [CONTROLLERS.md](02-core-concepts/CONTROLLERS.md) - 20 min
 5. [ROUTING.md](02-core-concepts/ROUTING.md) - 10 min
 6. [MIDDLEWARE.md](02-core-concepts/MIDDLEWARE.md) - 15 min
@@ -524,7 +525,7 @@ Concise overview with links to:
 | Configure environment                                    | [CONFIGURATION.md](01-getting-started/CONFIGURATION.md)        |
 | First API calls                                          | [FIRST_STEPS.md](01-getting-started/FIRST_STEPS.md)            |
 | Setup database                                           | [DATABASE_SETUP.md](02-core-concepts/DATABASE_SETUP.md)        |
-| Generate CRUD                                            | [CODE_GENERATOR.md](02-core-concepts/CODE_GENERATOR.md)        |
+| Generate CRUD                                            | [CLI_INTERFACE.md](02-core-concepts/CLI_INTERFACE.md)          |
 | Create models                                            | [MODELS.md](02-core-concepts/MODELS.md)                        |
 | Build controllers                                        | [CONTROLLERS.md](02-core-concepts/CONTROLLERS.md)              |
 | Connect frontend                                         | [FRONTEND_INTEGRATION.md](03-advanced/FRONTEND_INTEGRATION.md) |
@@ -557,7 +558,7 @@ docs/
 │   ├── MODELS.md                     # ✨ Database models guide
 │   ├── CONTROLLERS.md                # ✨ Controllers guide
 │   ├── ROUTING.md                    # ✨ Routing guide
-│   ├── CODE_GENERATOR.md             # ✨ Auto CRUD generator
+│   ├── CLI_INTERFACE.md              # ✨ CLI & Code Generator
 │   ├── RESOURCES.md                  # ✨ API resources guide
 │   ├── EMAIL.md                      # ✨ Email guide
 │   ├── QUEUE.md                      # ✨ Queue system guide
