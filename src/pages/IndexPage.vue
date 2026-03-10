@@ -10,7 +10,7 @@
       <div class="container relative-position">
         <div class="column items-center">
           <div class="hero-icon-container q-mb-lg">
-            <q-icon name="grain" size="100px" color="primary" class="animate-float" />
+            <q-img :src="heroImage" width="120px" class="animate-float shadow-glow" />
           </div>
           <h1
             class="text-h2 text-weight-bolder q-ma-none text-gradient text-uppercase tracking-tighter"
@@ -21,8 +21,8 @@
             <p
               class="text-h5 text-white text-weight-light max-width-900 opacity-90 border-left-primary q-pl-lg"
             >
-              The Industrial-Grade, <span class="text-weight-bold">Zero-Bloat</span> PHP Engine for
-              the Modern Web
+              The Industrial-Grade, <span class="text-weight-bold">Zero-Bloat</span> PHP REST API
+              Framework for the Modern Web
             </p>
           </div>
           <div class="q-mt-xl q-gutter-lg flex justify-center">
@@ -59,8 +59,8 @@
           </div>
           <p class="text-body1 text-grey-4 text-weight-light line-height-1-8">
             PADI isn't just another PHP framework; it's a meticulously crafted
-            <b class="text-white">Code Generation Engine</b> designed to transform your database
-            schemas into production-ready endpoints instantly.
+            <b class="text-white">REST API Generation Engine</b> designed to transform your database
+            schemas into production-ready RESTful services instantly.
           </p>
           <q-btn
             flat
@@ -297,6 +297,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
+import heroImage from 'assets/brand/padi_menunduk.png'
 
 const router = useRouter()
 const $q = useQuasar()
@@ -339,7 +340,7 @@ const features = [
   {
     title: 'Auto CRUD SDK',
     description:
-      'Instantly transform database schemas into production-ready APIs with full documentation in seconds.',
+      'Instantly transform database schemas into production-ready RESTful APIs with full documentation in seconds.',
     icon: 'auto_fix_high',
   },
   {
@@ -377,7 +378,8 @@ const features = [
 const learningPaths = [
   {
     title: 'Quick Scaffolder',
-    description: 'Perfect for building a rapid prototype or a standard internal utility app.',
+    description:
+      'Perfect for building rapid RESTful prototypes or standard internal utility services.',
     icon: 'flash_on',
     target: 'intro',
     steps: ['CLI Overview', 'Auto-CRUD Gen', 'First API Calls'],
@@ -434,6 +436,10 @@ php padi serve`
 </script>
 
 <style lang="scss" scoped>
+.shadow-glow {
+  filter: drop-shadow(0 0 15px rgba(46, 125, 50, 0.6));
+}
+
 .index-page {
   background: #0f172a;
   color: white;

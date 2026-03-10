@@ -45,7 +45,7 @@ php -r "echo bin2hex(random_bytes(32));"
 ```bash
 curl -X POST http://localhost:8085/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"name":"John Doe","email":"john@example.com","password":"SecurePass123!","password_confirmation":"SecurePass123!"}'
+  -d '{"username":"johndoe","email":"john@example.com","password":"SecurePass123!","password_confirmation":"SecurePass123!"}'
 ```
 
 Response (success):
@@ -66,7 +66,7 @@ Response (success):
 ```bash
 curl -X POST http://localhost:8085/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"john@example.com","password":"SecurePass123!"}'
+  -d '{"username":"john@example.com","password":"SecurePass123!"}'
 ```
 
 Response:
@@ -104,15 +104,15 @@ Response:
 
 All endpoints expect and return JSON. Replace `http://localhost:8085` with your `APP_URL`.
 
-- `POST /auth/register` — Register a new user. Required: `name`, `email`, `password`, `password_confirmation`.
-- `POST /auth/login` — Authenticate and retrieve token. Required: `email`, `password`.
+- `POST /auth/register` — Register a new user. Required: `username`, `email`, `password`, `password_confirmation`.
+- `POST /auth/login` — Authenticate and retrieve token. Required: `username` (can be email or username), `password`.
 - `GET /auth/me` — Get current authenticated user. Requires `Authorization` header.
 - `POST /auth/logout` — Invalidate token.
-- `POST /auth/refresh` — Exchange an expiring token for a new one.
+- `POST /auth/refresh` — Exchange an expiring token for a new one. Required: `remember_token`.
 - `POST /auth/forgot-password` — Request password reset email.
 - `POST /auth/reset-password` — Reset password using token.
 
-Example request/response are shown in the Quick Start section above.
+Example request/response are shown in the Quick Start section above. 
 
 ---
 
@@ -191,13 +191,13 @@ The framework includes a secure password reset flow:
 
 ```javascript
 // After login
-const response = await api.post("/auth/login", {
-  email: "user@example.com",
-  password: "SecurePass123!",
-});
+const response = await api.post('/api/auth/login', {
+  username: 'user@example.com',
+  password: 'SecurePass123!',
+})
 
 // Store token
-localStorage.setItem("access_token", response.data.token);
+localStorage.setItem('access_token', response.data.token)
 ```
 
 ### Send Token with Requests
@@ -205,12 +205,12 @@ localStorage.setItem("access_token", response.data.token);
 ```javascript
 // Axios interceptor
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem('access_token')
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`
   }
-  return config;
-});
+  return config
+})
 ```
 
 ### Handle Token Expiry
@@ -222,12 +222,12 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Token expired or invalid
-      localStorage.removeItem("access_token");
-      window.location.href = "/login";
+      localStorage.removeItem('access_token')
+      window.location.href = '/login'
     }
-    return Promise.reject(error);
+    return Promise.reject(error)
   },
-);
+)
 ```
 
 See [FRONTEND_INTEGRATION.md](../03-advanced/FRONTEND_INTEGRATION.md) for complete examples.

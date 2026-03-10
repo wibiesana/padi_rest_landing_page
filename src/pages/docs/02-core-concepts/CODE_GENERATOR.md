@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Code Generator automatically creates Models, Controllers, and Routes from your database tables, saving hours of repetitive coding.
+The Code Generator automatically creates Models, Controllers, APIs, and Documentation from your database tables. It follows a **Separation of Concerns** architecture, ensuring your custom logic is never lost when the schema changes.
 
 ---
 
@@ -218,7 +218,7 @@ The generator intelligently creates sample request bodies based on your database
    - `{{token}}` - Auth token (empty by default)
 
 3. **Get Auth Token:**
-   - Run `POST /api/auth/login`
+   - Run `POST /auth/login`
    - Copy token from response
    - Set `{{token}}` variable
 
@@ -257,110 +257,90 @@ The generator now also scans **other tables** for Foreign Keys pointing back to 
 
 ---
 
-## What Gets Generated
+## 📂 Deep Dive: What Gets Generated?
 
-### Model Files
+When you run `php padi generate:crud products --write`, the framework builds a full-scale API infrastructure. Here is the breakdown:
 
-**Base Model** (`app/Models/Base/Product.php`):
+### 1. Dual-Layer Architecture (Models & Controllers)
 
-```php
-<?php
+Padi uses a "Base vs Concrete" pattern. This is the **most important** rule to remember:
 
-namespace App\Models\Base;
+- **Base Files (`/Base/`)**: These are auto-managed by the generator. They contain the schema mapping and standard CRUD logic. **NEVER edit these files.**
+- **Concrete Files**: These inherit from Base files. This is where you write your custom business logic. They are only created once and **never overwritten**.
 
-use Core\ActiveRecord;
+#### 🏗️ Model Layer
 
-class Product extends ActiveRecord
-{
-    protected string $table = 'products';
-    protected string $primaryKey = 'id';
+- **`app/Models/Base/Product.php`**: Maps the table columns to the `$fillable` array and detects relationships.
+- **`app/Models/Product.php`**: Your playground for custom queries and business rules.
 
-    protected array $fillable = [
-        'name',
-        'price',
-        'description',
-        'category_id',
-        'status'
-    ];
+#### 🎮 Controller Layer
 
-    protected array $hidden = [];
+- **`app/Controllers/Base/ProductController.php`**: Implements standardized code for `index`, `show`, `store`, `update`, and `destroy`.
+- **`app/Controllers/ProductController.php`**: Override default behavior or add new endpoints here.
 
-    protected bool $timestamps = true;
-}
-```
+### 2. The Presentation Layer (Resources)
 
-**Concrete Model** (`app/Models/Product.php`):
+- **`app/Resources/ProductResource.php`**: A transformation layer that formats your database data into clean JSON. It handles date formatting, hides internal fields, and resolves relationships automatically.
+
+### 3. The Routing Layer
+
+- **`routes/api.php`**: A new route group is appended. It maps HTTP verbs to your Controller actions:
 
 ```php
-<?php
-
-namespace App\Models;
-
-use App\Models\Base\Product as BaseProduct;
-
-class Product extends BaseProduct
-{
-    // Add custom methods here
-}
+// Products generated routes
+$router->group(['prefix' => '/products'], function($router) {
+    $router->get('/', [ProductController::class, 'index']);
+    $router->get('/{id}', [ProductController::class, 'show']);
+    $router->post('/', [ProductController::class, 'store']);
+    $router->put('/{id}', [ProductController::class, 'update']);
+    $router->delete('/{id}', [ProductController::class, 'destroy']);
+});
 ```
 
-### Controller Files
+### 4. The Documentation Layer (Postman Collection)
 
-**Base Controller** (`app/Controllers/Base/ProductController.php`):
+- **`api_collection/products_api_collection.json`**: A ready-to-import Postman file. It includes example request bodies with sample data generated directly from your column types (e.g., it puts an email string for `email` columns).
 
-```php
-<?php
+---
 
-namespace App\Controllers\Base;
+## 🧪 Testing Your New API
 
-use Core\Controller;
-use App\Models\Product;
+Once generated, follow these steps to verify your API is working correctly:
 
-class ProductController extends Controller
-{
-    protected $model;
+### Step 1: Start the Engine
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->model = new Product();
-    }
+Run the local server using the console:
 
-    public function index(): void { /* ... */ }
-    public function show(): void { /* ... */ }
-    public function store(): void { /* ... */ }
-    public function update(): void { /* ... */ }
-    public function destroy(): void { /* ... */ }
-}
+```bash
+php padi serve
 ```
 
-**Concrete Controller** (`app/Controllers/ProductController.php`):
+Target URL: `http://localhost:8085`
 
-```php
-<?php
+### Step 2: Quick Verification (cURL)
 
-namespace App\Controllers;
+You can quickly test the list endpoint without any tools:
 
-use App\Controllers\Base\ProductController as BaseProductController;
+```bash
+# List all records
+curl http://localhost:8085/products
 
-class ProductController extends BaseProductController
-{
-    // Add custom methods here
-}
+# Search for a specific record
+curl "http://localhost:8085/products?search=gadget"
 ```
 
-### Route Registration
+### Step 3: Professional Testing (Postman)
 
-Added to `routes/api.php`:
+This is the recommended way for professional development:
 
-```php
-// Products routes
-$router->get('/products', [ProductController::class, 'index']);
-$router->get('/products/{id}', [ProductController::class, 'show']);
-$router->post('/products', [ProductController::class, 'store']);
-$router->put('/products/{id}', [ProductController::class, 'update']);
-$router->delete('/products/{id}', [ProductController::class, 'destroy']);
-```
+1. **Import**: Drag the generated `.json` file from `api_collection/` into Postman.
+2. **Environment**: Set a variable `base_url` to `http://localhost:8085/api`.
+3. **Authenticate**: If your routes are protected, use the `Login` request in the `Auth` folder to get a JWT token, then set it in your Postman Environment as `token`.
+4. **Run**: Click "Send" on the `GET All` or `GET Single` requests.
+
+### Step 4: Schema Validation
+
+Try sending a `POST` request with invalid data. The generated controller automatically uses the model's validation rules to return proper `422 Unprocessable Entity` errors with descriptive messages.
 
 ---
 

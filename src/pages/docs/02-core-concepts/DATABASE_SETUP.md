@@ -8,7 +8,7 @@ Multi-database system has been successfully implemented! 🎉
 
 1. **`Core\DatabaseManager`** - Manager for handling multiple database connections (padi-core).
 2. **`Core\Database`** - Updated to support multi-database (padi-core).
-3. **`Core\ActiveRecord`** - Updated with `$connection` property to specify database (padi-core).
+3. **`Wibiesana\Padi\Core\ActiveRecord`** - Updated with `$connection` property to specify database (padi-core).
 4. **`Core\Controller`** - Added `json()` method for easier response handling (padi-core).
 
 ### Configuration
@@ -124,7 +124,7 @@ curl http://localhost:8085/multi-db/cache/test
 ```php
 <?php
 namespace App\Models;
-use Core\ActiveRecord;
+use Wibiesana\Padi\Core\ActiveRecord;
 
 class Product extends ActiveRecord
 {

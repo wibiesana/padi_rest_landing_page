@@ -140,7 +140,6 @@ Padi REST API is highly compatible with shared hosting environments. The core en
 
 **Shared Hosting Tips:**
 
-- **URI Normalization:** If your API is at `domain.com/api`, Padi will automatically strip `/api` from the request so your routes in `api.php` remain clean (e.g., use `/users` instead of `/api/users`).
 - **PHP Version:** Ensure your hosting panel is set to **PHP 8.4+**.
 - **DB Limits:** Shared hosting often has low `wait_timeout`. The framework's `DatabaseManager` handles this by auto-reconnecting if a connection drops.
 

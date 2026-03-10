@@ -1,46 +1,32 @@
-# 🚀 Setup Methods - init.php vs init_app.bat
+# 🚀 Setup Methods - The Padi Console
 
-## ✨ **NEW! PHP CLI Setup Script (Recommended)**
+## ✨ **The Padi Console (The Ultimate CLI Hub)**
 
-We now provide **`init.php`** - a PHP CLI script that mimics Laravel Artisan!
+We provide a unified entry point called **Padi Console** (`php padi`) - a professional command-line interface inspired by **Laravel Artisan** and **Yii2 console**!
 
-### 🎯 **Why PHP CLI Instead of Batch File?**
-
-| Feature             | init.php (PHP)                   | init_app.bat (Batch)      |
-| ------------------- | -------------------------------- | ------------------------- |
-| **Cross-Platform**  | ✅ Works on Windows, Linux, Mac  | ❌ Windows only           |
-| **Stability**       | ✅ Very stable                   | ⚠️ Can crash unexpectedly |
-| **Error Handling**  | ✅ Excellent                     | ⚠️ Limited                |
-| **User Experience** | ✅ Colored output, clear prompts | ⚠️ Basic                  |
-| **Dependencies**    | ✅ PHP only (already required)   | ⚠️ PowerShell required    |
-| **Debugging**       | ✅ Easy with try-catch           | ⚠️ Difficult              |
-
----
-
-## 🎨 Method 1: PHP CLI Script (Recommended)
+## 🎨 The Unified Command (Universal Method)
 
 ### Usage:
 
 ```bash
-php init.php
+php padi init
 ```
 
 ### Features:
 
-✅ **Interactive wizard** with colored output  
-✅ **Works everywhere** - Windows, Linux, macOS  
-✅ **No dependencies** - Only PHP required (framework dependency)  
-✅ **Robust error handling** - Try-catch blocks  
-✅ **User-friendly** - Clear prompts and feedback  
-✅ **Similar to Artisan** - Familiar to Laravel developers
+✅ **Interactive wizard** with professional colored output  
+✅ **True Cross-Platform** - Works identically on Windows, Linux, and macOS  
+✅ **Zero Extra Dependencies** - Uses the same PHP engine that runs your API  
+✅ **Robust Logic** - Powered by modern PHP try-catch error handling  
+✅ **Developer Friendly** - Inspired by the best CLI tools in the PHP ecosystem (Artisan & Yii)
 
 ### Screenshot:
 
 ```
 ╔════════════════════════════════════════════════════════════════╗
 ║             Padi REST API Framework - Setup Wizard             ║
-║                        Version: 1.0.0                             ║
-║                    Powered by PHP CLI                          ║
+║                        Version: 2.x.x                             ║
+║                    Powered by Padi Console                     ║
 ╚════════════════════════════════════════════════════════════════╝
 
 ℹ [1/7] Checking environment file...
@@ -122,6 +108,8 @@ Continue anyway? (y/n) [n]:
 ⚠ Troubleshooting:
   • Ensure database connection is working
   • Check if migration files exist in database/migrations/
+
+> **Note:** For a full list of commands, simply run `php padi`.
   • Review error messages above
 
 Continue to next step? (y/n) [y]:
@@ -139,38 +127,6 @@ Continue to next step? (y/n) [y]:
 
 ---
 
-## 💻 Method 2: Windows Batch File (Alternative)
-
-### Usage:
-
-```bash
-init_app.bat
-```
-
-### When to Use:
-
-- ⚠️ **Only if you prefer GUI wizards**
-- ⚠️ **Windows users who prefer simpler interfaces**
-- ⚠️ **Known issues:** Can crash on some systems
-
-### Known Issues:
-
-1. **PowerShell dependency**
-   - Requires PowerShell execution policy
-   - May fail silently
-
-2. **Error handling**
-   - Limited error messages
-   - Hard to debug
-
-3. **Not cross-platform**
-   - Windows only
-   - Won't work on Linux/Mac
-
-### Our Recommendation:
-
-**Use `php init.php` instead!**
-
 ---
 
 ## 📊 Comparison
@@ -180,7 +136,7 @@ init_app.bat
 **PHP CLI (`init.php`):**
 
 ```bash
-$ php init.php
+$ php padi init
 ╔════════════════════════════════════════╗
 ║    Setup Wizard Started                ║
 ╚════════════════════════════════════════╝
@@ -188,27 +144,17 @@ $ php init.php
 ✓ All checks passed
 ```
 
-**Batch File (`init_app.bat`):**
-
-```batch
-C:\> init_app.bat
-[1/7] Checking environment file...
-```
+### Professional CLI Experience
 
 ### Error Messages:
 
-**PHP CLI:**
+**Padi Console:**
 
 ```bash
+$ php padi init
 ✗ Setup failed: .env.example not found!
   Please ensure .env.example exists in the project root.
   Current directory: C:\xampp\htdocs\project
-```
-
-**Batch File:**
-
-```batch
-ERROR: Failed to copy .env.example
 ```
 
 ### User Experience:
@@ -221,18 +167,13 @@ ERROR: Failed to copy .env.example
 - ✅ Default values shown
 - ✅ Confirmation prompts
 
-**Batch File:**
-
-- ⚠️ Basic output
-- ⚠️ Limited colors
-- ⚠️ Generic errors
-- ⚠️ Can crash unexpectedly
+- ✅ **Artisan & Yii Inspired** - A familiar and professional tool for PHP developers
 
 ---
 
-## 🛠️ Manual Setup (Fallback)
+## 🛠️ Manual Setup
 
-If both methods fail, you can setup manually:
+In scenarios where you cannot use the CLI, you can setup manually:
 
 ### Step 1: Create .env
 
@@ -265,8 +206,8 @@ JWT_SECRET=<run: php -r "echo bin2hex(random_bytes(32));">
 # 1. Install dependencies
 composer install
 
-# 2. Run PHP setup wizard (RECOMMENDED!)
-php init.php
+# 2. Run Padi Console Setup (RECOMMENDED!)
+php padi init
 
 # 3. Start server
 php -S localhost:8085 -t public
@@ -274,47 +215,16 @@ php -S localhost:8085 -t public
 
 ---
 
-## 🔧 Troubleshooting
-
-### init.php Issues:
-
-**Problem:** "Could not open input file: init.php"
-
-**Solution:**
-
-```bash
-# Ensure you're in project root
-cd /path/to/mvc_rest_api
-ls init.php  # Should exist
-
-# Run with full path
-php /full/path/to/init.php
-```
-
----
-
-### init_app.bat Issues:
-
-**Problem:** Script closes immediately
-
-**Solutions:**
-
-1. **Use init.php instead!** (Recommended)
-2. Run from command prompt (not double-click)
-3. Check PowerShell execution policy
-4. See `docs/INIT_APP_TROUBLESHOOTING.md`
-
 ---
 
 ## 📝 Summary
 
-| Question            | Answer                                        |
-| ------------------- | --------------------------------------------- |
-| **Which to use?**   | `php init.php`                                |
-| **Why PHP?**        | Cross-platform, stable, no extra dependencies |
-| **Still use .bat?** | Only if you really want to (Windows only)     |
-| **Manual setup?**   | Yes, always an option                         |
-| **Best practice?**  | `php init.php` → fastest and most reliable    |
+| Question            | Answer                                     |
+| ------------------- | ------------------------------------------ |
+| **Recommended Way** | `php padi init`                            |
+| **Why this way?**   | Universal, stable, and highly professional |
+| **Manual setup?**   | Available as fallback                      |
+| **Inspiration**     | Artisan & Yii2 Console                     |
 
 ---
 

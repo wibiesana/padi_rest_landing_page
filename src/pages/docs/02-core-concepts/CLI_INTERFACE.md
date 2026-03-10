@@ -57,10 +57,10 @@ Manage your database schema changes in a structured way.
 
 Full automation to create a complete API feature from a database table.
 
-| Command                               | Description                                                          |
-| :------------------------------------ | :------------------------------------------------------------------- |
-| `php padi generate:crud <table_name>` | Generates Model, Controller, Resource, Routes, & Postman Collection. |
-| `php padi generate:crud-all`          | Generates complete CRUD for **all** tables in the database (Bulk).   |
+| Command                               | Description                                                        |
+| :------------------------------------ | :----------------------------------------------------------------- |
+| `php padi generate:crud <table_name>` | Generates Model, Controller, Resource, Routes, & API Collection.   |
+| `php padi generate:crud-all`          | Generates complete CRUD for **all** tables in the database (Bulk). |
 
 ---
 

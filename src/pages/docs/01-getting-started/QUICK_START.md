@@ -17,16 +17,10 @@ composer create-project wibiesana/padi-rest-api my-app
 cd my-app
 ```
 
-Then run the setup script:
+Then initialize your project using the **Padi Console**:
 
 ```bash
 php padi init
-```
-
-Or on Windows:
-
-```bash
-init_app.bat
 ```
 
 The script will guide you through:
@@ -105,10 +99,10 @@ Visit: `http://localhost:8085`
 
 ## Next Steps
 
-1. Run `init_app.bat`
-2. Follow the prompts
-3. Start server
-4. Test API endpoints
+1. Run `php padi init`
+2. Follow the interactive prompts
+3. Start server with `php padi serve`
+4. Test your API endpoints
 
 ---
 

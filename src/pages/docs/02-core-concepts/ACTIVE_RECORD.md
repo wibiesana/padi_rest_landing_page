@@ -24,12 +24,12 @@ The `ActiveRecord` class is the heart of the framework's data layer. It provides
 
 ### Model Definition
 
-Every model in the system should extend `Core\ActiveRecord`. The base class handles the heavy lifting of mapping your class to a database table.
+Every model in the system should extend `Wibiesana\Padi\Core\ActiveRecord`. The base class handles the heavy lifting of mapping your class to a database table.
 
 ```php
 namespace App\Models;
 
-use Core\ActiveRecord;
+use Wibiesana\Padi\Core\ActiveRecord;
 
 class Product extends ActiveRecord
 {

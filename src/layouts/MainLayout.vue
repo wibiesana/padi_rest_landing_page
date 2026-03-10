@@ -14,7 +14,7 @@
 
         <q-toolbar-title class="flex items-center">
           <q-avatar size="32px" class="q-mr-sm">
-            <q-icon name="grain" color="primary" />
+            <q-img :src="logoIcon" />
           </q-avatar>
           <span class="text-weight-bold">Padi REST API</span>
         </q-toolbar-title>
@@ -69,7 +69,7 @@
 
     <q-footer class="bg-dark text-white q-pa-lg text-center border-top">
       <div class="text-subtitle1">&copy; 2026 Padi REST API Framework</div>
-      <div class="text-caption text-grey-5">Built with Quasar & Passion</div>
+      <div class="text-caption text-grey-5">Built with Love & Passion</div>
     </q-footer>
   </q-layout>
 </template>
@@ -77,6 +77,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import logoIcon from 'assets/brand/padi_menunduk.png'
 
 const leftDrawerOpen = ref(false)
 const router = useRouter()

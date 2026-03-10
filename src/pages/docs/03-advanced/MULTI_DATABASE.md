@@ -64,7 +64,7 @@ By default, all models will use the database specified in `DB_CONNECTION`:
 
 namespace App\Models;
 
-use Core\ActiveRecord;
+use Wibiesana\Padi\Core\ActiveRecord;
 
 class User extends ActiveRecord
 {
@@ -92,7 +92,7 @@ $users = $userModel->all();
 
 namespace App\Models;
 
-use Core\ActiveRecord;
+use Wibiesana\Padi\Core\ActiveRecord;
 
 class Analytics extends ActiveRecord
 {
@@ -109,7 +109,7 @@ class Analytics extends ActiveRecord
 
 namespace App\Models;
 
-use Core\ActiveRecord;
+use Wibiesana\Padi\Core\ActiveRecord;
 
 class CacheEntry extends ActiveRecord
 {
@@ -458,6 +458,6 @@ sudo apt-get install php-sqlite3
 - **Config File:** `config/database.php`
 - **DatabaseManager:** `Core\DatabaseManager` (padi-core)
 - **Database (Legacy):** `Core\Database` (padi-core)
-- **Model Base:** `Core\ActiveRecord` (padi-core)
+- **Model Base:** `Wibiesana\Padi\Core\ActiveRecord` (padi-core)
 
 ---

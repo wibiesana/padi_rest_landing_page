@@ -11,7 +11,7 @@ curl http://localhost:8085/
 ### 2. Register User
 
 ```bash
-curl -X POST http://localhost:8085/api/auth/register \
+curl -X POST http://localhost:8085/auth/register \
   -H "Content-Type: application/json" \
   -d "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"password123\",\"password_confirmation\":\"password123\"}"
 ```
@@ -19,7 +19,7 @@ curl -X POST http://localhost:8085/api/auth/register \
 ### 3. Login
 
 ```bash
-curl -X POST http://localhost:8085/api/auth/login \
+curl -X POST http://localhost:8085/auth/login \
   -H "Content-Type: application/json" \
   -d "{\"email\":\"admin@example.com\",\"password\":\"password\"}"
 ```
@@ -40,26 +40,26 @@ The response will contain a token:
 ### 4. Get All Users (Protected)
 
 ```bash
-curl -X GET http://localhost:8085/api/users \
+curl -X GET http://localhost:8085/users \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
 ### 5. Get All Products
 
 ```bash
-curl http://localhost:8085/api/products
+curl http://localhost:8085/products
 ```
 
 ### 6. Search Products
 
 ```bash
-curl "http://localhost:8085/api/products?search=laptop"
+curl "http://localhost:8085/products?search=laptop"
 ```
 
 ### 7. Create Product (Protected)
 
 ```bash
-curl -X POST http://localhost:8085/api/products \
+curl -X POST http://localhost:8085/products \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d "{\"name\":\"New Laptop\",\"description\":\"Gaming laptop\",\"price\":20000000,\"stock\":5,\"category\":\"Electronics\"}"
@@ -68,7 +68,7 @@ curl -X POST http://localhost:8085/api/products \
 ### 8. Update Product (Protected)
 
 ```bash
-curl -X PUT http://localhost:8085/api/products/1 \
+curl -X PUT http://localhost:8085/products/1 \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d "{\"name\":\"Updated Laptop\",\"price\":18085000}"
@@ -77,7 +77,7 @@ curl -X PUT http://localhost:8085/api/products/1 \
 ### 9. Update Stock (Protected)
 
 ```bash
-curl -X PATCH http://localhost:8085/api/products/1/stock \
+curl -X PATCH http://localhost:8085/products/1/stock \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -d "{\"quantity\":10}"
@@ -86,7 +86,7 @@ curl -X PATCH http://localhost:8085/api/products/1/stock \
 ### 10. Delete Product (Protected)
 
 ```bash
-curl -X DELETE http://localhost:8085/api/products/1 \
+curl -X DELETE http://localhost:8085/products/1 \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
@@ -102,7 +102,7 @@ curl -X DELETE http://localhost:8085/api/products/1 \
 
 ```javascript
 // Login
-fetch("http://localhost:8085/api/auth/login", {
+fetch("http://localhost:8085/auth/login", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -118,7 +118,7 @@ fetch("http://localhost:8085/api/auth/login", {
     const token = data.data.token;
 
     // Get products with token
-    return fetch("http://localhost:8085/api/products", {
+    return fetch("http://localhost:8085/products", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

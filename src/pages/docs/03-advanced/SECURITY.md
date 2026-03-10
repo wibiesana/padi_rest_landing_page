@@ -233,7 +233,7 @@ Cache files are now written atomically (temp file + rename) to prevent partial r
 // Cookies sent automatically with every request
 
 // ✅ CSRF safe (JWT in header)
-axios.get("/api/products", {
+axios.get("/products", {
   headers: {
     Authorization: `Bearer ${token}`, // Explicit, not automatic
   },

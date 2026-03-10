@@ -443,7 +443,7 @@ $router->get('/products', [ProductController::class, 'index']);
 curl http://localhost:8085/products
 
 # Incorrect
-curl http://localhost:8085/api/products
+curl http://localhost:8085/products
 ```
 
 3. Verify mod_rewrite is enabled (Apache):

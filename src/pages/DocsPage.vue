@@ -138,26 +138,38 @@ const mdCategoriesMap = {}
 for (const path in mdModules) {
   const parts = path.split('/')
   const filename = parts.pop()
-  if (filename === 'README.md' || filename === 'INDEX.md' || filename === 'CHANGE_LOG.md') continue
+  if (filename === 'README.md' || filename === 'INDEX.md') continue
 
-  const folder = parts.pop()
-  const catTitle = folder
-    .replace(/^\d+-/, '')
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  let catTitle = ''
+  let label = ''
 
-  if (!mdCategoriesMap[catTitle]) {
-    mdCategoriesMap[catTitle] = { title: catTitle + ' (Docs)', items: [] }
+  if (filename === 'CHANGE_LOG.md') {
+    catTitle = 'Releases'
+    label = 'Change Log'
+  } else {
+    const folder = parts.pop()
+    catTitle = folder
+      .replace(/^\d+-/, '')
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+
+    label = filename
+      .replace('.md', '')
+      .replace(/[_|-]/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase())
   }
 
-  const label = filename
-    .replace('.md', '')
-    .replace(/[_|-]/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  if (!mdCategoriesMap[catTitle]) {
+    mdCategoriesMap[catTitle] = {
+      title: catTitle + (catTitle === 'Releases' ? '' : ' (Docs)'),
+      items: [],
+    }
+  }
+
   mdCategoriesMap[catTitle].items.push({
     id: path,
     label: label,
-    icon: 'article',
+    icon: filename === 'CHANGE_LOG.md' ? 'history' : 'article',
     isMd: true,
   })
 }
@@ -179,6 +191,7 @@ const explicitOrder = [
   'worker scripts',
   'performance',
   'troubleshooting',
+  'change log',
 ]
 
 categories.push(
@@ -224,15 +237,36 @@ function handleMarkdownClick(event) {
   if (!link) return
 
   const href = link.getAttribute('href')
-  if (!href) return
+  if (!href || href.startsWith('#')) return
 
   // Handle internal .md links
   if (href.endsWith('.md')) {
     event.preventDefault()
-    // Find the module that matches the link filename
-    const filename = href.split('/').pop()
-    const foundPath = Object.keys(mdModules).find((path) => path.endsWith(filename))
+
+    // Robust relative path resolution
+    let targetPath = ''
+    if (href.startsWith('./') || href.startsWith('../') || !href.includes('/')) {
+      const base = activeSection.value.split('/')
+      base.pop() // remove current filename
+      const parts = href.split('/')
+      for (const part of parts) {
+        if (part === '.' || part === '') continue
+        if (part === '..') base.pop()
+        else base.push(part)
+      }
+      targetPath = base.join('/')
+    } else {
+      // Fallback for strange paths: search by filename if resolution fails
+      const filename = href.split('/').pop()
+      targetPath = Object.keys(mdModules).find((path) => path.endsWith(filename))
+    }
+
+    const foundPath = Object.keys(mdModules).find(
+      (path) => path === targetPath || path === './' + targetPath || path.endsWith(targetPath),
+    )
+
     if (foundPath) {
+      const filename = foundPath.split('/').pop()
       const label = filename
         .replace('.md', '')
         .replace(/[_|-]/g, ' ')
@@ -240,7 +274,6 @@ function handleMarkdownClick(event) {
       navigateTo({ id: foundPath, label, isMd: true })
     }
   } else if (href.startsWith('http')) {
-    // Open external links in new tab
     link.setAttribute('target', '_blank')
   }
 }
@@ -250,6 +283,7 @@ async function loadInitialDoc() {
     (k) => k.includes('INDEX.md') || k.includes('README.md'),
   )
   if (indexKey) {
+    activeSection.value = indexKey
     const raw = await mdModules[indexKey]()
     selectedMdHtml.value = DOMPurify.sanitize(marked.parse(raw))
     selectedMdTitle.value = indexKey.includes('INDEX') ? 'Documentation Hub' : 'Framework Overview'
