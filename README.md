@@ -1,6 +1,6 @@
-# Padi Rest Landing Page (padi-rest-landing-page)
+# Padi REST API Landing Page
 
-Padi Rest Landing Page
+The official landing page for the [Padi REST API Framework](https://github.com/wibiesana/padi_rest_api). Built with Quasar Framework (Vue 3).
 
 ## Install the dependencies
 
