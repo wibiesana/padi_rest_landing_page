@@ -1,6 +1,26 @@
 # 📦 Models Guide
 
+## 🏛️ Robust Data Foundations
+
+Models are the **Structural Blueprint** of your application's intelligence. Padi REST API Models go beyond simple data mapping; they provide a **Production-Ready Foundation** with automated field detection, secure attribute handling, and built-in industrial-grade auditing—empowering you to define your business domain with architectural clarity.
+
 ---
+
+## 📋 Table of Contents
+
+- [🏛️ Robust Data Foundations](#robust-data-foundations)
+- [Overview](#overview)
+- [Model Structure](#model-structure)
+- [Model Features](#model-features)
+- [Creating Models](#creating-models)
+- [Model Properties](#model-properties)
+- [Audit Fields (created_by / updated_by)](#audit-fields-created_by-updated_by)
+- [Query Methods](#query-methods)
+- [Best Practices](#best-practices)
+
+---
+
+
 
 ## Overview
 
@@ -218,9 +238,10 @@ class Product extends ActiveRecord
 
 When you use the [Code Generator](CODE_GENERATOR.md), the framework automatically detects relationships based on your database foreign keys:
 
-- **Direct Relation**: Creates `belongsTo` for table columns ending in `_id`.
+- **Direct Relation**: Creates `belongsTo` based on **Database Foreign Keys** (detecting columns like `user_id` pointing to other tables).
 - **Inverse Relation**: Automatically scans other tables for foreign keys pointing to your model and creates `hasMany()` or `hasOne()` (if a unique index exists).
-- **Naming**: Pluralizes `hasMany` relationships automatically (e.g., `user->posts()`).
+- **Many-to-Many**: Automatically detects pivot tables and creates `belongsToMany()`.
+- **Naming**: Pluralizes `hasMany` and `belongsToMany` relationships automatically (e.g., `user->posts()`, `product->tags()`).
 
 ---
 

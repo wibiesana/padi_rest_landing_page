@@ -1,6 +1,26 @@
 # ⚙️ Configuration Guide
 
+## ⚙️ Precision-Tuned Control Center
+
+Master your application's environment with our **Industrial-Grade Configuration Engine**. Padi REST API utilizes a sophisticated `.env` architecture that allows you to pivot between development agility and production-grade security with a single line of code. From surgical database tuning to high-security JWT orchestration, our configuration layer ensures your infrastructure is always optimized for maximum performance and architectural integrity.
+
 ---
+
+## 📋 Table of Contents
+
+- [⚙️ Precision-Tuned Control Center](#precision-tuned-control-center)
+
+- [Environment Variables (.env)](#environment-variables-env)
+- [Development Configuration](#development-configuration)
+- [Production Configuration](#production-configuration)
+- [Configuration Sections](#configuration-sections)
+- [Generate Strong JWT Secret](#generate-strong-jwt-secret)
+- [Environment-Specific Best Practices](#environment-specific-best-practices)
+- [Configuration Validation](#configuration-validation)
+- [Next Steps](#next-steps)
+
+---
+
 
 ## Environment Variables (.env)
 
@@ -262,7 +282,7 @@ php scripts/test_db.php
 ## Next Steps
 
 1. **First Steps** - See [FIRST_STEPS.md](FIRST_STEPS.md)
-2. **Database Setup** - See [../02-core-concepts/DATABASE_SETUP.md](../02-core-concepts/DATABASE_SETUP.md)
+2. **Database Setup** - See [../02-core-concepts/DATABASE.md](../02-core-concepts/DATABASE.md)
 3. **Security Best Practices** - See [../03-advanced/SECURITY.md](../03-advanced/SECURITY.md)
 
 ---

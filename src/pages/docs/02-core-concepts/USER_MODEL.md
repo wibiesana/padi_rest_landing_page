@@ -1,10 +1,28 @@
-# 👤 Enhanced User Model - Documentation
+# 👤 Enhanced User Model & Identity Engine
 
-## ✅ User Model Updated!
+## 🛡️ Industrial-Grade Identity & Security Foundation
 
-The `User` model has been **updated and adjusted** with the improved users table. No need to delete it!
+The Padi REST API User Model is more than just a data structure—it is a **Sophisticated Identity Engine**. Built for enterprise-scale security, it comes pre-integrated with advanced authentication logic, high-performance activity auditing, and professional-grade profile management. This ensures your application starts with a secure, scalable, and battle-tested identity system from the very first deployment.
 
 ---
+
+## 📋 Table of Contents
+
+- [🛡️ Industrial-Grade Identity & Security Foundation](#industrial-grade-identity--security-foundation)
+- [✅ User Model Updated!](#user-model-updated)
+- [📋 What Changed?](#what-changed)
+- [🎯 New Helper Methods Added](#new-helper-methods-added)
+- [🔐 Enhanced AuthController](#enhanced-authcontroller)
+- [💡 Usage Examples](#usage-examples)
+- [🗂️ Database Table Structure](#database-table-structure)
+- [🎨 Possible User Statuses](#possible-user-statuses)
+- [🔒 Security Features](#security-features)
+- [📊 Role-Based Access Control](#role-based-access-control)
+- [✨ Best Practices](#best-practices)
+
+---
+
+
 
 ## 📋 What Changed?
 

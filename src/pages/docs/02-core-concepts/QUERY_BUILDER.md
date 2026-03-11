@@ -1,8 +1,24 @@
 # 🔍 Query Builder Documentation
 
-The `Core\Query` class provides a fluent interface for building and executing SQL queries quickly, safely, and efficiently, similar to `yii\db\Query`.
+## ⚡ High-Performance SQL Orchestration
+
+The `Core\Query` class is an **Industrial-Grade Data Engine** designed for maximum speed and security. It enables you to construct complex SQL queries with surgical precision through a fluent, readable interface—protecting you from injection while maintaining the flexibility of raw SQL.
 
 ---
+
+## 📋 Table of Contents
+
+- [⚡ High-Performance SQL Orchestration](#high-performance-sql-orchestration)
+- [🚀 Getting Started](#getting-started)
+- [🛠️ Query Methods](#query-methods)
+- [🏃 Query Execution](#query-execution)
+- [💡 Real-World Examples](#real-world-examples)
+- [🔒 Security](#security)
+- [🌐 Worker Mode Notes (v2.0.3)](#worker-mode-notes-v203)
+
+---
+
+
 
 ## 🚀 Getting Started
 

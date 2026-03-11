@@ -1,30 +1,39 @@
 # 🗃️ ActiveRecord Guide
 
-The `ActiveRecord` class is the heart of the framework's data layer. It provides a powerful, fluent interface for database interactions, relationship management, and automated auditing.
+## 💎 The Heart of Data Persistence
+
+The `ActiveRecord` class is the **Industrial-Grade Backbone** of the Padi REST API. More than just an ORM, it is a high-performance engine that automates complex database orchestrations, relationships, and auditing—allowing you to interact with your data through a clean, fluent, and professional interface.
 
 ---
 
 ## 📋 Table of Contents
 
+- [💎 The Heart of Data Persistence](#the-heart-of-data-persistence)
 - [Core Concepts](#core-concepts)
 - [Basic CRUD](#basic-crud)
 - [Pagination](#pagination)
 - [Advanced Operations](#advanced-operations)
-- [Relationships & Eager Loading](#relationships--eager-loading)
+- [Relationships & Eager Loading](#relationships-eager-loading)
+- [Automatic Relationship Detection](#automatic-relationship-detection)
 - [Model Security (Hidden Fields)](#model-security-hidden-fields)
 - [Automatic Auditing](#automatic-auditing)
 - [Default Ordering](#default-ordering)
 - [Lifecycle Hooks (Yii Style)](#lifecycle-hooks)
 - [Database Connection Switching](#database-connection-switching)
-- [Worker Mode & Shared Hosting (v2.0.3)](#worker-mode--shared-hosting-v203)
+- [Worker Mode & Shared Hosting (v2.0.3)](#worker-mode-shared-hosting-v203)
 
 ---
+
 
 ## 🛠️ Core Concepts
 
 ### Model Definition
 
-Every model in the system should extend `Wibiesana\Padi\Core\ActiveRecord`. The base class handles the heavy lifting of mapping your class to a database table.
+Every model in the system should extend `Wibiesana\Padi\Core\ActiveRecord`. The framework follows a **Base vs. Concrete** architecture:
+
+1. **Base Models (`app/Models/Base/`)**: Auto-managed and overwritten during regeneration. They contain schema mappings and relationship detection logic.
+2. **Concrete Models (`app/Models/`)**: Inherit from Base models. They are created once and never overwritten, making them the safe place for your custom logic.
+
 
 ```php
 namespace App\Models;
@@ -62,6 +71,10 @@ $product = (new Product())->findOrFail(1);
 // Count records (v2.0.3)
 $total = (new Product())->count();
 $activeCount = (new Product())->count(['status' => 'active']);
+
+// Global Search (v2.0.3+)
+// Automatically searches through all $fillable fields
+$results = (new Product())->searchPaginate($keyword);
 ```
 
 ### Writing Data
@@ -193,6 +206,10 @@ class Product extends ActiveRecord {
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function userProfile() {
+        return $this->hasOne(UserProfile::class, 'user_id');
+    }
+
     public function tags() {
         return $this->belongsToMany(
             Tag::class,
@@ -204,19 +221,62 @@ class Product extends ActiveRecord {
 }
 ```
 
+### 🧠 Automatic Relationship Detection
+
+When using the [Padi CLI Generator](CLI_INTERFACE.md), relationships are automatically detected and written into the **Base Model**:
+
+- **`belongsTo`**: Detected from **Database Foreign Keys** (mapping columns like `category_id` to their respective tables).
+- **`hasMany`**: Detected when another table has a foreign key pointing to this table (and it's not unique).
+- **`hasOne`**: Detected when another table has a **Unique** foreign key pointing to this table.
+- **`belongsToMany`**: Detected from pivot tables (tables containing exactly two foreign keys connecting two models).
+- **Naming**: The generator automatically pluralizes names for `hasMany` and `belongsToMany` (e.g., `user->posts()`, `product->tags()`) and keeps them singular for `hasOne`.
+
+#### Example Generated Output:
+
+```php
+// app/Models/Base/User.php
+abstract class User extends ActiveRecord {
+    // 1. hasMany (Detected from posts.user_id)
+    public function posts() {
+        return $this->hasMany(Post::class, 'user_id');
+    }
+
+    // 2. hasOne (Detected from profiles.user_id + UNIQUE index)
+    public function profile() {
+        return $this->hasOne(Profile::class, 'user_id');
+    }
+
+    // 3. belongsToMany (Detected from user_roles pivot table)
+    public function roles() {
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+    }
+}
+
+// app/Models/Base/Post.php
+abstract class Post extends ActiveRecord {
+    // 4. belongsTo (Detected from post's own user_id foreign key)
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+}
+```
+
 ### Eager Loading (N+1 Solution)
 
 Use `with()` to load relationships efficiently.
 
 ```php
-// Basic eager loading
-$products = (new Product())->with('category')->all();
+// 1. Basic eager loading
+$users = (new User())->with('posts')->all();
 
-// Nested eager loading (dot notation)
-$products = (new Product())->with('category.parent')->all();
+// 2. Multiple relations
+$users = (new User())->with(['posts', 'profile', 'roles'])->all();
 
-// Specific columns (colon notation)
-$products = (new Product())->with('category:id,name')->all();
+// 3. Nested eager loading (dot notation)
+$users = (new User())->with('posts.tags')->all();
+
+// 4. Specific columns (colon notation)
+$users = (new User())->with('profile:user_id,bio,avatar')->all();
 ```
 
 ---

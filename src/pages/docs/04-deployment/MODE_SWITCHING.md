@@ -1,4 +1,24 @@
-# FrankenPHP Mode Configuration
+# 🚀 Adaptive Runtime Orchestration
+
+## 🔄 Dynamic Engine Switching
+
+Seamlessly pivot between development agility and production velocity. Padi REST API’s dual-engine architecture allows you to switch between **Standard Mode** for rapid iteration and **Worker Mode** for industrial-grade performance—all with zero code changes. Give your application the flexibility to evolve from a local sandbox to a global powerhouse in seconds.
+
+---
+
+## 📋 Table of Contents
+
+- [🔄 Dynamic Engine Switching](#dynamic-engine-switching)
+- [Available Modes](#available-modes)
+- [How to Use](#how-to-use)
+- [Configuration Files](#configuration-files)
+- [Performance Testing](#performance-testing)
+- [Recommendations](#recommendations)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+
 
 This application supports two FrankenPHP operational modes:
 

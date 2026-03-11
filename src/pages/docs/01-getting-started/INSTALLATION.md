@@ -1,6 +1,23 @@
 # 📦 Installation Guide
 
+## 🏗️ Professional Infrastructure Deployment
+
+Setting up Padi REST API is engineered to be as smooth as the framework itself. Our installation process is designed for developers who value speed, security, and industrial-grade reliability. Follow the steps below to establish your professional development environment in minutes.
+
 ---
+
+## 📋 Table of Contents
+
+- [🏗️ Professional Infrastructure Deployment](#professional-infrastructure-deployment)
+- [Requirements](#requirements)
+- [Installation Steps](#installation-steps)
+- [Verify Installation](#verify-installation)
+- [Alternative: Automated Setup](#alternative-automated-setup)
+- [Next Steps](#next-steps)
+- [Troubleshooting](#troubleshooting)
+
+---
+
 
 ## Requirements
 
@@ -157,7 +174,7 @@ See [INIT_APP_GUIDE.md](INIT_APP_GUIDE.md) for detailed automated setup instruct
 
 1. **Configure Environment** - See [CONFIGURATION.md](CONFIGURATION.md)
 2. **First Steps** - See [FIRST_STEPS.md](FIRST_STEPS.md)
-3. **Database Setup** - See [../02-core-concepts/DATABASE_SETUP.md](../02-core-concepts/DATABASE_SETUP.md)
+3. **Database Setup** - See [../02-core-concepts/DATABASE.md](../02-core-concepts/DATABASE.md)
 
 ---
 

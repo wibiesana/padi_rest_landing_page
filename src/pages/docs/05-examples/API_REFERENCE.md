@@ -2,6 +2,20 @@
 
 ---
 
+## 📋 Table of Contents
+
+- [Standard Response Format](#standard-response-format)
+- [🔑 Message Codes](#message-codes)
+- [HTTP Status Codes](#http-status-codes)
+- [Authentication Endpoints](#authentication-endpoints)
+- [CRUD Endpoints](#crud-endpoints)
+- [Validation Rules](#validation-rules)
+- [Rate Limiting](#rate-limiting)
+- [cURL Examples](#curl-examples)
+
+---
+
+
 ## Standard Response Format
 
 All API responses follow a consistent JSON structure, including a `message_code` for programmatic error handling.

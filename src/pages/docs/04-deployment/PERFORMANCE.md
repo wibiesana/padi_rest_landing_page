@@ -1,6 +1,23 @@
 # ⚡ Performance Optimization Guide
 
+## ⚡ Blazing-Fast Technical Excellence
+
+Performance is in our DNA. Padi REST API is engineered for **Extreme Throughput** and **Low-Latency** execution. From our optimized kernel to native support for memory-resident worker modes, every microsecond is accounted for. This guide breaks down the technical benchmark and optimizations that make Padi one of the fastest PHP frameworks in the industry.
+
 ---
+
+## 📋 Table of Contents
+
+- [⚡ Blazing-Fast Technical Excellence](#blazing-fast-technical-excellence)
+- [Performance Comparison](#performance-comparison)
+- [v2.0.2 Performance Improvements](#v202-performance-improvements)
+- [Recommendations](#recommendations)
+- [Quick Commands](#quick-commands)
+- [Environment Variables for Performance](#environment-variables-for-performance)
+
+---
+
+
 
 ## Performance Comparison
 

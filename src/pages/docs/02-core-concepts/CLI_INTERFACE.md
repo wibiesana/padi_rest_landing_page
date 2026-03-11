@@ -1,6 +1,26 @@
 # 🛠️ Padi Console CLI & Code Generator
 
+## 🤖 Industrial-Grade Developer Automation
+
+Padi CLI is the **Central Intelligence** of your development workflow. Far beyond a simple command-line tool, it is a high-performance **Automation Engine** designed to eliminate boilerplate and human error. From database migrations to the surgical generation of industrial-grade API components, Padi Console empowers you to build entire enterprise backends with unprecedented speed and architectural precision.
+
 ---
+
+## 📋 Table of Contents
+
+- [🤖 Industrial-Grade Developer Automation](#industrial-grade-developer-automation)
+- [📖 Overview](#overview)
+- [🚀 Basic Usage](#basic-usage)
+- [🛠️ Command Reference](#command-reference)
+- [⚙️ Options & Flags](#options-flags)
+- [🏗️ Architecture: Base vs. Concrete](#architecture-base-vs-concrete)
+- [� What Gets Generated?](#what-gets-generated)
+- [📮 API Collection & Client Integration](#api-collection-client-integration)
+- [� Best Practices](#best-practices)
+- [🔍 Troubleshooting](#troubleshooting)
+
+---
+
 
 ## 📖 Overview
 
@@ -71,10 +91,40 @@ The heart of the framework. It transforms database tables into fully working API
 | `--write`     | `generate:crud` | **Mandatory** to actually write files to disk (prevents accidents). |
 | `--overwrite` | `generate:crud` | Overwrites existing **Base** files (use after schema changes).      |
 | `--force`     | `generate:crud` | Forces regeneration on protected tables (e.g., `users`).            |
-| `--protected` | `all` / `none`  | Automatically applies `Auth` middleware to generated routes.        |
+| `--protected` | `all` / `none`  | RBAC Protection. **Default**: `store,update,destroy` (Read-only public). |
 | `--tables`    | `users,posts`   | Specific tables for migration execution.                            |
 | `--step`      | `int`           | Number of steps for migration rollback.                             |
 | `--port`      | `int`           | Custom port for the `serve` command.                                |
+
+### 🛡️ Route Protection (`--protected`)
+
+The `--protected` flag determines which generated API endpoints require authentication via `AuthMiddleware`.
+
+| Value | Behavior | Ideal For |
+| :--- | :--- | :--- |
+| *(Omitted)* | **Default**. `index` & `show` are **Public**. `store`, `update`, & `destroy` are **Protected**. | Blogs, Product Catalogs, Public Lists. |
+| `all` | **Strict**. Every single endpoint requires a valid JWT token. | Internal Dashboards, Private User Data. |
+| `none` | **Open**. All endpoints are public and accessible without a token. | Public Reference Data, Testing. |
+
+#### Examples:
+
+**1. Standard API (Public Read, Private Write)**
+```bash
+php padi generate:crud products --write
+```
+*Result: Anyone can view products, but only logged-in users can create/edit them.*
+
+**2. Private Dashboard API (Fully Protected)**
+```bash
+php padi generate:crud invoices --protected=all --write
+```
+*Result: All endpoints for invoices will return `401 Unauthorized` without a token.*
+
+**3. Public Utility API (No Protection)**
+```bash
+php padi generate:crud settings --protected=none --write
+```
+*Result: All endpoints are completely open.*
 
 ---
 
@@ -101,9 +151,10 @@ When you run `php padi generate:crud products --write`, the following is created
 
 The generator automatically detects foreign keys and writes relationship methods:
 
-- **`belongsTo`**: Detected from `*_id` columns.
+- **`belongsTo`**: Detected from **Database Foreign Keys** (mapping local columns like `user_id` to their target tables).
 - **`hasMany`**: Detected from non-unique foreign keys in other tables pointing back.
 - **`hasOne`**: Detected from unique foreign keys in other tables.
+- **`belongsToMany`**: Detected from pivot tables (tables with only two foreign keys linking two different models).
 
 ---
 

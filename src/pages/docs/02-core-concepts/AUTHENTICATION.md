@@ -3,24 +3,29 @@
   Improved for beginners: clearer structure, quick-start examples, and troubleshooting.
 -->
 
-# Authentication & Security (Beginner Friendly)
+# 🔐 Authentication & Security
 
-This document explains how authentication works in Padi REST API using JSON Web Tokens (JWT). It is written for beginners and includes step-by-step examples, common errors, and troubleshooting tips.
+## 🛡️ Fortified Identity Management
 
-**Quick overview:**
+Security is the cornerstone of the Padi REST API. Our Authentication system is a **High-Security Identity Engine** built on the industry-standard JSON Web Token (JWT) architecture. We provide a stateless, cryptographically secure foundation that ensures your users' identities are protected with professional-grade encryption while maintaining seamless connectivity for modern web and mobile applications.
 
-- The app uses JWT for stateless authentication.
-- Clients (web/mobile) authenticate via `/auth/login` or `/auth/register` and receive a token.
-- The token is sent in the `Authorization: Bearer <token>` header on protected requests.
+---
 
-## Table of contents
+## 📋 Table of Contents
 
-- Prerequisites
-- Quick start (example requests)
-- Authentication endpoints (register, login, refresh, logout, me)
-- How tokens are validated (server-side)
-- Common errors & troubleshooting
-- Security best practices
+- [🛡️ Fortified Identity Management](#fortified-identity-management)
+- [Prerequisites](#prerequisites)
+- [Quick start (example requests)](#quick-start-example-flows)
+- [Authentication endpoints](#authentication-endpoints-details)
+- [How JWT tokens are validated](#how-jwt-tokens-are-validated-server-side)
+- [Password rules & hashing](#password-rules--hashing)
+- [Common errors & troubleshooting](#common-errors--troubleshooting)
+- [Security best practices](#security-best-practices)
+- [Password Recovery](#password-recovery)
+
+---
+
+- [Frontend Integration](#frontend-integration)
 
 ---
 
@@ -112,7 +117,7 @@ All endpoints expect and return JSON. Replace `http://localhost:8085` with your 
 - `POST /auth/forgot-password` — Request password reset email.
 - `POST /auth/reset-password` — Reset password using token.
 
-Example request/response are shown in the Quick Start section above. 
+Example request/response are shown in the Quick Start section above.
 
 ---
 

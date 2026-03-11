@@ -1,5 +1,24 @@
 # 🚀 Setup Methods - The Padi Console
 
+## 🤖 Adaptive Deployment & Orchestration
+
+Tailor your environment with the **Padi Intelligence Hub**. Whether you prefer our sophisticated, interactive CLI wizard or a surgical manual configuration, Padi REST API provides the most flexible and professional setup experience in the PHP ecosystem. Build your infrastructure on a foundation that adapts to your workflow, not the other way around.
+
+---
+
+## 📋 Table of Contents
+
+- [🤖 Adaptive Deployment & Orchestration](#adaptive-deployment-orchestration)
+
+- [✨ The Padi Console (The Ultimate CLI Hub)](#the-padi-console-the-ultimate-cli-hub)
+- [🎨 The Unified Command (Universal Method)](#the-unified-command-universal-method)
+- [📊 Comparison](#comparison)
+- [🛠️ Manual Setup](#manual-setup)
+- [✅ Recommended Workflow](#recommended-workflow)
+- [📝 Summary](#summary)
+
+---
+
 ## ✨ **The Padi Console (The Ultimate CLI Hub)**
 
 We provide a unified entry point called **Padi Console** (`php padi`) - a professional command-line interface inspired by **Laravel Artisan** and **Yii2 console**!
@@ -19,6 +38,8 @@ php padi init
 ✅ **Zero Extra Dependencies** - Uses the same PHP engine that runs your API  
 ✅ **Robust Logic** - Powered by modern PHP try-catch error handling  
 ✅ **Developer Friendly** - Inspired by the best CLI tools in the PHP ecosystem (Artisan & Yii)
+
+
 
 ### Screenshot:
 

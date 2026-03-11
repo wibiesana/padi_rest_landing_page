@@ -17,6 +17,26 @@ Welcome to the official documentation for **Padi REST API Framework** - a high-p
 
 ---
 
+## 📋 Table of Contents
+
+- [✨ P.A.D.I. Philosophy](#padi-philosophy)
+- [📖 Quick Navigation](#quick-navigation)
+- [🚀 Getting Started](#getting-started)
+- [📚 Core Concepts](#core-concepts)
+- [🎯 Advanced Topics](#advanced-topics)
+- [🚀 Deployment & Performance](#deployment-performance)
+- [💡 Code Examples](#code-examples)
+- [📋 Complete Reference](#complete-reference)
+- [🎓 Learning Paths](#learning-paths)
+- [🔍 Quick Reference](#quick-reference)
+- [📁 Documentation Structure](#documentation-structure)
+- [🌟 Key Features](#key-features)
+- [💬 Need Help?](#need-help)
+- [🚀 Quick Links](#quick-links)
+
+---
+
+
 ## 📖 Quick Navigation
 
 | Section                                    | Description                                        | Best For          |
@@ -24,7 +44,7 @@ Welcome to the official documentation for **Padi REST API Framework** - a high-p
 | [🚀 Getting Started](#-getting-started)    | Installation, setup, and first steps               | New users         |
 | [📚 Core Concepts](#-core-concepts)        | Models, controllers, resources, and query building | All developers    |
 | [🎯 Advanced Topics](#-advanced-topics)    | Multi-database, frontend integration               | Experienced users |
-| [🚀 Deployment](#-deployment--performance) | Production deployment and optimization             | DevOps teams      |
+| [🚀 Deployment](#-deployment-performance) | Production deployment and optimization             | DevOps teams      |
 | [💡 Examples](#-code-examples)             | Ready-to-use code samples                          | Quick reference   |
 
 ---
@@ -68,15 +88,6 @@ Perfect for developers new to Padi REST API or setting up a new project.
 - Generate CRUD
 - Common tasks
 
-### Complete Setup Guide
-
-**[📄 INIT_APP_GUIDE.md](01-getting-started/INIT_APP_GUIDE.md)**
-
-- Automated setup process
-- Database configuration
-- User management
-- CRUD generation
-
 ### Setup Methods Comparison
 
 **[📄 SETUP_METHODS.md](01-getting-started/SETUP_METHODS.md)**
@@ -84,14 +95,6 @@ Perfect for developers new to Padi REST API or setting up a new project.
 - `init.php` vs `init_app.bat`
 - Cross-platform compatibility
 - Choosing the right method
-
-### Troubleshooting
-
-**[📄 INIT_APP_TROUBLESHOOTING.md](01-getting-started/INIT_APP_TROUBLESHOOTING.md)**
-
-- Common installation issues
-- Platform-specific problems
-- Solutions and workarounds
 
 ---
 
@@ -228,12 +231,16 @@ Essential knowledge for building with Padi REST API.
 
 ### Database Setup
 
-**[📄 DATABASE_SETUP.md](02-core-concepts/DATABASE_SETUP.md)**
+**[📄 DATABASE.md](02-core-concepts/DATABASE.md)**
 
-- Database configuration
-- Schema management
-- Connection setup
-- Best practices
+### Database Orchestration & Transactions
+
+**[📄 DATABASE.md](02-core-concepts/DATABASE.md)** ✨ UPDATED
+
+- Multi-Database configuration (MySQL, PostgreSQL, SQLite)
+- Automatic & manual transaction management
+- Cross-database atomic integrity
+- Persistence layer orchestration
 
 ### Query Builder
 
@@ -243,15 +250,6 @@ Essential knowledge for building with Padi REST API.
 - Complex queries
 - Joins and aggregations
 - Security features
-
-### Database Transactions
-
-**[📄 DATABASE_TRANSACTIONS.md](02-core-concepts/DATABASE_TRANSACTIONS.md)**
-
-- Automatic transactions
-- Manual transaction control
-- Rollback strategies
-- Error handling
 
 ### Active Record
 
@@ -524,7 +522,7 @@ Concise overview with links to:
 | Install framework                                        | [INSTALLATION.md](01-getting-started/INSTALLATION.md)          |
 | Configure environment                                    | [CONFIGURATION.md](01-getting-started/CONFIGURATION.md)        |
 | First API calls                                          | [FIRST_STEPS.md](01-getting-started/FIRST_STEPS.md)            |
-| Setup database                                           | [DATABASE_SETUP.md](02-core-concepts/DATABASE_SETUP.md)        |
+| Setup database                                           | [DATABASE.md](02-core-concepts/DATABASE.md)        |
 | Generate CRUD                                            | [CLI_INTERFACE.md](02-core-concepts/CLI_INTERFACE.md)          |
 | Create models                                            | [MODELS.md](02-core-concepts/MODELS.md)                        |
 | Build controllers                                        | [CONTROLLERS.md](02-core-concepts/CONTROLLERS.md)              |
@@ -549,9 +547,7 @@ docs/
 │   ├── INSTALLATION.md               # ✨ Detailed installation
 │   ├── CONFIGURATION.md              # ✨ Environment configuration
 │   ├── FIRST_STEPS.md                # ✨ First API calls
-│   ├── INIT_APP_GUIDE.md             # Automated setup guide
-│   ├── SETUP_METHODS.md              # Setup methods comparison
-│   └── INIT_APP_TROUBLESHOOTING.md   # Installation troubleshooting
+│   └── SETUP_METHODS.md              # Setup methods comparison
 │
 ├── 02-core-concepts/                 # Core Features
 │   ├── AUTHENTICATION.md             # ✨ JWT authentication & security
@@ -564,9 +560,8 @@ docs/
 │   ├── QUEUE.md                      # ✨ Queue system guide
 │   ├── CACHE.md                      # ✨ Caching system guide
 │   ├── FILE_UPLOAD.md                # ✨ File upload guide
-│   ├── DATABASE_SETUP.md             # Database configuration
+│   ├── DATABASE.md             # DB Orchestration & Transactions
 │   ├── QUERY_BUILDER.md              # Query builder
-│   ├── DATABASE_TRANSACTIONS.md      # Transactions
 │   ├── ACTIVE_RECORD.md              # ✨ ActiveRecord guide
 │   ├── RESPONSE_STRUCTURE.md         # ✨ Response structure & formats
 │   └── USER_MODEL.md                 # User model guide

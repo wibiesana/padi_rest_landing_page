@@ -1,6 +1,25 @@
 # 📦 API Resources Guide
 
+## 💎 Elegant Data Transformation
+
+API Resources are the **Precision Transformers** of the Padi REST API. They provide a sophisticated abstraction layer that allows you to sculpt your data with architectural grace, ensuring that only the essential, perfectly-formatted information reaches your client applications. This decoupling protects your underlying model structure while giving you total control over your API's public contract.
+
 ---
+
+## 📋 Table of Contents
+
+- [💎 Elegant Data Transformation](#elegant-data-transformation)
+- [Overview](#overview)
+- [Resource Structure](#resource-structure)
+- [Creating Resources](#creating-resources)
+- [Core Methods](#core-methods)
+- [Helper Methods](#helper-methods)
+- [Usage in Controllers](#usage-in-controllers)
+- [Best Practices](#best-practices)
+
+---
+
+
 
 ## Overview
 

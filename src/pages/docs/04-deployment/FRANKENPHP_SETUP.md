@@ -1,10 +1,14 @@
 # 🚀 FrankenPHP Worker Mode Setup & Implementation
 
-Complete guide for using FrankenPHP with Padi REST API Framework to achieve **3-10x performance improvements** in production.
+## 🏎️ The Future of High-Performance PHP
 
-## Table of Contents
+Step into the next generation of web serving. Padi REST API is natively architectural-compatible with **FrankenPHP Worker Mode**, transforming your API into a **Resident Memory Super-Engine**. By keeping the framework loaded in persistent memory, you eliminate boot-up overhead, achieving **3-10x performance gains** and industrial-grade throughput that traditional FPM simply cannot match.
 
-- [Overview](#overview)
+---
+
+## 📋 Table of Contents
+
+- [🏎️ The Future of High-Performance PHP](#the-future-of-high-performance-php)
 - [Performance Gains](#performance-gains)
 - [Installation](#installation)
 - [How to Run](#how-to-run)
@@ -14,6 +18,9 @@ Complete guide for using FrankenPHP with Padi REST API Framework to achieve **3-
 - [Docker Deployment](#docker-deployment)
 - [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
+
+---
+
 
 ---
 

@@ -1,8 +1,23 @@
 # 🌐 Cross-Origin Resource Sharing (CORS)
 
-CORS is a security feature implemented by browsers to restrict how resources on a web page can be requested from another domain.
+## 🌐 Secure Cross-Origin Connectivity
+
+Enable seamless, secure integration across the web. Padi REST API’s CORS Engine is a **High-Performance Security Guardian** that manages cross-origin traffic with architectural precision. Designed to be developer-friendly in local environments and industrial-grade in production, it provides granular whitelist control while maintaining full compatibility with memory-resident architectures like FrankenPHP.
 
 ---
+
+## 📋 Table of Contents
+
+- [🌐 Secure Cross-Origin Connectivity](#secure-cross-origin-connectivity)
+- [📋 Overview](#overview)
+- [⚙️ Configuration](#configuration)
+- [🛠️ How it Works](#how-it-works)
+- [🏎️ FrankenPHP Worker Mode Compatibility](#frankenphp-worker-mode-compatibility)
+- [🔍 Troubleshooting](#troubleshooting)
+
+---
+
+
 
 ## 📋 Overview
 

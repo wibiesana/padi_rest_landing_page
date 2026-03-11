@@ -1,11 +1,14 @@
 # 📧 Email Guide
 
-The Email component provides a simple wrapper around [PHPMailer](https://github.com/PHPMailer/PHPMailer) to send HTML and plain-text emails via SMTP.
+## 🏎️ Industrial-Grade Communication Layer
+
+Deliver professional, high-reliability communications with the Padi REST API Email Engine. Built as a sophisticated wrapper around **PHPMailer**, our component is designed for both synchronous immediacy and high-performance background queuing. Whether sending automated invoices or security alerts, our engine ensures your messages reach their destination with architectural precision and security.
 
 ---
 
 ## 📋 Table of Contents
 
+- [🏎️ Industrial-Grade Communication Layer](#industrial-grade-communication-layer)
 - [Configuration](#configuration)
 - [Basic Usage](#basic-usage)
 - [Sending with Attachments](#sending-with-attachments)
@@ -13,6 +16,7 @@ The Email component provides a simple wrapper around [PHPMailer](https://github.
 - [Troubleshooting](#troubleshooting)
 
 ---
+
 
 ## ⚙️ Configuration
 
@@ -35,10 +39,10 @@ MAIL_FROM_NAME="Padi REST API"
 
 ## 📍 Basic Usage
 
-You can send emails directly using the `Core\Email` class. This is a synchronous operation, meaning the request will wait until the email is sent.
+You can send emails directly using the `Wibiesana\Padi\Core\Email` class. This is a synchronous operation, meaning the request will wait until the email is sent.
 
 ```php
-use Core\Email;
+use Wibiesana\Padi\Core\Email;
 
 $to = 'user@example.com';
 $subject = 'Welcome to our App!';
@@ -58,7 +62,7 @@ if ($success) {
 To send attachments, pass an array of file paths as the fourth parameter.
 
 ```php
-use Core\Email;
+use Wibiesana\Padi\Core\Email;
 
 $attachments = [
     '/path/to/invoice.pdf',
@@ -76,10 +80,10 @@ Sending email via SMTP can be slow (1-5 seconds). For the best user experience, 
 
 ### 1. Push to Queue
 
-Instead of calling `Email::send()` directly in your controller, use `Core\Queue::push()`.
+Instead of calling `Email::send()` directly in your controller, use `Wibiesana\Padi\Core\Queue::push()`.
 
 ```php
-use Core\Queue;
+use Wibiesana\Padi\Core\Queue;
 use App\Jobs\SendEmailJob;
 
 Queue::push(SendEmailJob::class, [

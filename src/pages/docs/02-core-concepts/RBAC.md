@@ -1,9 +1,14 @@
-# Role-Based Access Control (RBAC)
+# 🎭 Role-Based Access Control (RBAC)
 
-Complete guide to implementing role-based authorization in Padi REST API Framework.
+## 🛡️ Granular Authorization & Security Orchestration
 
-## Table of Contents
+Define and enforce access with **Surgical Precision**. Padi REST API’s Role-Based Access Control (RBAC) is an **Industrial-Grade Authorization Engine** that allows you to protect your resources at any level—from entire route groups to specific controller actions. By utilizing our seamless middleware and helper architecture, you ensure that every interaction with your API is validated against professional-grade security policies.
 
+---
+
+## 📋 Table of Contents
+
+- [🛡️ Granular Authorization & Security Orchestration](#granular-authorization--security-orchestration)
 - [Overview](#overview)
 - [Quick Start](#quick-start)
 - [RoleMiddleware](#rolemiddleware)
@@ -14,6 +19,7 @@ Complete guide to implementing role-based authorization in Padi REST API Framewo
 - [Testing](#testing)
 
 ---
+
 
 ## Overview
 

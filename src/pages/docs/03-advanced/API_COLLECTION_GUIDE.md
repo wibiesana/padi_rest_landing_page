@@ -1,14 +1,43 @@
-# 📮 Postman Collections Guide
+# 📮 API Collections Guide
 
-Complete guide for using Postman Collections to test the Padi REST Framework API.
+## 📮 Surgical API Debugging & Orchestration
+
+Accelerate your development cycle with **Industrial-Grade API Collections**. Padi REST API automatically generates comprehensive blueprints for Postman, Insomnia, and Hoppscotch, complete with pre-configured variables, authentication scripts, and testing scenarios. This ensures that your entire team can interact with, debug, and validate your API endpoints with surgical precision and zero setup time.
 
 ---
 
+## 📋 Table of Contents
+
+- [📮 Surgical API Debugging & Orchestration](#surgical-api-debugging--orchestration)
+- [📦 How to Use](#how-to-use)
+- [🔐 Getting the Authentication Token](#getting-the-authentication-token)
+- [📝 Sample Request Body](#sample-request-body)
+- [🚀 Tips](#tips)
+- [📁 File Naming Convention](#file-naming-convention)
+- [🎯 Example Workflow](#example-workflow)
+- [⚙️ Advanced: Generate All Collections](#advanced-generate-all-collections)
+- [🎨 Collection Features](#collection-features)
+- [📖 Collection Structure](#collection-structure)
+- [🔗 Related Documentation](#related-documentation)
+- [🔑 Environment Variables](#environment-variables)
+- [📝 Test Scripts Included](#test-scripts-included)
+- [🎨 Request Examples](#request-examples)
+- [🔧 Modify Collection Variables](#modify-collection-variables)
+- [🎯 Testing Scenarios](#testing-scenarios)
+- [🐛 Troubleshooting](#troubleshooting)
+- [📚 Additional Tips](#additional-tips)
+- [✅ Checklist](#checklist)
+- [🎉 Ready to Test!](#ready-to-test)
+- [📖 Documentation](#documentation)
+
+---
+
+
 ## 📦 How to Use
 
-### 1. Generate Postman Collection
+### 1. Generate API Collection
 
-When you run the CRUD generator, a Postman collection will be automatically created:
+When you run the CRUD generator, a standard API collection (JSON) will be automatically created:
 
 ```bash
 php scripts/generate.php crud products --write
@@ -28,19 +57,19 @@ The output will show:
 3. Generating Routes...
 ✓ Routes for 'products' automatically appended to routes/api.php
 
-4. Generating Postman Collection...
-✓ Postman Collection created at /path/to/api_collection/product_api_collection.json
-  Import this file to Postman to test the API endpoints
+4. Generating API Collection...
+✓ API Collection created at /path/to/api_collection/product_api_collection.json
+  Import this file to your preferred API client (Postman, Insomnia, Hoppscotch) to test the API endpoints
 ```
 
-### 2. Import to Postman
+### 2. Import to your API Client
 
-1. Open the Postman application
-2. Click **Import** in the top left corner
+1. Open your preferred API application (Postman, Insomnia, Hoppscotch, etc.)
+2. Click **Import** in the application
 3. Select the `.json` file from the `api_collection/` folder:
    - **`auth_api_collection.json`** - Authentication endpoints (Login, Register, Get Me, Forgot/Reset Password)
    - **`*_api_collection.json`** - Resource endpoints (auto-generated)
-4. The collection will appear in your Postman sidebar
+4. The collection will appear in your sidebar
 
 ### 3. Setup Environment Variables
 
@@ -51,33 +80,36 @@ The collections use 2 variables:
 
 **How to set variables:**
 
-1. In Postman, click the collection name
-2. Select the **Variables** tab
+1. In your API client, click the collection name
+2. Select the **Variables** or **Environment** tab
 3. Update the `base_url` value according to your server
 4. Update the `token` value with the token returned after login
 
 ### 4. Testing API
 
-Each collection contains standard CRUD endpoints:
+### ⚡ Standard CRUD Endpoints
 
-✅ **GET** - Get All (Paginated) - `GET /resource?page=1&per_page=10`
-✅ **GET** - Search - `GET /resource?search=keyword`
-✅ **GET** - Get All (No Pagination) - `GET /resource/all`
-✅ **GET** - Get Single - `GET /resource/1`
-✅ **POST** - Create (Protected) - `POST /resource`
-✅ **PUT** - Update (Protected) - `PUT /resource/1`
-✅ **DELETE** - Delete (Protected) - `DELETE /resource/1`
+| Method   | Endpoint                                                             | Description              | Auth |
+| :------- | :------------------------------------------------------------------- | :----------------------- | :--: |
+| `GET`    | `/resource?page=1&per_page=10&search=val&order_by=id&direction=desc` | List, Search, & Sort     |  -   |
+| `GET`    | `/resource/all`                                                      | List All (No Pagination) |  -   |
+| `GET`    | `/resource/{id}`                                                     | Get Single Record        |  -   |
+| `POST`   | `/resource`                                                          | Create New Record        |  🔒  |
+| `PUT`    | `/resource/{id}`                                                     | Update Record            |  🔒  |
+| `DELETE` | `/resource/{id}`                                                     | Delete Record            |  🔒  |
 
-Endpoints labeled **(Protected)** require an Authentication token.
+### 🔑 Authentication Collection
 
-**Authentication Collection:**
+| Method | Endpoint                | Description          | Auth |
+| :----- | :---------------------- | :------------------- | :--: |
+| `POST` | `/auth/register`        | Register New User    |  -   |
+| `POST` | `/auth/login`           | Login & Get Token    |  -   |
+| `GET`  | `/auth/me`              | Current User Profile |  🔒  |
+| `POST` | `/auth/logout`          | Revoke Token         |  🔒  |
+| `POST` | `/auth/forgot-password` | Send Reset Link      |  -   |
+| `POST` | `/auth/reset-password`  | Update Password      |  -   |
 
-✅ **POST** - Register - `POST /auth/register`
-✅ **POST** - Login - `POST /auth/login`
-✅ **GET** - Get Me (Protected) - `GET /auth/me`
-✅ **POST** - Logout (Protected) - `POST /auth/logout`
-✅ **POST** - Forgot Password - `POST /auth/forgot-password`
-✅ **POST** - Reset Password - `POST /auth/reset-password`
+> 🔒 **Protected**: Requires a valid Bearer Token in the Authorization header.
 
 ---
 
@@ -132,18 +164,18 @@ Edit this as needed for your tests.
 
 2. **Organize collections:**
    - Import all collections
-   - Create Folders in Postman to group them
+   - Create Folders in your API Client to group them
    - Use Workspaces for different projects
 
 3. **Share with your team:**
-   - Export the collection from Postman
+   - Export the collection from your client
    - Commit it to your Git repository
    - Your team can import it directly
 
 4. **Update collection:**
    - If the schema changes, run the generator again
    - The file will be overwritten with the latest data
-   - Re-import it into Postman
+   - Re-import it into your API tool
 
 ---
 
@@ -178,10 +210,10 @@ Example:
 # Request: GET {{base_url}}/auth/me
 # Token is automatically sent via Authorization header
 
-# 4. Generate CRUD + Postman Collection for resource
+# 4. Generate CRUD + API Collection for resource
 php scripts/generate.php crud products --write
 
-# 5. Import api_collection/product_api_collection.json into Postman
+# 5. Import api_collection/product_api_collection.json into your API Client
 
 # 6. Set base_url in Collection Variables (if different)
 # base_url = http://localhost:8085
@@ -196,32 +228,15 @@ php scripts/generate.php crud products --write
 
 ---
 
-## 🔧 Customization
-
-If you want to customize the collection generation, edit the `generatePostmanCollection()` method in:
-
-```
-core/Generator.php
-```
-
-You can modify:
-
-- Sample data generation
-- Endpoint structure
-- Variable names
-- Test scripts
-
----
-
 ## ⚙️ Advanced: Generate All Collections
 
 ```bash
-# Generate CRUD for all tables + Postman collections
+# Generate CRUD for all tables + API collections
 php scripts/generate.php crud-all --write
 
 # Results:
 # - Model, Controller, Routes for all tables
-# - Postman collection for each table in api_collection/ folder
+# - API collection for each table in api_collection/ folder
 ```
 
 ---
@@ -235,10 +250,10 @@ Login and Register endpoints include a Test Script that automatically saves the 
 ```javascript
 // Auto-save token from response
 if (pm.response.code === 200) {
-  var jsonData = pm.response.json();
+  var jsonData = pm.response.json()
   if (jsonData.data && jsonData.data.token) {
-    pm.collectionVariables.set("token", jsonData.data.token);
-    console.log("Token saved:", jsonData.data.token);
+    pm.collectionVariables.set('token', jsonData.data.token)
+    console.log('Token saved:', jsonData.data.token)
   }
 }
 ```
@@ -338,16 +353,16 @@ Collections use automatic variables:
 
 ## 📝 Test Scripts Included
 
-Collections come with **test scripts** that automatically run in Postman:
+Collections come with **test scripts** that automatically run in your API Client:
 
 ### Register/Login
 
 ```javascript
 // Auto-save token after login
 if (pm.response.code === 201) {
-  const response = pm.response.json();
-  pm.collectionVariables.set("auth_token", response.data.token);
-  pm.collectionVariables.set("user_id", response.data.user.id);
+  const response = pm.response.json()
+  pm.collectionVariables.set('auth_token', response.data.token)
+  pm.collectionVariables.set('user_id', response.data.user.id)
 }
 ```
 
@@ -356,8 +371,8 @@ if (pm.response.code === 201) {
 ```javascript
 // Auto-save ID after create
 if (pm.response.code === 201) {
-  const response = pm.response.json();
-  pm.collectionVariables.set("post_id", response.data.id);
+  const response = pm.response.json()
+  pm.collectionVariables.set('post_id', response.data.id)
 }
 ```
 
@@ -477,7 +492,7 @@ Headers: Authorization: Bearer {{auth_token}}
 ### View Variables
 
 1. Click collection name
-2. Click **Variables** tab
+2. Click **Variables** or **Environment** tab
 3. View all variables
 
 ### Edit Base URL
@@ -573,7 +588,7 @@ If the token doesn't auto-save:
 **Solution:**
 
 1. Check JSON syntax (commas, brackets)
-2. Use Postman's JSON validator
+2. Use your API Client's JSON validator
 3. Copy from examples in the collection
 
 ---
@@ -582,7 +597,7 @@ If the token doesn't auto-save:
 
 ### 1. Run Collection with Runner
 
-1. Click collection → **Run**
+1. Click collection → **Run** or **Runner**
 2. Select requests
 3. Click **Run Collection**
 4. All requests are run sequentially!
@@ -604,8 +619,8 @@ Add logic before a request:
 
 ```javascript
 // Pre-request Script
-const timestamp = Date.now();
-pm.collectionVariables.set("timestamp", timestamp);
+const timestamp = Date.now()
+pm.collectionVariables.set('timestamp', timestamp)
 ```
 
 ---
@@ -616,7 +631,7 @@ Before testing:
 
 - [ ] Server running (`php -S localhost:8085 -t public`)
 - [ ] Database migrated (`php scripts/migrate.php migrate`)
-- [ ] Collection imported to Postman
+- [ ] Collection imported to your API Client
 - [ ] `base_url` variable correct
 
 Workflow:
@@ -632,7 +647,7 @@ Workflow:
 
 ## 🎉 Ready to Test!
 
-1. **Import** `postman_collection.json`
+1. **Import** `{resource}_api_collection.json`
 2. **Run** Register request
 3. **Start** creating resources
 4. **Test** all endpoints!

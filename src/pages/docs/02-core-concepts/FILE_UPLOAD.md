@@ -1,11 +1,14 @@
 # 📁 File Upload Guide
 
-The `Core\File` class provides a simple and **secure** way to handle file uploads, deletions, and URL generation.
+## 🛡️ Industrial-Grade Asset Protection
+
+The Padi REST API File Engine is not just about storage—it's about **Strategic Security**. Built with a **6-Layer Multi-Defense Architecture**, it automates every aspect of asset management, from surgical path sanitization to cryptographically secure filename generation. This ensures your application's file lifecycle is protected by default against common attack vectors like path traversal and header injection.
 
 ---
 
 ## 📋 Table of Contents
 
+- [🛡️ Industrial-Grade Asset Protection](#industrial-grade-asset-protection)
 - [Configuration](#configuration)
 - [Basic Upload](#basic-upload)
 - [Validation (Types & Size)](#validation-types--size)
@@ -16,6 +19,7 @@ The `Core\File` class provides a simple and **secure** way to handle file upload
 - [Generating File URLs](#generating-file-urls)
 
 ---
+
 
 ## ⚙️ Configuration
 

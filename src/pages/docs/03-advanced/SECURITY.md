@@ -1,6 +1,35 @@
 # 🔒 Security Best Practices
 
+## 🛡️ Industrial-Grade Technical Security
+
+At Padi REST API, security is not an afterthought—it's the core. We've engineered an **Enterprise-Grade Security Framework** that provides a multi-layered defense system, ensuring that your application is resilient against modern attacks, from automated bots to sophisticated injection attempts. Built with a **Zero-Trust** philosophy, our framework protects every byte of your data by default.
+
 ---
+
+## 📋 Table of Contents
+
+- [🛡️ Industrial-Grade Technical Security](#industrial-grade-technical-security)
+- [Security Overview](#security-overview)
+- [Security Checklist](#security-checklist)
+- [Implemented Security Features](#implemented-security-features)
+- [SQL Injection Protection](#sql-injection-protection)
+- [Security Headers (v2.0.2)](#security-headers-v202)
+- [File Upload Security (v2.0.2)](#file-upload-security-v202)
+- [Cache Security (v2.0.2)](#cache-security-v202)
+- [CSRF (Cross-Site Request Forgery) Protection](#csrf-cross-site-request-forgery-protection)
+- [Password Security](#password-security)
+- [JWT Security](#jwt-security)
+- [CORS Security](#cors-security)
+- [Input Validation](#input-validation)
+- [Database Security](#database-security)
+- [Directory Permissions (v2.0.2)](#directory-permissions-v202)
+- [Rate Limiting](#rate-limiting)
+- [Error Handling](#error-handling)
+- [Security Audit Checklist](#security-audit-checklist)
+- [Next Steps](#next-steps)
+
+---
+
 
 ## Security Overview
 

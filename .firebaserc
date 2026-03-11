@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "padi-rest-landing",
+    "prod": "padisoftware-e1f85"
+  },
+  "targets": {},
+  "etags": {}
+}

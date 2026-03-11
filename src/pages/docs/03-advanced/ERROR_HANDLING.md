@@ -1,9 +1,14 @@
-# Error Handling & Message Codes
+# 🛡️ Error Handling & Message Codes
 
-Complete guide to error handling and response codes in Padi REST API Framework.
+## 🛡️ Strategic Resilience & Deterministic Responses
 
-## Table of Contents
+Turn failure into clarity. Padi REST API’s Error Handling architecture is a **Professional Resiliency Engine** that replaces ambiguous server errors with deterministic, machine-readable message codes. Providing full architectural transparency for developers without sacrificing production security, our system ensures your frontend can respond with surgical precision to any application state.
 
+---
+
+## 📋 Table of Contents
+
+- [🛡️ Strategic Resilience & Deterministic Responses](#strategic-resilience--deterministic-responses)
 - [Overview](#overview)
 - [Response Structure](#response-structure)
 - [Message Codes Reference](#message-codes-reference)

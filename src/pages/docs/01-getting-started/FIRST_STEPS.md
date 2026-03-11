@@ -1,6 +1,30 @@
 # 🚀 First Steps
 
+## 🏁 Foundations of Success: Your First 5 Minutes
+
+Take your first steps toward **Architectural Mastery**. Padi REST API is designed to translate your vision into a production-ready reality with unparalleled efficiency. In the next few minutes, you will validate your environment, secure your first user, and experience the power of our **Industrial-Grade CRUD Engine**. This is where your journey from installation to innovation truly begins.
+
 ---
+
+## 📋 Table of Contents
+
+- [🏁 Foundations of Success: Your First 5 Minutes](#foundations-of-success-your-first-5-minutes)
+
+- [Quick Start Checklist](#quick-start-checklist)
+- [Step 1: Test Installation](#step-1-test-installation)
+- [Step 2: Register First User](#step-2-register-first-user)
+- [Step 3: Login](#step-3-login)
+- [Step 4: Test Protected Route](#step-4-test-protected-route)
+- [Step 5: Generate Your First CRUD](#step-5-generate-your-first-crud)
+- [Common First Tasks](#common-first-tasks)
+- [Testing Workflow](#testing-workflow)
+- [Password Requirements](#password-requirements)
+- [Quick Reference](#quick-reference)
+- [Next Steps](#next-steps)
+- [Troubleshooting](#troubleshooting)
+
+---
+
 
 ## Quick Start Checklist
 

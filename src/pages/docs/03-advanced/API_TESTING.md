@@ -1,4 +1,22 @@
-# API Testing Guide
+# 🧪 API Testing Guide
+
+## 🕵️ Strategic API Validation
+
+Master your API with **Industrial-Grade Testing Workflows**. Padi REST API is designed for total observability and effortless validation. Whether you are performing surgical strikes with cURL, utilizing full-featured API Orchestration tools, or integrating via JavaScript, our framework ensures a consistent, predictable, and professional testing experience for developers across the stack.
+
+---
+
+## 📋 Table of Contents
+
+- [🕵️ Strategic API Validation](#strategic-api-validation)
+- [Using cURL](#using-curl)
+- [Using API Clients (Postman, Insomnia, etc.)](#using-api-clients-postman-insomnia-etc)
+- [Using JavaScript (Fetch API)](#using-javascript-fetch-api)
+- [Response Codes](#response-codes)
+
+---
+
+
 
 ## Using cURL
 
@@ -50,10 +68,10 @@ curl -X GET http://localhost:8085/users \
 curl http://localhost:8085/products
 ```
 
-### 6. Search Products
+### 6. Search & Sort Products
 
 ```bash
-curl "http://localhost:8085/products?search=laptop"
+curl "http://localhost:8085/products?search=laptop&order_by=price&direction=desc"
 ```
 
 ### 7. Create Product (Protected)
@@ -90,9 +108,9 @@ curl -X DELETE http://localhost:8085/products/1 \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
-## Using Postman
+## Using API Clients (Postman, Insomnia, etc.)
 
-1. Import collection file (e.g., `api_collection/auth_api_collection.json`) into Postman.
+1. Import collection file (e.g., `api_collection/auth_api_collection.json`) into your preferred API client.
 2. Set the `base_url` variable to `http://localhost:8085`.
 3. Login to retrieve the token.
 4. Copy the token into the `token` variable.
@@ -102,30 +120,30 @@ curl -X DELETE http://localhost:8085/products/1 \
 
 ```javascript
 // Login
-fetch("http://localhost:8085/auth/login", {
-  method: "POST",
+fetch('http://localhost:8085/auth/login', {
+  method: 'POST',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   body: JSON.stringify({
-    email: "admin@example.com",
-    password: "password",
+    email: 'admin@example.com',
+    password: 'password',
   }),
 })
   .then((res) => res.json())
   .then((data) => {
-    console.log(data);
-    const token = data.data.token;
+    console.log(data)
+    const token = data.data.token
 
     // Get products with token
-    return fetch("http://localhost:8085/products", {
+    return fetch('http://localhost:8085/products', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    });
+    })
   })
   .then((res) => res.json())
-  .then((data) => console.log(data));
+  .then((data) => console.log(data))
 ```
 
 ## Response Codes

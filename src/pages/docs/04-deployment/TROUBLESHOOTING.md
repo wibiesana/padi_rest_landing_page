@@ -1,6 +1,20 @@
-# 🔧 Troubleshooting Guide
+# 🔧 Troubleshooting & Architectural Resilience
+
+## 🛠️ Industrial-Grade Diagnostics
+
+Even the most robust systems require surgical precision when anomalies occur. The Padi REST API Troubleshooting Guide is your **Technical Command Center** for resolving infrastructure challenges, optimizing performance bottlenecks, and ensuring your application maintains **100% Uptime and Reliability**. From deep-dive database diagnostics to advanced worker-mode debugging, we provide the industrial-grade insights you need to keep your system running at peak performance.
 
 ---
+
+## 📋 Table of Contents
+
+- [🛠️ Industrial-Grade Diagnostics](#industrial-grade-diagnostics)
+- [Common Issues](#common-issues)
+- [Debugging Tools](#debugging-tools)
+- [Getting Help](#getting-help)
+- [Quick Fixes](#quick-fixes)
+- [Prevention Tips](#prevention-tips)
+
 
 ## Common Issues
 

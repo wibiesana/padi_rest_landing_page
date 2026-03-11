@@ -1,11 +1,14 @@
 # 🛡️ Middleware Guide
 
-Middleware provides a convenient mechanism for inspecting and filtering HTTP requests entering your application.
+## 🛣️ Adaptive Request Interception
+
+Middleware is the **Strategic Filter** of the Padi REST API. It empowers you to intercept and validate every HTTP request with surgical precision before it reaches your business logic. Whether for authentication, rate limiting, or custom security audits, our middleware architecture provides a clean, decoupled layer for your application’s most critical cross-cutting concerns.
 
 ---
 
 ## 📋 Table of Contents
 
+- [🛣️ Adaptive Request Interception](#adaptive-request-interception)
 - [Overview](#overview)
 - [Defining Middleware](#defining-middleware)
 - [Registering Middleware](#registering-middleware)
@@ -14,6 +17,7 @@ Middleware provides a convenient mechanism for inspecting and filtering HTTP req
 - [FrankenPHP Worker Mode Compatibility](#frankenphp-worker-mode-compatibility)
 
 ---
+
 
 ## 📖 Overview
 

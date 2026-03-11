@@ -1,16 +1,30 @@
 # API Response Structure & Flexible Formats
 
-The Padi REST API Framework provides a powerful and flexible response system that allows developers to return data directly from controllers while maintaining a consistent API structure.
+## 💎 Deterministic API Excellence
 
-## 🌟 Key Features
-
-- **Direct Return**: Simply return an array, object, or model from your controller.
-- **Multiple Formats**: Support for `full`, `simple`, and `raw` response formats.
-- **Dynamic Selection**: Switch formats via Environment Variables or HTTP Headers.
-- **Auto-Detection**: Automatic status code and resource type detection.
-- **FrankenPHP Ready**: Optimized for high-performance worker modes.
+The Padi REST API Response Engine is a **High-Precision Data Orchestrator**. It eliminates the complexity of manual response handling by providing a **Zero-Friction Return Architecture** that automatically detects your data types and status codes. Whether you need industrial-grade meta-wrappers or surgical raw data output, our flexible formatting system ensures your API remains consistent, professional, and fully optimized for memory-resident environments like **FrankenPHP**.
 
 ---
+
+## 📋 Table of Contents
+
+- [💎 Deterministic API Excellence](#deterministic-api-excellence)
+- [🌟 Key Features](#key-features)
+- [🚀 How It Works](#how-it-works)
+- [⚙️ Configuration](#configuration)
+- [🛠️ Controller Helper Methods](#controller-helper-methods)
+- [🔍 Auto-Detection Features](#auto-detection-features)
+- [📝 Complete CRUD Example](#complete-crud-example)
+- [🛑 Error Handling](#error-handling)
+- [🏎️ FrankenPHP Worker Mode](#frankenphp-worker-mode)
+- [🔄 Migration Guide](#migration-guide)
+- [🤖 Code Generator](#code-generator)
+
+---
+
+
+
+
 
 ## 🚀 How It Works
 

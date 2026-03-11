@@ -1,5 +1,24 @@
 # 🚀 Quick Start - Run This!
 
+## ⚡ Speed to Market: Zero to API in Seconds
+
+Experience the ultimate developer fast-track. Padi REST API is engineered for **Instant Productivity**, allowing you to go from a clean slate to a fully-functional, secure, and industrial-grade REST API in less than 60 seconds. Our intelligent setup wizard handles the heavy lifting, so you can focus on building the features that matter.
+
+---
+
+## 📋 Table of Contents
+
+- [⚡ Speed to Market: Zero to API in Seconds](#speed-to-market-zero-to-api-in-seconds)
+
+- [📝 Prerequisites](#prerequisites)
+- [Automated Setup](#automated-setup)
+- [What You Get](#what-you-get)
+- [Database Support](#database-support)
+- [Commands](#commands)
+- [Next Steps](#next-steps)
+
+---
+
 ## 📝 Prerequisites
 
 - **PHP 8.4+**
@@ -7,6 +26,9 @@
 - **Database:** MySQL/MariaDB/PostgreSQL/SQLite
 
 ---
+
+
+
 
 ## Automated Setup
 
@@ -51,12 +73,10 @@ The script will guide you through:
 
 ## Database Support
 
-| Database   | Port | Auto-Increment | Notes            |
-| ---------- | ---- | -------------- | ---------------- |
-| MySQL      | 3306 | AUTO_INCREMENT | Default, UTF8MB4 |
-| MariaDB    | 3306 | AUTO_INCREMENT | MySQL compatible |
-| PostgreSQL | 5432 | SERIAL         | Auto triggers    |
-| SQLite     | -    | AUTOINCREMENT  | File-based       |
+- ✅ **MySQL**
+- ✅ **MariaDB**
+- ✅ **PostgreSQL**
+- ✅ **SQLite**
 
 ---
 
@@ -106,4 +126,4 @@ Visit: `http://localhost:8085`
 
 ---
 
-**Full Documentation:** [INIT_APP_GUIDE.md](INIT_APP_GUIDE.md)
+**Next Steps:** Run `php padi init` and follow the prompts.

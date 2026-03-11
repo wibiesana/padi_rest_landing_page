@@ -1,11 +1,14 @@
 # ⚡ Caching System
 
-The Caching system provides a unified API for various caching backends, allowing you to speed up your application by storing expensive data in a fast storage.
+## 🏎️ Multi-Tier Performance Layer
+
+The Padi REST API Caching System is a **Precision-Engineered Performance Accelerator**. Utilizing a sophisticated **Two-Tier Architecture** (L1 In-Memory + L2 Redis/File), it delivers sub-millisecond response times for even the most data-intensive applications. Built for the high-concurrency demands of **FrankenPHP Worker Mode**, our cache ensures your API remains lightning-fast under any load.
 
 ---
 
 ## 📋 Table of Contents
 
+- [🏎️ Multi-Tier Performance Layer](#multi-tier-performance-layer)
 - [Architecture](#architecture)
 - [Drivers](#drivers)
 - [Configuration](#configuration)
@@ -20,6 +23,7 @@ The Caching system provides a unified API for various caching backends, allowing
 - [Best Practices](#best-practices)
 
 ---
+
 
 ## 🏗️ Architecture
 
