@@ -74,7 +74,7 @@
           <!-- MARKDOWN VIEWER -->
           <div class="doc-markdown-view anim-fade-in q-pb-xl">
             <div class="flex items-center q-mb-lg">
-              <div class="text-h3 text-weight-bold text-gradient">{{ selectedMdTitle }}</div>
+              <h1 class="text-h3 text-weight-bold text-gradient">{{ selectedMdTitle }}</h1>
             </div>
             <div class="markdown-body" v-html="selectedMdHtml" @click="handleMarkdownClick"></div>
           </div>
@@ -123,6 +123,7 @@ import { ref, computed, onMounted } from 'vue'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import { APP_CONFIG } from 'src/constants'
+import { useMeta } from 'quasar'
 
 const search = ref('')
 const activeSection = ref('intro')
@@ -133,6 +134,10 @@ const categories = []
 // Markdown Logic
 const selectedMdTitle = ref('Loading Documentation...')
 const selectedMdHtml = ref('')
+
+useMeta(() => ({
+  title: selectedMdTitle.value ? `Padi Docs - ${selectedMdTitle.value}` : 'Padi REST API Documentation'
+}))
 
 const mdModules = import.meta.glob('./docs/**/*.md', { query: '?raw', import: 'default' })
 const mdCategoriesMap = {}

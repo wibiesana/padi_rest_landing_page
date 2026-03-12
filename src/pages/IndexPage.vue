@@ -307,9 +307,17 @@
 <script setup>
 import { onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
+import { useQuasar, useMeta } from 'quasar'
 import heroImage from 'assets/brand/padi_menunduk.png'
 import { APP_CONFIG } from 'src/constants'
+
+useMeta({
+  title: 'Padi REST API - Home',
+  meta: {
+    description: { name: 'description', content: 'Industrial-grade PHP REST API framework. Zero-bloat, high performance, and secure.' },
+    keywords: { name: 'keywords', content: 'php, rest api, framework, padi, speed' }
+  }
+})
 
 const router = useRouter()
 const $q = useQuasar()
