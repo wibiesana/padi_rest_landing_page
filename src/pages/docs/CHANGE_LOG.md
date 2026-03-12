@@ -1,5 +1,40 @@
 # CHANGE LOG
 
+## v2.0.7 (2026-03-12)
+
+### ⚡ Controller: Performance & DRY Refactor
+
+- **Cached Debug Flag**:
+  - `APP_DEBUG` environment lookup is now performed **once** during construction and stored in a `private readonly bool $isDebug` property.
+  - Eliminates repeated `Env::get()` calls on every error response within the same request.
+- **Unified `error()` Method**:
+  - Introduced a single `error(string $message, int $code, string $messageCode, ?Throwable $exception)` method as the central path for all error responses (database, auth, business logic).
+  - `databaseError()` now delegates to `error()` in a single line, removing ~20 lines of duplicated formatting logic.
+  - Debug info (exception details, database errors) is only appended when `APP_DEBUG=true`.
+- **Centralized `assertUser()` Guard**:
+  - New `private assertUser(): object` method centralizes the null-check for `$request->user`.
+  - `requireRole()`, `requireAnyRole()`, and `requireAdminOrOwner()` now call `assertUser()` first, properly returning **HTTP 401** when no user is authenticated (previously only returned 403).
+  - Eliminates duplicated `$this->request->user !== null` checks across 5 methods.
+- **`requireAdminOrOwner()` Optimized**:
+  - Previously called `isAdmin()` → `hasRole()` + `isOwner()` (3 method calls, 2 null-checks).
+  - Now performs inline comparison from `assertUser()` result (1 method call, 1 null-check).
+
+### 🔐 Controller: Security Fixes
+
+- **Proper 401 vs 403 Separation**:
+  - `requireRole()`, `requireAnyRole()`, and `requireAdminOrOwner()` now throw **401 Unauthorized** when no user is attached to the request, and **403 Forbidden** only when the role check fails. Previously all cases returned 403.
+- **`\InvalidArgumentException` for Empty Rules**:
+  - `validate()` now throws `\InvalidArgumentException` instead of generic `\Exception(500)` when rules are empty. This is a developer error, not a runtime API error.
+
+### 🏗️ Controller: Worker & Hosting Compatibility
+
+- **`readonly` Property**:
+  - Debug flag uses PHP 8.4+ `readonly` modifier, making it immutable after construction. Prevents accidental mutation across FrankenPHP worker iterations.
+- **Zero Static State**:
+  - Controller remains fully stateless with fresh instances per request. No static properties that could leak between worker iterations.
+- **No External Dependencies**:
+  - Pure PHP implementation, fully compatible with shared hosting environments.
+
 ## v2.0.6 (2026-03-09)
 
 ### ⚡ Cache: Two-Tier Architecture Rewrite
@@ -179,6 +214,7 @@
 
 ## 📋 Table of Contents
 
+- [v2.0.7 (2026-03-12)](#v207-2026-03-12)
 - [v2.0.6 (2026-03-09)](#v206-2026-03-09)
 - [v2.0.5 (2026-03-04)](#v205-2026-03-04)
 - [v2.0.4 (2026-03-02)](#v204-2026-03-02)
