@@ -142,7 +142,7 @@ curl http://localhost:8085/
 {
   "success": true,
   "message": "Padi REST API is running",
-  "version": "1.0.0"
+  "version": "{{APP_VERSION}}"
 }
 ```
 

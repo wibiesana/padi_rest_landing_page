@@ -17,7 +17,7 @@
             <q-img :src="logoIcon" />
           </q-avatar>
           <span class="text-weight-bold">Padi REST API</span>
-          <q-badge color="primary" class="q-ml-sm text-weight-bold" outline label="v2.0.5" />
+          <q-badge color="primary" class="q-ml-sm text-weight-bold" outline :label="'v' + APP_CONFIG.version" />
         </q-toolbar-title>
 
         <div class="gt-sm q-gutter-md">
@@ -79,6 +79,7 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import logoIcon from 'assets/brand/padi_menunduk.png'
+import { APP_CONFIG } from 'src/constants'
 
 const leftDrawerOpen = ref(false)
 const router = useRouter()

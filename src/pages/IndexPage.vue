@@ -189,7 +189,7 @@
                 <div class="t-dot dot-yellow"></div>
                 <div class="t-dot dot-green"></div>
               </div>
-              <div class="q-mx-auto text-caption text-grey-6 font-mono">padi-core-cli v2.0.5</div>
+              <div class="q-mx-auto text-caption text-grey-6 font-mono">{{ APP_CONFIG.cliName }} v{{ APP_CONFIG.version }}</div>
               <q-btn
                 flat
                 round
@@ -309,6 +309,7 @@ import { onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import heroImage from 'assets/brand/padi_menunduk.png'
+import { APP_CONFIG } from 'src/constants'
 
 const router = useRouter()
 const $q = useQuasar()

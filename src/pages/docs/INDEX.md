@@ -1,6 +1,6 @@
 # 🌾 Padi REST API Framework - Documentation
 
-> **Version 2.0.5** | Production Ready | Last Updated: 2026-03-04
+> **Version {{APP_VERSION}}** | Production Ready
 
 Welcome to the official documentation for **Padi REST API Framework** - a high-performance, lightweight PHP framework designed for building professional REST APIs with maximum speed and minimal overhead.
 
@@ -625,7 +625,7 @@ docs/
 
 ---
 
-**Framework:** Padi REST API v2.0.5  
+**Framework:** Padi REST API v{{APP_VERSION}}  
 **Status:** Production Ready ✅  
 **Security Score:** 9.0/10 🛡️  
 **Performance Score:** 8.5/10 ⚡  

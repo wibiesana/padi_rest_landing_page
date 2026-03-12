@@ -13,7 +13,7 @@
             @click="leftDrawerOpen = !leftDrawerOpen"
           />
           <div class="text-h6 text-weight-bold text-gradient">Framework Documentation Hub</div>
-          <q-badge color="primary" class="q-ml-sm q-px-sm text-weight-bold" label="v2.0.5" />
+          <q-badge color="primary" class="q-ml-sm q-px-sm text-weight-bold" :label="'v' + APP_CONFIG.version" />
         </div>
         <q-input
           v-model="search"
@@ -122,6 +122,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
+import { APP_CONFIG } from 'src/constants'
 
 const search = ref('')
 const activeSection = ref('intro')
@@ -328,7 +329,9 @@ marked.use({ renderer })
 async function navigateTo(item) {
   activeSection.value = item.id
   if (item.isMd) {
-    const raw = await mdModules[item.id]()
+    let raw = await mdModules[item.id]()
+    // Replace placeholders
+    raw = raw.replace(/\{\{APP_VERSION\}\}/g, APP_CONFIG.version)
     selectedMdHtml.value = DOMPurify.sanitize(marked.parse(raw))
     selectedMdTitle.value = item.label
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -437,7 +440,8 @@ async function loadInitialDoc() {
 
   if (indexKey) {
     activeSection.value = indexKey
-    const raw = await mdModules[indexKey]()
+    let raw = await mdModules[indexKey]()
+    raw = raw.replace(/\{\{APP_VERSION\}\}/g, APP_CONFIG.version)
     selectedMdHtml.value = DOMPurify.sanitize(marked.parse(raw))
     selectedMdTitle.value = '🌾 Documentation Hub'
   } else {
