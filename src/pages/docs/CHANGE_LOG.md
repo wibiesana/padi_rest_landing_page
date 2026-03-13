@@ -9,6 +9,8 @@
   - The detected value is written back to `$_ENV` and `putenv()` so all core classes (`File.php`, `Generator.php`) that call `Env::get('APP_URL')` directly also receive the correct auto-detected value.
   - Falls back to `http://localhost` in CLI context (e.g., `padi serve`, queue workers).
   - Supports reverse proxy setups (Nginx, Cloudflare) via `HTTP_X_FORWARDED_PROTO` header detection.
+- **📋 Upgrade from previous version**:
+  - This feature requires a template file update. Copy `config/app.php` from the [padi_template](https://github.com/wibiesana/padi_rest_api) repository into your project's `config/` directory, replacing the existing file.
 
 ### ⚡ Controller: Performance & DRY Refactor
 
