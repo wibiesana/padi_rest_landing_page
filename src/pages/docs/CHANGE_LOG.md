@@ -1,6 +1,14 @@
 # CHANGE LOG
 
-## v2.0.7 (2026-03-12)
+## v2.0.7 (2026-03-13)
+
+### 🌐 APP_URL Auto-Detection
+
+- **Auto-Detect from Request**:
+  - When `APP_URL` is left empty in `.env`, the framework now automatically detects the application URL from the incoming HTTP request (`$_SERVER['HTTP_HOST']`, scheme detection via `HTTPS`/`X-Forwarded-Proto`).
+  - The detected value is written back to `$_ENV` and `putenv()` so all core classes (`File.php`, `Generator.php`) that call `Env::get('APP_URL')` directly also receive the correct auto-detected value.
+  - Falls back to `http://localhost` in CLI context (e.g., `padi serve`, queue workers).
+  - Supports reverse proxy setups (Nginx, Cloudflare) via `HTTP_X_FORWARDED_PROTO` header detection.
 
 ### ⚡ Controller: Performance & DRY Refactor
 
