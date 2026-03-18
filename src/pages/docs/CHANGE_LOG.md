@@ -1,6 +1,6 @@
 # CHANGE LOG
 
-## v2.0.7 (2026-03-13)
+## v2.0.7 (2026-03-14)
 
 ### 🌐 APP_URL Auto-Detection
 
@@ -44,6 +44,16 @@
   - Controller remains fully stateless with fresh instances per request. No static properties that could leak between worker iterations.
 - **No External Dependencies**:
   - Pure PHP implementation, fully compatible with shared hosting environments.
+
+### 🐛 Bug Fixes & Improvements
+
+- **Auth Core: `userId()` TypeError Fixed**:
+  - Fixed a `TypeError` in `Auth::userId()` by ensuring the method correctly returns `null` when a user ID is missing from the token payload, instead of failing on type casting.
+- **Auth Template: Enhanced Registration & Login**:
+  - Added strict password complexity validation (uppercase, lowercase, number, and special character) to the registration process.
+  - Improved `remember_me` detection to support various input formats (boolean, string "true", "1", etc.).
+  - Standardized token payload across `register`, `login`, and `refresh` methods to include `status` and ensure consistent user data returning.
+  - Added `HTTP 201 Created` status explicitly for successful user registration.
 
 ## v2.0.6 (2026-03-09)
 
@@ -224,7 +234,7 @@
 
 ## 📋 Table of Contents
 
-- [v2.0.7 (2026-03-12)](#v207-2026-03-12)
+- [v2.0.7 (2026-03-14)](#v207-2026-03-14)
 - [v2.0.6 (2026-03-09)](#v206-2026-03-09)
 - [v2.0.5 (2026-03-04)](#v205-2026-03-04)
 - [v2.0.4 (2026-03-02)](#v204-2026-03-02)
