@@ -1,5 +1,38 @@
 # CHANGE LOG
 
+## v2.0.8 (2026-04-03)
+
+### ⚡ Cache: DRY Refactor (~45% Code Reduction)
+
+- **Unified Redis Operations — `redisOp()`**:
+  - Extracted 8 identical `try/catch + error_log` blocks into a single `redisOp(callable $fn, string $op, mixed $fallback)` helper.
+  - All Redis operations (`get`, `set`, `delete`, `deleteMany`, `has`, `clear`, `increment`) now delegate to this single method.
+- **Unified Redis Bootstrap — `tryRedis()`**:
+  - Extracted the duplicated "try Redis operation, fall back to file on failure" pattern into `tryRedis()`. Used by both `initRedis()` and `ensureRedis()` reconnect logic.
+- **Unified L1 Memory Read — `getFromMemory()`**:
+  - Extracted the repeated L1 check (isset → expiry check → unset on expired) from `get()`, `has()`, and internal lookups into a single `getFromMemory(string $key, mixed $miss)` method.
+  - Uses a sentinel object to distinguish "cached null" from "cache miss".
+- **Unified File Helpers — `fileRead()` / `fileWrite()`**:
+  - Extracted file-based read (exists → read → json_decode → expiry check → L1 promote) into `fileRead()`.
+  - Extracted atomic write (mkdir → tmp file → LOCK_EX → rename) into `fileWrite()`.
+- **Unified Directory Walk — `walkCacheFiles()`**:
+  - Replaced two nearly identical recursive `scandir` methods (`clearDirectory` and `cleanupDirectory`) with a single `walkCacheFiles(string $dir, ?callable $visitor)` using the visitor pattern.
+  - `clear()` passes `@unlink(...)` (first-class callable syntax).
+  - `cleanup()` passes a closure with `filemtime` pre-filter + expiry logic.
+
+### 🏗️ Cache: PHP 8.4+ Modernization
+
+- **Typed Class Constant**: `JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES` extracted to `private const int JSON_FLAGS`.
+- **`match` Expression**: Driver initialization uses `match` instead of `if/else`.
+- **First-Class Callable Syntax**: `clear()` uses `@unlink(...)` as a callable, eliminating an anonymous function wrapper.
+- **`stdClass` Sentinel Objects**: Replaced magic string sentinels (`"\x00__CACHE_MISS__\x00"`) with `new \stdClass()` — guaranteed uniqueness without fragile string conventions.
+
+### 📊 Impact
+
+- **656 → ~350 lines** (~45% reduction) with identical public API and behavior.
+- Zero breaking changes — all public methods retain the same signatures and semantics.
+- FrankenPHP worker-mode safety and shared hosting compatibility fully preserved.
+
 ## v2.0.7 (2026-03-14)
 
 ### 🌐 APP_URL Auto-Detection
@@ -234,6 +267,7 @@
 
 ## 📋 Table of Contents
 
+- [v2.0.8 (2026-04-03)](#v208-2026-04-03)
 - [v2.0.7 (2026-03-14)](#v207-2026-03-14)
 - [v2.0.6 (2026-03-09)](#v206-2026-03-09)
 - [v2.0.5 (2026-03-04)](#v205-2026-03-04)
