@@ -33,13 +33,11 @@ php padi init
 
 ### Features:
 
-✅ **Interactive wizard** with professional colored output  
-✅ **True Cross-Platform** - Works identically on Windows, Linux, and macOS  
-✅ **Zero Extra Dependencies** - Uses the same PHP engine that runs your API  
-✅ **Robust Logic** - Powered by modern PHP try-catch error handling  
+✅ **Interactive wizard** with professional arrow-key navigation  
+✅ **Visual Highlighting** - Clear selection feedback with colors and indicators  
+✅ **True Cross-Platform** - Works identically on Windows (CMD/PowerShell), Linux, and macOS  
+✅ **Zero Extra Dependencies** - Uses pure PHP with smart fallbacks (FFI or shell)  
 ✅ **Developer Friendly** - Inspired by the best CLI tools in the PHP ecosystem (Artisan & Yii)
-
-
 
 ### Screenshot:
 
@@ -54,13 +52,13 @@ php padi init
 ✓ .env file created from .env.example
 
 [2/7] Select Database Driver
-------------------------------------------------------------
-  → 1. MySQL (Default)
+────────────────────────────────────────────────────────────
+  → 1. MySQL (Default)     <-- Highlighted with cyan background
     2. MariaDB
     3. PostgreSQL
     4. SQLite
-------------------------------------------------------------
-Enter your choice [1]:
+────────────────────────────────────────────────────────────
+  ↑/↓ Navigate  •  Enter Select  •  q Quit
 ```
 
 ### What It Does:
