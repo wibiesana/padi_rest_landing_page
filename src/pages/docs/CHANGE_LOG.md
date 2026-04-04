@@ -33,6 +33,20 @@
 - Zero breaking changes — all public methods retain the same signatures and semantics.
 - FrankenPHP worker-mode safety and shared hosting compatibility fully preserved.
 
+### 🎯 Console: Interactive Arrow-Key Menu
+
+- **`Console::interactiveChoice()`**:
+  - New public static method providing interactive menu selection with ↑/↓ arrow-key navigation, replacing the old number-only input for `choice()` prompts.
+  - Highlighted selection with cyan-background indicator (`→`) and dimmed unselected items for clear visual feedback.
+  - Supports **Enter** to confirm, **number keys** to jump directly, and **q/ESC** to cancel.
+- **Cross-Platform Key Reading**:
+  - **Windows**: Uses `PowerShell [Console]::ReadKey()` to capture single keystrokes without echo.
+  - **Unix/Mac**: Uses `stty -icanon -echo` raw mode with `fread(STDIN)` to detect arrow-key escape sequences (`ESC[A`/`ESC[B`).
+- **Graceful Fallback**:
+  - Automatically falls back to classic number-input mode if the terminal does not support raw mode (e.g., piped input, non-TTY environments).
+- **Setup Wizard Updated**:
+  - `init.php` now delegates all `choice()` calls to `Console::interactiveChoice()` when the framework autoload is available.
+
 ## v2.0.7 (2026-03-14)
 
 ### 🌐 APP_URL Auto-Detection
