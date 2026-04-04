@@ -44,7 +44,7 @@ php padi init
 ```
 ╔════════════════════════════════════════════════════════════════╗
 ║             Padi REST API Framework - Setup Wizard             ║
-║                        Version: 2.x.x                             ║
+║                        Version: 2.0.8                             ║
 ║                    Powered by Padi Console                     ║
 ╚════════════════════════════════════════════════════════════════╝
 
