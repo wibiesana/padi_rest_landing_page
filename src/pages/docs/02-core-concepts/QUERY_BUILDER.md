@@ -2,7 +2,7 @@
 
 ## ⚡ High-Performance SQL Orchestration
 
-The `Core\Query` class is an **Industrial-Grade Data Engine** designed for maximum speed and security. It enables you to construct complex SQL queries with surgical precision through a fluent, readable interface—protecting you from injection while maintaining the flexibility of raw SQL.
+The `Wibiesana\Padi\Core\Query` class is an **Industrial-Grade Data Engine** designed for maximum speed and security. It enables you to construct complex SQL queries with surgical precision through a fluent, readable interface—protecting you from injection while maintaining the flexibility of raw SQL.
 
 ---
 
@@ -17,8 +17,6 @@ The `Core\Query` class is an **Industrial-Grade Data Engine** designed for maxim
 - [🌐 Worker Mode Notes (v2.0.3)](#worker-mode-notes-v203)
 
 ---
-
-
 
 ## 🚀 Getting Started
 
