@@ -1,5 +1,24 @@
 # CHANGE LOG
 
+## v2.0.9 (2026-04-29)
+
+### 🛠️ Console: Cross-Platform Hardening & FFI Fix
+
+- **FFI & Interactive Input Robustness**:
+  - Fixed "Undefined method `_getch`" by adding explicit `extension_loaded('ffi')` and `instanceof \FFI` checks.
+  - Added try-catch guards around dynamic FFI calls to handle runtime binding failures gracefully.
+  - Added IDE suppression annotations and type-hints to resolve static analysis warnings for `_getch()`.
+- **Shared Hosting Compatibility**:
+  - Implemented `functionAvailable()` to check `disable_functions` before calling `shell_exec()` or `passthru()`.
+  - Prevents fatal errors on restricted environments (Shared Hosting) by providing clear error messages instead of crashing.
+- **FrankenPHP & Worker Mode Safety**:
+  - Replaced `exit(0)` with `return` in `interactiveChoice()` to prevent killing the entire worker process on cancellation.
+  - Added `isCli()` and `stdinAvailable()` checks to ensure interactive menus only trigger in valid terminal environments.
+  - Hardened terminal state cleanup to prevent leaking `stty` settings between persistent requests.
+- **Environment Detection Helpers**:
+  - Added `isCli()`, `functionAvailable()`, and `stdinAvailable()` internal helpers for more reliable cross-platform logic.
+
+
 ## v2.0.8 (2026-04-03)
 
 ### ⚡ Cache: DRY Refactor (~45% Code Reduction)
