@@ -5,6 +5,7 @@
 Break free from single-database constraints. Padi REST API empowers your application with **Simultaneous Polyglot Persistence**, allowing you to orchestrate data across multiple engines within a single unified workflow.
 
 **Supported Powerhouses:**
+
 - ✅ **MySQL / MariaDB** (Production Transactional)
 - ✅ **PostgreSQL** (Advanced Analytics & Reporting)
 - ✅ **SQLite** (High-Speed Local Storage & Caching)
@@ -131,7 +132,7 @@ class CacheEntry extends ActiveRecord
 
 namespace App\Controllers;
 
-use Core\Controller;
+use Wibiesana\Padi\Core\Controller;
 use App\Models\User;        // MySQL
 use App\Models\Analytics;   // PostgreSQL
 use App\Models\CacheEntry;  // SQLite
@@ -168,7 +169,7 @@ class DashboardController extends Controller
 ### Using DatabaseManager Directly
 
 ```php
-use Core\DatabaseManager;
+use Wibiesana\Padi\Core\DatabaseManager;
 
 // Get default connection
 $db = DatabaseManager::connection();
@@ -187,7 +188,7 @@ $results = $stmt->fetchAll();
 ### Using Database Class (Backward Compatible)
 
 ```php
-use Core\Database;
+use Wibiesana\Padi\Core\Database;
 
 // Default connection
 $db = Database::getInstance()->getConnection();
@@ -204,7 +205,7 @@ $sqlite = Database::connection('sqlite');
 ### Transaction on a Specific Database
 
 ```php
-use Core\DatabaseManager;
+use Wibiesana\Padi\Core\DatabaseManager;
 
 try {
     // Start transaction on PostgreSQL
@@ -227,7 +228,7 @@ try {
 ### Transaction on Multiple Databases
 
 ```php
-use Core\DatabaseManager;
+use Wibiesana\Padi\Core\DatabaseManager;
 
 try {
     // Start transactions
@@ -268,8 +269,8 @@ try {
 
 namespace App\Controllers;
 
-use Core\Controller;
-use Core\DatabaseManager;
+use Wibiesana\Padi\Core\Controller;
+use Wibiesana\Padi\Core\DatabaseManager;
 use App\Models\User;
 
 class UserController extends Controller
@@ -332,8 +333,8 @@ class UserController extends Controller
 
 namespace App\Controllers;
 
-use Core\Controller;
-use Core\DatabaseManager;
+use Wibiesana\Padi\Core\Controller;
+use Wibiesana\Padi\Core\DatabaseManager;
 use App\Models\Product;
 
 class ProductController extends Controller

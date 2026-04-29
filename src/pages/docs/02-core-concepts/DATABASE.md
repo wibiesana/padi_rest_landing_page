@@ -11,9 +11,9 @@ Master the heart of your application with Padi REST API’s **Unified Database E
 - [🏗️ Industrial-Grade Persistence & Atomic Integrity](#industrial-grade-persistence--atomic-integrity)
 - [⚙️ Multi-Database Configuration](#multi-database-configuration)
 - [🛡️ Transaction Management](#transaction-management)
-    - [Automatic Transactions (Recommended)](#automatic-transactions-recommended)
-    - [Manual Transactions](#manual-transactions)
-    - [Cross-Database Transactions](#cross-database-transactions)
+  - [Automatic Transactions (Recommended)](#automatic-transactions-recommended)
+  - [Manual Transactions](#manual-transactions)
+  - [Cross-Database Transactions](#cross-database-transactions)
 - [📝 Implementation Patterns](#implementation-patterns)
 - [🎯 Available API Endpoints](#available-api-endpoints)
 - [🔍 Supported Drivers](#supported-drivers)
@@ -71,7 +71,7 @@ Ensure **Absolute Atomicity** for your critical operations. If any step fails, t
 The safest implementation. The framework handles `commit` and `rollback` orchestration automatically based on your execution logic.
 
 ```php
-use Core\Database;
+use Wibiesana\Padi\Core\Database;
 
 try {
     $result = Database::transaction(function() {
@@ -96,7 +96,7 @@ try {
 Use for surgical control over the transaction lifecycle:
 
 ```php
-use Core\Database;
+use Wibiesana\Padi\Core\Database;
 
 Database::beginTransaction();
 
@@ -119,7 +119,7 @@ try {
 Seamlessly manage atomicity across different database engines:
 
 ```php
-use Core\Database;
+use Wibiesana\Padi\Core\Database;
 
 // Transaction on Analytical PostgreSQL
 Database::transaction(function() {
@@ -151,7 +151,7 @@ public function store()
 
         Database::commit('mysql');
         Database::commit('pgsql');
-        
+
         return $this->created(['id' => $id]);
     } catch (\Exception $e) {
         Database::rollback('mysql');
@@ -165,11 +165,11 @@ public function store()
 
 ## 🎯 Available API Endpoints
 
-| Endpoint | Method | Description |
-| :--- | :--- | :--- |
-| `/multi-db/info` | GET | Connection health & status monitor |
-| `/multi-db/dashboard` | GET | Aggregated data from multiple engines |
-| `/multi-db/track` | POST | Cross-database atomic logging |
+| Endpoint              | Method | Description                           |
+| :-------------------- | :----- | :------------------------------------ |
+| `/multi-db/info`      | GET    | Connection health & status monitor    |
+| `/multi-db/dashboard` | GET    | Aggregated data from multiple engines |
+| `/multi-db/track`     | POST   | Cross-database atomic logging         |
 
 ---
 
