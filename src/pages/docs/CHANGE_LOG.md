@@ -18,6 +18,17 @@
 - **Environment Detection Helpers**:
   - Added `isCli()`, `functionAvailable()`, and `stdinAvailable()` internal helpers for more reliable cross-platform logic.
 
+### 🛡️ Database & ORM: SQL Injection Hardening
+
+- **ActiveRecord Security Patch**:
+  - Implemented `sanitizeOrderBy()` to validate sort parameters against a strict regex allowlist.
+  - Prevents SQL injection via unsanitized `ORDER BY` strings in `all()` and `paginate()` methods.
+- **Query Builder Hardening**:
+  - Added `sanitizeIdentifier()` and `sanitizeOrderBySegment()` guard methods to `Query` class.
+  - Hardened `ORDER BY`, `GROUP BY`, and aggregate functions (`count`, `sum`, `avg`, `min`, `max`) against malicious column/segment injection.
+  - Standardized identifier validation for table and column names (`table.column` format).
+
+
 
 ## v2.0.8 (2026-04-03)
 
