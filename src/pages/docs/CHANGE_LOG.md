@@ -1,5 +1,16 @@
 # CHANGE LOG
 
+## v2.0.10 (2026-05-09)
+
+### 🏗️ Generator: Smart Relationship Naming
+
+- **Duplicate Method Fix**:
+  - Resolved "Fatal Error: Cannot redeclare method" caused by naming collisions when a table has multiple relationships to the same target table (e.g., two foreign keys to the same table).
+  - Previously, the generator would create duplicate method names (like `ferryroute()`) for each relationship.
+- **New Naming Convention**:
+  - Modified the Generator to automatically append the column name to the relationship method name (e.g., `ferryschedulesByoperator()`).
+  - Ensures unique method names and prevents collisions in generated Base Models.
+
 ## v2.0.9 (2026-04-29)
 
 ### 🛠️ Console: Cross-Platform Hardening & FFI Fix
@@ -311,6 +322,8 @@
 
 ## 📋 Table of Contents
 
+- [v2.0.10 (2026-05-09)](#v2010-2026-05-09)
+- [v2.0.9 (2026-04-29)](#v209-2026-04-29)
 - [v2.0.8 (2026-04-03)](#v208-2026-04-03)
 - [v2.0.7 (2026-03-14)](#v207-2026-03-14)
 - [v2.0.6 (2026-03-09)](#v206-2026-03-09)
