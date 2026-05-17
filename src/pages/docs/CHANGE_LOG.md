@@ -2,6 +2,24 @@
 
 ## v2.0.10 (2026-05-09)
 
+### ⚡ ActiveRecord & Query: Fluent Eloquent/Yii2 Query Builder & `save()` Method
+
+- **Smart `save()` Method**:
+  - Added `save(array $data, int|string|array|null $id = null)` to `ActiveRecord`. Automatically detects if the record is new (inserts via `create()`) or existing (updates via `update()`) based on primary key presence.
+- **Fluent ModelQuery Integration**:
+  - Introduced `ModelQuery` class bridging raw SQL `Query` builder with `ActiveRecord`.
+  - Enabled Yii2/Eloquent fluent query syntax: `Model::find()->with('passengerShip')->orderBy('id DESC')->limit(5000)->all()`.
+  - Added support for eager loading (`->with()`), automatic model lifecycle hooks (`afterLoad()`), and field hiding (`$hidden`) when querying via `ModelQuery`.
+- **Legacy Deprecations**:
+  - Marked `findQuery()` and `findBuilder()` as deprecated in favor of the cleaner static `::find()` syntax.
+
+### 📬 Queue & Notification: Robust Async Email Dispatch (`SendEmailJob`)
+
+- **Flexible Payload Handling**:
+  - Updated `SendEmailJob` to accept both `email` and `to` payload keys (`$data['email'] ?? $data['to']`), ensuring robust compatibility with various queue dispatchers.
+- **Enhanced Monitoring & Logging**:
+  - Added strict recipient validation and comprehensive lifecycle logging (`Logger::info`/`error`) for background worker visibility.
+
 ### 🏗️ Generator: Smart Relationship Naming
 
 - **Duplicate Method Fix**:
