@@ -105,7 +105,7 @@ public function getStats()
     $this->requireRole('admin');
 
     return [
-        'total_users' => $this->model::findQuery()->count(),
+        'total_users' => $this->model::find()->count(),
         'active_sessions' => $this->activeSessions(),
     ];
 }
@@ -120,11 +120,11 @@ public function listUsers()
 {
     $this->requireAnyRole(['admin', 'teacher']);
 
-    $query = $this->model::findQuery();
+    $query = $this->model::find();
 
     // 1. Filter query based on role
     if ($this->hasRole('teacher')) {
-        $query->where('role = :role', ['role' => 'student']);
+        $query->where(['role' => 'student']);
     }
 
     $users = $query->all();

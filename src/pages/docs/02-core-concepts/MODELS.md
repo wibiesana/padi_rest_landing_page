@@ -197,18 +197,20 @@ and enabled by default.
 - Cannot be chained with `->get()`, `->orderBy()`, `->limit()`.
 - Simple and convenient for basic queries.
 
-**Query Builder (`Wibiesana\Padi\Core\Query`):**
+**ModelQuery Builder (`Wibiesana\Padi\Core\ModelQuery`):**
 
-- Return **Query instance** for method chaining.
-- Accessed via `Product::findQuery()`.
+- Bridges raw SQL Query builder with ActiveRecord models.
+- Provides fluent chaining with automatic eager loading (`->with()`), lifecycle hooks, and hidden field filtering.
+- Accessed via `Product::find()`.
 
 ```php
-// ✅ ActiveRecord - returns array directly
-$products = $product->where(['status' => 'active']);
+// ✅ ActiveRecord - simple instance query
+$products = (new Product())->where(['status' => 'active']);
 
-// ✅ Query Builder - for chaining
-$products = Product::findQuery()
-    ->where('status = :status', ['status' => 'active'])
+// ✅ Fluent ModelQuery Builder - for chaining and eager loading
+$products = Product::find()
+    ->with('category')
+    ->where(['status' => 'active'])
     ->orderBy('price DESC')
     ->limit(10)
     ->all();

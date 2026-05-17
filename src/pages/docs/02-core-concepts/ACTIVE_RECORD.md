@@ -56,21 +56,21 @@ class Product extends ActiveRecord
 ### Retrieving Data
 
 ```php
-// Find by ID
-$product = (new Product())->find(1);
+// Find by ID (static or instance)
+$product = Product::find(1);
 
-// Get all records
-$all = (new Product())->all();
+// Find or throw 404
+$product = Product::findOrFail(1);
+
+// Get all records (using fluent ModelQuery builder)
+$all = Product::find()->all();
 
 // Filtered results
-$active = (new Product())->where(['status' => 'active']);
+$active = Product::find()->where(['status' => 'active'])->all();
 
-// Find or throw 404 (v2.0.3)
-$product = (new Product())->findOrFail(1);
-
-// Count records (v2.0.3)
-$total = (new Product())->count();
-$activeCount = (new Product())->count(['status' => 'active']);
+// Count records
+$total = Product::find()->count();
+$activeCount = Product::find()->where(['status' => 'active'])->count();
 
 // Global Search (v2.0.3+)
 // Automatically searches through all $fillable fields
@@ -267,16 +267,16 @@ Use `with()` to load relationships efficiently.
 
 ```php
 // 1. Basic eager loading
-$users = (new User())->with('posts')->all();
+$users = User::find()->with('posts')->all();
 
 // 2. Multiple relations
-$users = (new User())->with(['posts', 'profile', 'roles'])->all();
+$users = User::find()->with(['posts', 'profile', 'roles'])->all();
 
 // 3. Nested eager loading (dot notation)
-$users = (new User())->with('posts.tags')->all();
+$users = User::find()->with('posts.tags')->all();
 
 // 4. Specific columns (colon notation)
-$users = (new User())->with('profile:user_id,bio,avatar')->all();
+$users = User::find()->with('profile:user_id,bio,avatar')->all();
 ```
 
 ---
@@ -430,7 +430,7 @@ Atomic insert-or-update for MariaDB/MySQL:
 
 ## 💡 Best Practices
 
-1. **Use findQuery()**: For complex chaining, use `$model->findQuery()` which returns a `Query` builder instance.
+1. **Use Fluent ModelQuery**: For complex chaining, use static `Model::find()` which returns a `ModelQuery` builder instance bridging raw SQL queries with ActiveRecord models.
 2. **Use findOrFail()**: In controllers, prefer `findOrFail()` over `find()` + manual null check for cleaner code.
 3. **Hide Sensitive Data**: Always add `password`, `token`, etc. to the `$hidden` array.
 4. **Reference in beforeSave**: The `$data` parameter is passed by reference (`&$data`). Use it to modify values before they hit the database.

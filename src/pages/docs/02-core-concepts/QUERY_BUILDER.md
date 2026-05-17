@@ -24,13 +24,13 @@ You can use the Query Builder through ActiveRecord or directly.
 
 ### 1. Through ActiveRecord (Recommended)
 
-This method automatically sets the table name and database connection based on the ActiveRecord definition.
+This method returns a `ModelQuery` instance which automatically sets the table name and database connection based on the ActiveRecord definition, and ensures results are processed through model lifecycle hooks and eager loading.
 
 ```php
 use App\Models\Post;
 
-// Using findQuery() or findBuilder() aliases
-$query = Post::findQuery();
+// Using static find() method
+$query = Post::find();
 ```
 
 ### 2. Standalone Usage
@@ -265,7 +265,7 @@ After building the query, use the following methods to retrieve the results:
 ### Search with Complex Filtering
 
 ```php
-$posts = Post::findQuery()
+$posts = Post::find()
     ->select(['posts.*', 'users.username as author'])
     ->leftJoin('users', 'users.id = posts.user_id')
     ->where(['status' => 'published'])
@@ -278,7 +278,7 @@ $posts = Post::findQuery()
 ### Duplicate Check
 
 ```php
-$exists = Post::findQuery()
+$exists = Post::find()
     ->where(['slug' => 'this-post-title'])
     ->exists();
 
@@ -290,7 +290,7 @@ if ($exists) {
 ### Counting Totals by Category
 
 ```php
-$total = Post::findQuery()
+$total = Post::find()
     ->where(['category_id' => 5])
     ->count();
 ```
