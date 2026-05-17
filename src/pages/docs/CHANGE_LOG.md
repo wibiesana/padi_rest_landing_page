@@ -2,14 +2,19 @@
 
 ## v2.0.10 (2026-05-09)
 
-### ⚡ ActiveRecord & Query: Fluent Eloquent/Yii2 Query Builder & `save()` Method
+### ⚡ ActiveRecord & Query: Fluent ModelQuery Builder
 
-- **Smart `save()` Method**:
-  - Added `save(array $data, int|string|array|null $id = null)` to `ActiveRecord`. Automatically detects if the record is new (inserts via `create()`) or existing (updates via `update()`) based on primary key presence.
 - **Fluent ModelQuery Integration**:
   - Introduced `ModelQuery` class bridging raw SQL `Query` builder with `ActiveRecord`.
-  - Enabled Yii2/Eloquent fluent query syntax: `Model::find()->with('passengerShip')->orderBy('id DESC')->limit(5000)->all()`.
+  - Enabled fluent query builder syntax: `Model::find()->with('passengerShip')->orderBy('id DESC')->limit(5000)->all()`.
   - Added support for eager loading (`->with()`), automatic model lifecycle hooks (`afterLoad()`), and field hiding (`$hidden`) when querying via `ModelQuery`.
+  - Upgraded `ModelQuery->paginate()` to return a standard API meta envelope (`['data' => ..., 'meta' => [...]]`) fully compatible with `Resource::collection()`.
+  - Added `findByPk($id)` and `findOrFailByPk($id)` helper methods to `ModelQuery`.
+- **Clean Architecture Generator Templates**:
+  - Replaced redundant search methods in Base Models with a clean static `search($keyword)` query builder helper.
+  - Standardized Base Controller templates to define `$withRelations` properties for centralized eager loading management.
+  - Added dynamic pagination and customizable `limit` payload parameters (default 1000, max 5000) on `/all` endpoints.
+  - Refactored `Generator` codebase for strict DRY compliance by centralizing relationship naming logic (`getRelationName()`), removing dead methods/variables, and eliminating redundant schema lookups.
 - **Legacy Deprecations**:
   - Marked `findQuery()` and `findBuilder()` as deprecated in favor of the cleaner static `::find()` syntax.
 
