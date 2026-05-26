@@ -83,6 +83,19 @@ $results = Product::search($keyword)->all();
 $paginatedResults = Product::search($keyword)->paginate(1, 25);
 ```
 
+> [!NOTE]
+> ### 💡 `findOrFail()` vs `findOrFailByPk()`
+> While both helpers search for a single record by primary key and automatically throw an HTTP 404 Exception if the record doesn't exist, they are designed for different calling styles:
+> 
+> * **`Product::findOrFail($id)`** (Static Helper): Called statically directly on the Model class. It is simple and concise, but **cannot be chained** with relationship eager loading.
+>   ```php
+>   $product = Product::findOrFail(5);
+>   ```
+> * **`Product::find()->findOrFailByPk($id)`** (Builder Helper): Called on the fluent `ModelQuery` builder returned by `find()`. It is perfect when you need to **eager load relations** or apply other custom scopes before fetching the record.
+>   ```php
+>   $product = Product::find()->with('category', 'tags')->findOrFailByPk(5);
+>   ```
+
 ### Writing Data
 
 ```php
