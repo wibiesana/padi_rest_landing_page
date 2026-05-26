@@ -59,6 +59,9 @@ class Product extends ActiveRecord
 // Find by ID (static or instance)
 $product = Product::find(1);
 
+// Find a single record by primary key (Yii2-style convenience helper, v2.0.11)
+$product = Product::findOne(1);
+
 // Find or throw 404
 $product = Product::findOrFail(1);
 
@@ -72,9 +75,12 @@ $active = Product::find()->where(['status' => 'active'])->all();
 $total = Product::find()->count();
 $activeCount = Product::find()->where(['status' => 'active'])->count();
 
-// Global Search (v2.0.3+)
-// Automatically searches through all $fillable fields
-$results = (new Product())->searchPaginate($keyword);
+// Global Search (v2.0.10+)
+// Automatically searches through all $fillable and joined display fields
+$results = Product::search($keyword)->all();
+
+// Search with pagination
+$paginatedResults = Product::search($keyword)->paginate(1, 25);
 ```
 
 ### Writing Data
@@ -277,7 +283,48 @@ $users = User::find()->with('posts.tags')->all();
 
 // 4. Specific columns (colon notation)
 $users = User::find()->with('profile:user_id,bio,avatar')->all();
+
+// 5. Variadic calling style (v2.0.11)
+$users = User::find()->with('posts', 'profile', 'roles')->all();
 ```
+
+### ⚡ Complicated Real-World Eager Loading & Query Chaining
+
+Here is an advanced real-world orchestration combining complex filters, custom selects, sorting, and nested eager loading with column constraints:
+
+```php
+$query = Post::find()
+    // 1. Select specific columns from the primary table
+    ->select(['id', 'title', 'slug', 'user_id', 'status', 'published_at'])
+    
+    // 2. Perform variadic eager loading with nested relations & specific column restrictions
+    ->with(
+        'comments.author:id,username,avatar',  // Nested + specific columns
+        'user:id,name,email',                   // Simple + specific columns
+        'tags'                                  // Full relation
+    )
+    
+    // 3. Apply complex operators & multiple filtering criteria
+    ->where(['status' => 'published'])
+    ->andWhere(['views', '>=', 150])
+    ->whereIn('category_id', [1, 3, 5])
+    
+    // 4. Sort the result set
+    ->orderBy('published_at DESC');
+
+// Then, execute the query using one of these terminal methods:
+
+// A) Paginate the results (returns formatted pagination metadata + data array)
+$paginated = $query->paginate(page: 1, perPage: 25);
+
+// B) Get all matching records (returns array of record arrays)
+$posts = $query->all();
+
+// C) Get the first matching record (returns a single record array or null)
+$post = $query->one();
+```
+
+This single fluent pipeline runs high-performance queries, executes the minimum required queries for relationship binding, respects the `$hidden` model configuration, and triggers lifecycle `afterLoad()` hooks automatically.
 
 ---
 

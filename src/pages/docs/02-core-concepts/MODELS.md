@@ -66,7 +66,7 @@ $all = $product->all();                    // Get all records
 $one = $product->find($id);                // Find by ID
 $filtered = $product->where(['status' => 1]); // Where conditions
 $paginated = $product->paginate($page, $perPage); // Pagination
-$searched = $product->searchPaginate($keyword);    // Search with pagination
+$searched = Product::search($keyword)->all();    // Search via static search helper (v2.0.10+)
 
 // CREATE
 $new = $product->create([

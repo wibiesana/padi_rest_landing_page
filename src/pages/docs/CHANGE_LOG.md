@@ -1,5 +1,24 @@
 # CHANGE LOG
 
+## v2.0.11 (2026-05-26)
+
+### ⚡ ActiveRecord & Query: Flexible Eager Loading & Static Helpers
+
+- **Variadic Eager Loading (`with()`)**:
+  - Upgraded both `ActiveRecord->with()` and `ModelQuery->with()` to accept variadic parameters, arrays, and strings.
+  - Supports versatile usage: `->with('author', 'comments')`, `->with(['author', 'comments'])`, `->with('author,comments')`.
+  - Added support for colon-separated specific column selection syntax (e.g. `->with('author:id,name')`), safely protecting it from comma splitting logic.
+- **New `findOne()` Helper**:
+  - Added `ActiveRecord::findOne($id, $columns)` as a static convenience alias for `find()`.
+  - Enables clean model retrieval: `User::findOne(5)`.
+  - Refactored `ActiveRecord::findOrFail()` to internally delegate to `findOne()`.
+
+### 🏗️ Generator: Variadic Controller Templates
+
+- **Centralized Eager Loading unpacking**:
+  - Updated generated Controller templates to unpack the relation config array when querying models (e.g., `->with(...$this->withRelations)`).
+  - Aligns the standard generated REST endpoints with the new variadic pattern in `ActiveRecord` and `ModelQuery`.
+
 ## v2.0.10 (2026-05-09)
 
 ### ⚡ ActiveRecord & Query: Fluent ModelQuery Builder
@@ -61,8 +80,6 @@
   - Added `sanitizeIdentifier()` and `sanitizeOrderBySegment()` guard methods to `Query` class.
   - Hardened `ORDER BY`, `GROUP BY`, and aggregate functions (`count`, `sum`, `avg`, `min`, `max`) against malicious column/segment injection.
   - Standardized identifier validation for table and column names (`table.column` format).
-
-
 
 ## v2.0.8 (2026-04-03)
 
@@ -345,6 +362,7 @@
 
 ## 📋 Table of Contents
 
+- [v2.0.11 (2026-05-26)](#v2011-2026-05-26)
 - [v2.0.10 (2026-05-09)](#v2010-2026-05-09)
 - [v2.0.9 (2026-04-29)](#v209-2026-04-29)
 - [v2.0.8 (2026-04-03)](#v208-2026-04-03)
@@ -363,7 +381,6 @@
 - [v1.0.0](#v100)
 
 ---
-
 
 ## v2.0.2 (2026-02-26)
 
