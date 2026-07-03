@@ -1,5 +1,18 @@
 # CHANGE LOG
 
+## v2.0.12 (2026-07-03)
+
+### 🚀 Core: Support Both FrankenPHP Worker & Non-Worker Modes
+
+- **Worker Mode Detection Hardening**:
+  - Upgraded worker mode detection (`$isWorkerMode`) to check both `function_exists('frankenphp_handle_request')` and the presence of `$_SERVER['FRANKENPHP_WORKER']`.
+  - Prevents the application from running in worker mode loops when deployed in FrankenPHP standard/non-worker environments (where `frankenphp_handle_request` is compiled but worker mode is disabled).
+- **Graceful Response Termination**:
+  - Restructured `Response::terminate()` to check `$_SERVER['FRANKENPHP_WORKER']` before throwing `TerminateException`.
+  - Automatically falls back to standard `exit` termination in non-worker environments for native request resolution.
+- **Worker-Optimized Persistent Connections**:
+  - Configured `DatabaseManager` to only enable persistent database connections (`PDO::ATTR_PERSISTENT`) when `$_SERVER['FRANKENPHP_WORKER']` is explicitly set to ensure stable connection reuse.
+
 ## v2.0.11 (2026-05-26)
 
 ### ⚡ ActiveRecord & Query: Flexible Eager Loading & Static Helpers
