@@ -1,6 +1,75 @@
 # CHANGE LOG
 
-## v2.0.12 (2026-07-03)
+## v2.0.12 (2026-07-04)
+
+### 🛡️ Memory Leak Fixes — Standard & FrankenPHP Worker Mode
+
+- **`Database::logQuery()` — Bounded Query Log**:
+  - Added `$maxQueryLog = 100` cap on `self::$queries[]` to prevent unbounded array growth when `APP_DEBUG=true` in long-lived PHP-FPM or FrankenPHP worker processes.
+  - Added `$maxQueryParams = 20` cap on stored params per query to prevent large payloads (e.g. bulk inserts) from inflating the in-memory debug log.
+
+- **`ActiveRecord::$columnsCache` — TTL-Based Invalidation**:
+  - Replaced forever-cached column metadata with a configurable TTL (default: 3600s via `COLUMNS_CACHE_TTL` env).
+  - Cache now auto-refreshes after `ALTER TABLE` operations without requiring a worker restart.
+  - Added `$columnsCacheTtl[]` timestamp array to track per-table cache age.
+  - `clearColumnsCache()` now also resets the TTL timestamps array.
+
+- **`ActiveRecord::clearWith()` — Explicit Relation State Reset**:
+  - Added `clearWith(): self` method to allow safe resetting of eager-load relations on a reused model instance, preventing unintentional relation accumulation.
+
+- **`Cache::setMemory()` — Memory Usage Guard**:
+  - Added `memory_get_usage()` check against `$maxMemoryBytes` (configurable via `CACHE_L1_MAX_MEMORY_MB` env, default: 64 MB).
+  - L1 memory cache is force-cleared when PHP process memory exceeds the configured limit, preventing value-heavy entries from exhausting worker process memory.
+  - `init()` now loads `CACHE_L1_MAX_MEMORY_MB` from env and converts it to bytes.
+
+- **`Application::registerErrorHandlers()` — WeakReference Exception Handler**:
+  - Changed `set_exception_handler([$this, 'handleException'])` to use a `WeakReference::create($this)` static closure.
+  - Prevents the global exception handler registry from holding a strong reference to the `Application` instance, allowing proper GC in test environments and multi-instance setups.
+
+- **`Application::run()` — Periodic GC in Worker Loop**:
+  - Added `gc_collect_cycles()` call every `GC_INTERVAL` requests (configurable via env, default: 50) in the FrankenPHP worker loop.
+  - Cleans up circular references from controllers and middleware objects between worker restart cycles, reducing baseline memory growth.
+
+- **`Queue::work()` — Worker Restart & Periodic GC**:
+  - Added `$gcInterval` (env: `QUEUE_GC_INTERVAL`, default: 100) — calls `gc_collect_cycles()` every N processed jobs.
+  - Added `$maxJobs` (env: `QUEUE_MAX_JOBS`, default: 1000) — worker exits cleanly after N jobs so the process supervisor can restart with a fresh memory state.
+  - Added `unset($instance)` after each job's `handle()` call to release job object and any resources it holds immediately after processing.
+
+- **`DatabaseManager::createConnection()` — Error History Cap**:
+  - Applied the same `$maxErrorHistory` cap to connection errors pushed in `createConnection()`.
+  - Previously, only `logError()` had this cap; repeated DB-down scenarios could cause `$databaseErrors[]` to grow unboundedly.
+
+### 🆕 New Environment Variables
+
+| Variable                 | Default | Description                                                          |
+| ------------------------ | ------- | -------------------------------------------------------------------- |
+| `GC_INTERVAL`            | `50`    | Run `gc_collect_cycles()` every N requests in FrankenPHP worker      |
+| `COLUMNS_CACHE_TTL`      | `3600`  | TTL (seconds) for ActiveRecord column metadata cache; `0` = forever  |
+| `CACHE_L1_MAX_MEMORY_MB` | `64`    | Max PHP memory (MB) before L1 cache is force-cleared; `0` = disabled |
+| `QUEUE_GC_INTERVAL`      | `100`   | Run `gc_collect_cycles()` every N queue jobs                         |
+| `QUEUE_MAX_JOBS`         | `1000`  | Queue worker exits after N jobs for memory hygiene                   |
+
+### 🌐 File Upload: Portable URL & Auto Path Auto-Detection
+
+- **`File::url()` — Server-Portable URLs**:
+  - Rewrote `File::url()` to auto-detect the base URL from the live HTTP request (`scheme + HTTP_HOST`) instead of hardcoding `APP_URL`.
+  - Resolution order: `APP_URL` env (if set to a non-localhost domain) → current HTTP request → `http://localhost` fallback.
+  - Upload file URLs now work correctly across any server (dev → staging → production) without modifying `.env`.
+  - Supports reverse proxy scheme detection via `HTTP_X_FORWARDED_PROTO` and `HTTP_X_FORWARDED_SSL` headers.
+
+- **`File::urlOrNull()` — Nullable Column Safety**:
+  - Added `urlOrNull(?string $path): ?string` — returns `null` for empty/null paths instead of generating a broken URL. Ideal for optional file columns in database models.
+
+- **`File::isAbsoluteUrl()` — Legacy Data Guard**:
+  - Added `isAbsoluteUrl(string $path): bool` to detect if a stored value is already a full URL (http/https). Used internally in `url()` to safely handle legacy data that was mistakenly stored as absolute URLs.
+
+- **`config/app.php` — Smarter APP_URL Auto-Detect**:
+  - Extended auto-detection to also override `APP_URL` when it contains a localhost/127.0.0.1 placeholder (not just when empty).
+  - Propagates the detected URL to `$_ENV['APP_URL']` and `putenv()` so `Env::get('APP_URL')` returns the correct value across all classes in the same request.
+
+- **`.env.example` — APP_URL Default Changed to Empty**:
+  - `APP_URL` now defaults to empty string (auto-detect mode) instead of `http://localhost:8085`.
+  - Added comprehensive inline documentation explaining auto-detect vs. explicit override use cases.
 
 ### 🚀 Core: Support Both FrankenPHP Worker & Non-Worker Modes
 
