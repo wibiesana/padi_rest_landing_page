@@ -22,7 +22,7 @@
             class="q-ml-sm text-weight-bold cursor-pointer hover-scale"
             outline
             :label="'v' + APP_CONFIG.version"
-            @click="router.push('/docs#changelog')"
+            @click="router.push('/docs/change-log')"
           />
         </q-toolbar-title>
 

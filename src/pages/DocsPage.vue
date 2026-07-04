@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
@@ -488,6 +488,7 @@ async function loadInitialDoc() {
     })
 
     if (matchedKey) {
+      if (activeSection.value === matchedKey) return
       const filename = matchedKey.split('/').pop()
       const label = filename
         .replace('.md', '')
@@ -503,6 +504,7 @@ async function loadInitialDoc() {
   const changelogKey = Object.keys(mdModules).find((k) => k.includes('CHANGE_LOG.md'))
 
   if (hasChangelogTarget && changelogKey) {
+    if (activeSection.value === changelogKey) return
     const filename = changelogKey.split('/').pop()
     const label = filename
       .replace('.md', '')
@@ -518,6 +520,7 @@ async function loadInitialDoc() {
     Object.keys(mdModules).find((k) => k.includes('README.md'))
 
   if (indexKey) {
+    if (activeSection.value === indexKey) return
     activeSection.value = indexKey
     let raw = await mdModules[indexKey]()
     raw = raw.replace(/\{\{APP_VERSION\}\}/g, APP_CONFIG.version)
@@ -661,6 +664,13 @@ function handleMobileNav(item) {
   navigateTo(item)
   leftDrawerOpen.value = false
 }
+
+watch(
+  () => [route.params.topic, route.hash],
+  () => {
+    loadInitialDoc()
+  }
+)
 
 onMounted(() => {
   loadInitialDoc()
