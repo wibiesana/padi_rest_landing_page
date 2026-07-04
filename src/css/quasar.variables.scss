@@ -1,25 +1,16 @@
 // Quasar SCSS (& Sass) Variables
 // --------------------------------------------------
-// To customize the look and feel of this app, you can override
-// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+// Vibrant and highly contrast color scheme for a premium first impression
 
-// Check documentation for full list of Quasar variables
+$primary: #10b981;   // Vibrant Emerald Green
+$secondary: #8b5cf6; // Electric Violet / Purple
+$accent: #f59e0b;    // Neon Amber / Gold
 
-// Your own variables (that are declared here) and Quasar's own
-// ones will be available out of the box in your .vue/.scss/.sass files
+$dark: #090d16;      // Deeper Space Blue
+$dark-page: #0f172a; // Slate Dark Mode
 
-// It's highly recommended to change the default colors
-// to match your app's branding.
-// Tip: Use the "Theme Builder" on Quasar's documentation website.
+$positive: #10b981;
+$negative: #ef4444;
+$info: #06b6d4;
+$warning: #f59e0b;
 
-$primary: #2e7d32;
-$secondary: #1a237e;
-$accent: #ffa000;
-
-$dark: #0f172a;
-$dark-page: #1e293b;
-
-$positive: #21ba45;
-$negative: #c10015;
-$info: #31ccec;
-$warning: #f2c037;

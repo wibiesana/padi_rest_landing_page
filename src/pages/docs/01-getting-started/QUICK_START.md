@@ -11,11 +11,11 @@ Experience the ultimate developer fast-track. Padi REST API is engineered for **
 - [⚡ Speed to Market: Zero to API in Seconds](#speed-to-market-zero-to-api-in-seconds)
 
 - [📝 Prerequisites](#prerequisites)
-- [Automated Setup](#automated-setup)
-- [What You Get](#what-you-get)
-- [Database Support](#database-support)
-- [Commands](#commands)
-- [Next Steps](#next-steps)
+- [🤖 Automated Setup](#automated-setup)
+- [📦 What You Get](#what-you-get)
+- [🗄️ Database Support](#database-support)
+- [💻 Commands](#commands)
+- [👣 Next Steps](#next-steps)
 
 ---
 

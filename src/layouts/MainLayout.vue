@@ -17,7 +17,13 @@
             <q-img :src="logoIcon" />
           </q-avatar>
           <span class="text-weight-bold">Padi REST API</span>
-          <q-badge color="primary" class="q-ml-sm text-weight-bold" outline :label="'v' + APP_CONFIG.version" />
+          <q-badge
+            color="primary"
+            class="q-ml-sm text-weight-bold cursor-pointer hover-scale"
+            outline
+            :label="'v' + APP_CONFIG.version"
+            @click="router.push('/docs#changelog')"
+          />
         </q-toolbar-title>
 
         <div class="gt-sm q-gutter-md">
@@ -115,5 +121,11 @@ function scrollTo(id) {
 }
 .border-top {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.hover-scale {
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.08);
+  }
 }
 </style>

@@ -510,7 +510,7 @@ php padi serve`
 }
 
 .index-page {
-  background: #0f172a;
+  background: #090d16;
   color: white;
   min-height: 100vh;
 }
@@ -519,6 +519,10 @@ php padi serve`
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 40px;
+  
+  @media (max-width: 599px) {
+    padding: 0 16px;
+  }
 }
 
 /* Enhanced Mesh Backgrounds with Breathing */
@@ -526,12 +530,17 @@ php padi serve`
   position: absolute;
   width: 800px;
   height: 800px;
-  background: radial-gradient(circle, rgba(46, 125, 50, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
   filter: blur(100px);
   animation: breathing 15s ease-in-out infinite alternate;
+
+  @media (max-width: 599px) {
+    width: 300px;
+    height: 300px;
+  }
 }
 
 @keyframes breathing {
@@ -553,7 +562,7 @@ php padi serve`
 .mesh-2 {
   top: 40%;
   left: -300px;
-  background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
   animation-duration: 25s;
 }
 .mesh-3 {
@@ -565,24 +574,38 @@ php padi serve`
 /* Hero Styling */
 .hero-section {
   min-height: 90vh;
-  padding-top: 100px;
+  padding-top: 120px;
+  padding-bottom: 60px;
   position: relative;
+  
+  @media (max-width: 599px) {
+    min-height: auto;
+    padding-top: 100px;
+    padding-bottom: 40px;
+  }
 }
 
 .hero-icon-container {
-  background: radial-gradient(circle, rgba(46, 125, 50, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
   padding: 40px;
   border-radius: 50%;
   animation: pulse-glow 4s ease-in-out infinite;
+
+  @media (max-width: 599px) {
+    padding: 20px;
+    .q-img {
+      width: 80px !important;
+    }
+  }
 }
 
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(46, 125, 50, 0);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0);
   }
   50% {
-    box-shadow: 0 0 60px rgba(46, 125, 50, 0.3);
+    box-shadow: 0 0 60px rgba(16, 185, 129, 0.25);
   }
 }
 
@@ -590,31 +613,41 @@ php padi serve`
   font-size: 3.5rem;
   line-height: 0.9;
   letter-spacing: -4px;
+
+  @media (max-width: 599px) {
+    font-size: 2.2rem !important;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+  }
 }
 
 .premium-btn {
   border-radius: 12px;
   font-weight: 800;
-  padding: 10px 40px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  padding: 12px 42px;
+  background: linear-gradient(135deg, var(--q-primary) 0%, #2e7d32 100%);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   &:hover {
-    transform: scale(1.08) translateY(-8px);
-    box-shadow: 0 20px 50px rgba(46, 125, 50, 0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(46, 125, 50, 0.4);
+    filter: brightness(1.1);
   }
 }
 
 .premium-btn-outline {
   border-radius: 12px;
-  border-width: 2px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   font-weight: 800;
   padding: 10px 40px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.8);
     transform: translateY(-5px);
-    border-color: white;
+    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.05);
   }
 }
 

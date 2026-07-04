@@ -120,6 +120,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import { APP_CONFIG } from 'src/constants'
@@ -128,6 +129,8 @@ import { useMeta } from 'quasar'
 const search = ref('')
 const activeSection = ref('intro')
 const leftDrawerOpen = ref(false)
+const router = useRouter()
+const route = useRoute()
 
 const categories = []
 
@@ -337,9 +340,24 @@ async function navigateTo(item) {
     let raw = await mdModules[item.id]()
     // Replace placeholders
     raw = raw.replace(/\{\{APP_VERSION\}\}/g, APP_CONFIG.version)
+
+    // Format raw markdown uniformly
+    raw = cleanMarkdownRaw(raw);
+
     selectedMdHtml.value = DOMPurify.sanitize(marked.parse(raw))
     selectedMdTitle.value = item.label
     window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    // Dynamically update browser URL without .md extension
+    const cleanSlug = item.id
+      .split('/')
+      .pop()
+      .replace('.md', '')
+      .toLowerCase()
+      .replace(/_/g, '-');
+
+    const newPath = cleanSlug === 'index' ? '/docs' : `/docs/${cleanSlug}`;
+    router.replace(newPath);
   }
 }
 
@@ -386,9 +404,15 @@ function handleMarkdownClick(event) {
     return
   }
 
-  // Handle internal .md links
-  if (href.endsWith('.md')) {
+  // Handle internal markdown links (with or without anchor hashes)
+  const isMdLink = href.includes('.md') || href.endsWith('.md');
+  if (isMdLink) {
     event.preventDefault()
+
+    // Separate file path from anchor hash (e.g. "./ACTIVE_RECORD.md#some-heading")
+    const hashIndex = href.indexOf('#')
+    const filePart = hashIndex !== -1 ? href.substring(0, hashIndex) : href
+    const anchorHash = hashIndex !== -1 ? href.substring(hashIndex) : ''
 
     // Robust relative path resolution
     const currentPath = activeSection.value // e.g., "./docs/02-core-concepts/CACHE.md"
@@ -396,9 +420,9 @@ function handleMarkdownClick(event) {
 
     let targetKey = ''
 
-    if (href.startsWith('./') || href.startsWith('../') || !href.includes('/')) {
+    if (filePart.startsWith('./') || filePart.startsWith('../') || !filePart.includes('/')) {
       // Relative path logic
-      const parts = href.split('/')
+      const parts = filePart.split('/')
       const pathStack = basePath.split('/')
 
       for (const part of parts) {
@@ -408,8 +432,8 @@ function handleMarkdownClick(event) {
       }
       targetKey = pathStack.join('/')
     } else {
-      // It's a path like "01-getting-started/QUICK_START.md" relative to current basePath
-      targetKey = basePath + '/' + href
+      // Relative to current basePath
+      targetKey = basePath + '/' + filePart
     }
 
     // Clean up double slashes or ./ prefixes for matching
@@ -428,7 +452,23 @@ function handleMarkdownClick(event) {
         .replace('.md', '')
         .replace(/[_|-]/g, ' ')
         .replace(/\b\w/g, (c) => c.toUpperCase())
-      navigateTo({ id: foundPath, label, isMd: true })
+
+      navigateTo({ id: foundPath, label, isMd: true }).then(() => {
+        // If there was an anchor hash, scroll to that element
+        if (anchorHash) {
+          setTimeout(() => {
+            const targetId = anchorHash.substring(1)
+            const element = document.getElementById(targetId)
+            if (element) {
+              const headerOffset = 150
+              const elementPosition = element.getBoundingClientRect().top
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+              window.scrollTo({ top: offsetPosition, behavior: 'smooth' })
+              history.pushState(null, null, window.location.pathname + anchorHash)
+            }
+          }, 150)
+        }
+      })
     } else {
       console.error(`Documentation file not found: ${href} (Resolved to: ${normalizedTarget})`)
     }
@@ -438,7 +478,41 @@ function handleMarkdownClick(event) {
 }
 
 async function loadInitialDoc() {
-  // Priority: INDEX.md, then README.md
+  const topic = route.params.topic ? String(route.params.topic).toLowerCase().replace(/-/g, '_') : null
+
+  // 1. Detect if specific topic is requested (e.g. /docs/active-record)
+  if (topic) {
+    const matchedKey = Object.keys(mdModules).find((key) => {
+      const name = key.split('/').pop().replace('.md', '').toLowerCase().replace(/_/g, '_')
+      return name === topic
+    })
+
+    if (matchedKey) {
+      const filename = matchedKey.split('/').pop()
+      const label = filename
+        .replace('.md', '')
+        .replace(/[_|-]/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+      await navigateTo({ id: matchedKey, label, isMd: true })
+      return
+    }
+  }
+
+  // 2. Legacy Check if hash is #changelog
+  const hasChangelogTarget = window.location.hash === '#changelog' || window.location.search.includes('tab=changelog')
+  const changelogKey = Object.keys(mdModules).find((k) => k.includes('CHANGE_LOG.md'))
+
+  if (hasChangelogTarget && changelogKey) {
+    const filename = changelogKey.split('/').pop()
+    const label = filename
+      .replace('.md', '')
+      .replace(/[_|-]/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+    await navigateTo({ id: changelogKey, label, isMd: true })
+    return
+  }
+
+  // 3. Fallback Priority: INDEX.md, then README.md
   const indexKey =
     Object.keys(mdModules).find((k) => k.includes('INDEX.md')) ||
     Object.keys(mdModules).find((k) => k.includes('README.md'))
@@ -447,12 +521,140 @@ async function loadInitialDoc() {
     activeSection.value = indexKey
     let raw = await mdModules[indexKey]()
     raw = raw.replace(/\{\{APP_VERSION\}\}/g, APP_CONFIG.version)
+
+    // Format raw markdown uniformly
+    raw = cleanMarkdownRaw(raw);
+
     selectedMdHtml.value = DOMPurify.sanitize(marked.parse(raw))
     selectedMdTitle.value = '🌾 Documentation Hub'
   } else {
     selectedMdTitle.value = 'Welcome'
     selectedMdHtml.value = '<p>Select a topic from the sidebar.</p>'
   }
+}
+
+/**
+ * Format and clean raw markdown uniformly.
+ * 1. Strips ".md" extension from the link labels (e.g. "[PAGE.md](url)" -> "[PAGE](url)")
+ * 2. Parses the "Table of Contents" section and adds a "🔗" emoji to any list item links
+ *    that don't already start with an emoji/icon.
+ */
+function cleanMarkdownRaw(raw) {
+  if (!raw) return '';
+
+  // 1. Remove ".md" from label/text inside markdown links
+  raw = raw.replace(/\[([^\]]+)\.md\]\(/gi, '[$1](');
+
+  // 2. Format Table of Contents items cleanly
+  // Matches list items under the TOC header and adds a matching document emoji from iconMap
+  const tocRegex = /(## 📋 Table of Contents\s*\n)([\s\S]*?)(?=\n## |---|$)/i;
+  raw = raw.replace(tocRegex, (match, header, listContent) => {
+    // Mapping of Quasar icons to beautiful unicode emojis for Markdown rendering
+    const emojiMapping = {
+      'rocket_launch': '🚀',
+      'bolt': '⚡',
+      'settings_remote': '⚙️',
+      'account_tree': '🌱',
+      'directions_walk': '👣',
+      'display_settings': '🔧',
+      'auto_awesome': '✨',
+      'moped': '🛵',
+      'hub': '🛣️',
+      'gamepad': '🎮',
+      'rebase_edit': '🧱',
+      'dataset': '💾',
+      'login': '📥',
+      'logout': '📤',
+      'vpn_key': '🔑',
+      'settings_input_component': '🔌',
+      'dynamic_feed': '📦',
+      'verified_user': '🛡️',
+      'manage_search': '🔍',
+      'cached': '⚡',
+      'send_time_extension': '📬',
+      'upload_file': '📁',
+      'filter_alt': '🎛️',
+      'badge': '🏷️',
+      'inventory': '🗃️',
+      'schema': '📐',
+      'account_circle': '👤',
+      'security': '🛡️',
+      'timer': '⏱️',
+      'playlist_add_check': '📋',
+      'terminal': '💻',
+      'devices': '📱',
+      'rule_folder': '📂',
+      'storage': '🗄️',
+      'folder_shared': '📂',
+      'alternate_email': '✉️',
+      'collections_bookmark': '📚',
+      'language': '🌐',
+      'report_problem': '⚠️',
+      'last_page': '📄',
+      'lock_reset': '🔄',
+      'running_with_errors': '🚀',
+      'anchor': '⚓',
+      'electric_bolt': '⚡',
+      'flash_on': '🔥',
+      'multiple_stop': '🔁',
+      'smart_toy': '🤖',
+      'speed': '📈',
+      'help_center': '❓',
+      'dashboard': '🌾',
+      'history': '📜'
+    };
+
+    // Process each line in the TOC list block
+    const updatedLines = listContent.split('\n').map((line) => {
+      const trimmed = line.trim();
+      // If line is a list item starting with a link: - [label](url)
+      if (trimmed.startsWith('- [') || trimmed.startsWith('* [')) {
+        const linkMatch = trimmed.match(/^[-*]\s+\[([^\]]+)\]\(([^)]+)\)/);
+        if (linkMatch) {
+          const text = linkMatch[1];
+          const href = linkMatch[2];
+
+          // Check if link text already starts with a unicode emoji or custom icon
+          const hasEmoji = /^\p{Emoji}/u.test(text) 
+            || /^[\u2700-\u27BF]/u.test(text)
+            || /^[a-zA-Z0-9]/.test(text) === false;
+
+          if (!hasEmoji) {
+            let matchedEmoji = '📄';
+
+            // If the link is a local anchor link: e.g. "#requirements"
+            if (href.startsWith('#')) {
+              const anchor = href.substring(1).toLowerCase();
+              if (anchor.includes('requirements')) matchedEmoji = '⚙️';
+              else if (anchor.includes('installation') || anchor.includes('step')) matchedEmoji = '🏗️';
+              else if (anchor.includes('verify') || anchor.includes('check')) matchedEmoji = '✓';
+              else if (anchor.includes('troubleshoot') || anchor.includes('error')) matchedEmoji = '❓';
+              else if (anchor.includes('next') || anchor.includes('link')) matchedEmoji = '👣';
+              else if (anchor.includes('routing') || anchor.includes('url')) matchedEmoji = '🛣️';
+              else if (anchor.includes('group') || anchor.includes('version')) matchedEmoji = '👥';
+              else if (anchor.includes('auth') || anchor.includes('security')) matchedEmoji = '🛡️';
+              else if (anchor.includes('method') || anchor.includes('action')) matchedEmoji = '⚡';
+              else if (anchor.includes('parameter') || anchor.includes('variable')) matchedEmoji = '🔢';
+              else if (anchor.includes('auto') || anchor.includes('wizard')) matchedEmoji = '🤖';
+            } else {
+              // Standard file link resolution
+              const filePart = href.split('#')[0].split('/').pop() || '';
+              const quasarIcon = iconMap[filePart] || '';
+              matchedEmoji = emojiMapping[quasarIcon] || '📄';
+            }
+            
+            // Prepend the matching visual emoji
+            return line.replace(/\[/, `[${matchedEmoji} `);
+          }
+        }
+      }
+      return line;
+    });
+
+    return header + updatedLines.join('\n');
+  });
+
+  return raw;
 }
 
 function handleMobileNav(item) {
