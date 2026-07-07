@@ -1,5 +1,51 @@
 # CHANGE LOG
 
+## v2.0.13 (2026-07-07)
+
+### ⚡ Performance: Lightweight Resource Optimization
+
+Comprehensive optimizations to reduce per-request resource usage and ensure the framework runs as lightweight as possible.
+
+- **`Response::sendHeaders()` — Remove Duplicate Security Headers**:
+  - Removed `X-Frame-Options: DENY` and `X-Content-Type-Options: nosniff` headers that were already sent by `Application::sendSecurityHeaders()`.
+  - Saves 2 `header()` system calls per response.
+
+- **`Env::get()` — Cache `getenv()` Results**:
+  - When `getenv()` finds a system environment variable, the result is now cached into `$_ENV` so subsequent lookups for the same key use fast O(1) array access instead of repeated system calls.
+
+- **`Router` — Method-Indexed Route Dispatch**:
+  - Routes are now indexed by HTTP method (`$routes['GET'][]`, `$routes['POST'][]`, etc.) instead of a flat array.
+  - Dispatch only iterates routes matching the current method, significantly reducing iterations (e.g., from 60 total routes down to ~10 per request).
+  - `addRoute()` stores routes under `$routes[$method][]` and removes the `method` field from each route entry.
+  - `middleware()` chaining updated to use `$lastMethod` tracking for the new structure.
+  - `dispatch()` uses `$this->routes[$method] ?? []` for direct lookup.
+
+- **`Cache` — Static Miss Sentinel**:
+  - Replaced `new \stdClass()` created on every `get()`, `has()`, and `remember()` call with a single static sentinel instance reused via `self::miss()`.
+  - Eliminates 1 object allocation per cache call on a hot path.
+
+- **`Application::handleCors()` — Production Early Return**:
+  - In production mode, requests without an `Origin` header (the majority of API calls from backend/mobile clients) now return immediately without sending `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers`.
+  - Saves 2 unnecessary `header()` calls on non-CORS requests.
+
+- **`Request::parseHeaders()` — Optimized String Operations**:
+  - Replaced the `str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', ...))))` chain with `strtr()` + `ucwords`, which is more efficient.
+  - `strtr()` with single-char translation is faster and produces fewer intermediate string allocations.
+
+- **`DatabaseManager::createMySQLConnection()` — Consolidated SET SESSION Queries**:
+  - Combined 3 separate `SET SESSION` statements (`sql_mode`, `wait_timeout`, `interactive_timeout`) into a single `exec()` call using multi-statement syntax.
+  - Reduces 3 database round-trips to 1 per new connection, especially impactful on shared hosting (non-worker mode) where connections are created per request.
+
+### 📊 Resource Savings Summary
+
+| Metric | Before | After |
+| --- | --- | --- |
+| `header()` calls per response (production, no origin) | 9 | 5 |
+| DB queries per new MySQL connection | 3 | 1 |
+| Route iterations per dispatch (60 routes) | ~60 | ~10 |
+| Object allocations per cache call | 1 | 0 |
+| `getenv()` system calls (repeated key) | N | 1 |
+
 ## v2.0.12 (2026-07-04)
 
 ### 🛡️ Memory Leak Fixes — Standard & FrankenPHP Worker Mode
