@@ -11,6 +11,7 @@ Setting up Padi REST API is engineered to be as smooth as the framework itself. 
 - [🏗️ Professional Infrastructure Deployment](#professional-infrastructure-deployment)
 - [Requirements](#requirements)
 - [Installation Steps](#installation-steps)
+- [Optional Dependencies (Suggestions)](#optional-dependencies-suggestions)
 - [Verify Installation](#verify-installation)
 - [Alternative: Automated Setup](#alternative-automated-setup)
 - [Next Steps](#next-steps)
@@ -128,6 +129,46 @@ php -S localhost:8085 -t public
 
 # Server running at http://localhost:8085
 ```
+
+---
+
+## Optional Dependencies (Suggestions)
+
+Padi REST API is engineered to be extremely lightweight by default. Optional features such as Redis caching and SMTP email delivery can be installed on-demand:
+
+### ⚡ Redis Cache Support
+By default, Padi uses file-based caching. If you want to use Redis:
+1. **Option A: Pure PHP Client (Predis)**
+   Install the Predis package via Composer:
+   ```bash
+   composer require predis/predis
+   ```
+2. **Option B: Native C Extension (ext-redis)**
+   Enable the `redis` extension in your PHP configuration (`php.ini`):
+   ```ini
+   extension=redis
+   ```
+   *(Highly recommended for high-performance and production environments)*
+
+   > [!NOTE]
+   > **For FrankenPHP users:**
+   > - **If using Docker:** You can install the extension by adding `RUN install-php-extensions redis` in your `Dockerfile`.
+   > - **If using standalone binary:** Run FrankenPHP with the extension flag: `frankenphp run --with-extensions redis`.
+
+After installing or enabling either driver, update your `.env` configuration:
+```env
+CACHE_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+```
+
+### ✉️ SMTP Email Support
+If your API requires sending emails via SMTP (using `Email::send()`):
+1. Install the PHPMailer package:
+   ```bash
+   composer require phpmailer/phpmailer
+   ```
+2. Update your email configuration in `.env` (SMTP settings, port, encryption, etc.).
 
 ---
 

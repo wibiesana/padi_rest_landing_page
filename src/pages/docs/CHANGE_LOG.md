@@ -2,9 +2,16 @@
 
 ## v2.0.13 (2026-07-07)
 
-### ⚡ Performance: Lightweight Resource Optimization
+### ⚡ Performance & Dependency Optimization
 
-Comprehensive optimizations to reduce per-request resource usage and ensure the framework runs as lightweight as possible.
+Comprehensive optimizations to reduce per-request resource usage, minimize external dependencies, and ensure the framework runs as lightweight as possible.
+
+- **Dependencies — Ultra-Lightweight Core Refactoring**:
+  - Reduced mandatory dependencies from 4 packages down to just 1 (`firebase/php-jwt`).
+  - Saves **~6.3 MB+** from the vendor directory.
+  - **`Logger`**: Removed `monolog/monolog` (saving ~3 MB). Rewrote `Logger.php` using native PHP file operations with concurrent-safe file locking (`LOCK_EX`) and automatic 14-day daily rotation.
+  - **`Cache`**: Moved `predis/predis` to `suggest` (saving ~2.5 MB). Added support for PHP extension `ext-redis` (C extension, faster) and fallback to file cache if no Redis driver is installed.
+  - **`Email`**: Moved `phpmailer/phpmailer` to `suggest` (saving ~800 KB). Added structural verification using `class_exists` to throw informative errors when sending mail if not installed.
 
 - **`Response::sendHeaders()` — Remove Duplicate Security Headers**:
   - Removed `X-Frame-Options: DENY` and `X-Content-Type-Options: nosniff` headers that were already sent by `Application::sendSecurityHeaders()`.
