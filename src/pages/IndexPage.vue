@@ -345,8 +345,8 @@ onUnmounted(() => {
 })
 
 const stats = [
-  { label: 'Security Score', value: '9.0', color: 'text-primary' },
-  { label: 'Performance', value: '8.5', color: 'text-accent' },
+  { label: 'Security Score', value: '9.8', color: 'text-primary' },
+  { label: 'Performance', value: '9.5', color: 'text-accent' },
 ]
 
 const installationSteps = [
