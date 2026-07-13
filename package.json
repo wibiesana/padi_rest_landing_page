@@ -20,12 +20,12 @@
     "postinstall": "quasar prepare"
   },
   "dependencies": {
-    "@quasar/extras": "^1.16.4",
+    "@quasar/extras": "^1.18.0",
     "axios": "^1.2.1",
     "dompurify": "^3.3.2",
     "marked": "^17.0.4",
     "pinia": "^3.0.1",
-    "quasar": "^2.16.0",
+    "quasar": "^2.21.3",
     "vue": "^3.5.22",
     "vue-i18n": "^11.0.0",
     "vue-router": "^4.0.0"
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@eslint/js": "^9.14.0",
     "@intlify/unplugin-vue-i18n": "^4.0.0",
-    "@quasar/app-vite": "^2.1.0",
+    "@quasar/app-vite": "^2.6.2",
     "@vue/eslint-config-prettier": "^10.1.0",
     "autoprefixer": "^10.4.2",
     "eslint": "^9.14.0",
