@@ -107,7 +107,7 @@ curl http://localhost:8085/
 | --------------------------------------------------------- | --------------------------- |
 | **[API Reference](05-examples/API_REFERENCE.md)**         | Complete API documentation  |
 | **[Frontend Examples](05-examples/frontend-examples.js)** | JavaScript/Axios examples   |
-| **[API Collection](05-examples/postman_collection.json)** | Import-ready API collection |
+| **[API Collection](05-examples/api_collection.json)** | Import-ready API collection |
 
 **📑 Full Documentation Index:** [INDEX.md](INDEX.md)
 

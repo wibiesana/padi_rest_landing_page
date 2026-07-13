@@ -2,7 +2,7 @@
 
 ## 📮 Surgical API Debugging & Orchestration
 
-Accelerate your development cycle with **Industrial-Grade API Collections**. Padi REST API automatically generates comprehensive blueprints for Postman, Insomnia, and Hoppscotch, complete with pre-configured variables, authentication scripts, and testing scenarios. This ensures that your entire team can interact with, debug, and validate your API endpoints with surgical precision and zero setup time.
+Accelerate your development cycle with **Industrial-Grade API Collections**. Padi REST API automatically generates comprehensive blueprints for Postman, Insomnia, Hoppscotch, Bruno, or any modern REST client, complete with pre-configured variables, authentication scripts, and testing scenarios. This ensures that your entire team can interact with, debug, and validate your API endpoints with surgical precision and zero setup time.
 
 ---
 
@@ -59,12 +59,12 @@ The output will show:
 
 4. Generating API Collection...
 ✓ API Collection created at /path/to/api_collection/product_api_collection.json
-  Import this file to your preferred API client (Postman, Insomnia, Hoppscotch) to test the API endpoints
+  Import this file to your preferred API client (Postman, Insomnia, Hoppscotch, Bruno) to test the API endpoints
 ```
 
 ### 2. Import to your API Client
 
-1. Open your preferred API application (Postman, Insomnia, Hoppscotch, etc.)
+1. Open your preferred API application (Postman, Insomnia, Hoppscotch, Bruno, etc.)
 2. Click **Import** in the application
 3. Select the `.json` file from the `api_collection/` folder:
    - **`auth_api_collection.json`** - Authentication endpoints (Login, Register, Profile)

@@ -92,10 +92,11 @@ The heart of the framework. It transforms database tables into fully working API
 | `--overwrite` | `generate:crud` | Overwrites existing **Base** files (use after schema changes).      |
 | `--force`     | `generate:crud` | Forces regeneration on protected tables (e.g., `users`).            |
 | `--protected` | `all` / `none`  | RBAC Protection. **Default**: `store,update,destroy` (Read-only public). |
-| `--realtime`  | `generate:crud` | Generates with real-time SSE hooks automatically inside concrete models. |
-| `--tables`    | `users,posts`   | Specific tables for migration execution.                            |
-| `--step`      | `int`           | Number of steps for migration rollback.                             |
-| `--port`      | `int`           | Custom port for the `serve` command.                                |
+| `--realtime`      | `generate:crud` | Generates with real-time SSE hooks automatically inside concrete models (Uses background Queue by default). |
+| `--realtime-sync` | `generate:crud` | Forces real-time SSE hooks to run synchronously (no Queue) instead of utilizing background workers. |
+| `--tables`        | `users,posts`   | Specific tables for migration execution.                            |
+| `--step`          | `int`           | Number of steps for migration rollback.                             |
+| `--port`          | `int`           | Custom port for the `serve` command.                                |
 
 ### 🛡️ Route Protection (`--protected`)
 
@@ -129,9 +130,13 @@ php padi generate:crud settings --protected=none --write
 
 **4. Real-time Broadcasting (Mercure Integration)**
 ```bash
+# Uses background Queue by default (highly recommended)
 php padi generate:crud messages --realtime --write
+
+# Or publish synchronously directly (if Queue is not configured)
+php padi generate:crud messages --realtime --realtime-sync --write
 ```
-*Result: Scaffolds full CRUD files and automatically inserts `afterSave` and `afterDelete` hooks calling `Realtime::publish` into the concrete `Message.php` model to push updates to the Mercure Hub.*
+*Result: Scaffolds full CRUD files and automatically inserts `afterSave` and `afterDelete` hooks calling `Queue::push` (or `Realtime::publish` if synced) into the concrete `Message.php` model to push updates to the Mercure Hub.*
 
 ---
 
@@ -152,7 +157,7 @@ When you run `php padi generate:crud products --write`, the following is created
 2.  **REST Controllers**: Standardized `index`, `show`, `store`, `update`, and `destroy` logic.
 3.  **API Resources**: A transformation layer for clean JSON output (filters fields, formats dates).
 4.  **Automatic Routing**: Routes are appended to `routes/api.php` with optional protection.
-5.  **API Collection**: A ready-to-import JSON file compatible with most API IDEs (Postman, Insomnia, Hoppscotch) with sample request bodies.
+5.  **API Collection**: A ready-to-import JSON file compatible with most API IDEs (Postman, Insomnia, Hoppscotch, Bruno) with sample request bodies.
 
 ### 🧠 Smart Relationship Detection
 
@@ -178,9 +183,9 @@ The generator automatically detects foreign keys and writes relationship methods
 | PUT    | `/products/{id}`     | Update           |
 | DELETE | `/products/{id}`     | Delete           |
 
-### API IDE Integration (Postman, Insomnia, etc.)
+### API IDE Integration (Postman, Insomnia, Hoppscotch, Bruno, etc.)
 
-1.  **Import**: Drag the `.json` file from `api_collection/` into your preferred API client (Postman, Insomnia, Hoppscotch).
+1.  **Import**: Drag the `.json` file from `api_collection/` into your preferred API client (Postman, Insomnia, Hoppscotch, Bruno).
 2.  **Environment**: Set `base_url` (default: `http://localhost:8085`).
 3.  **Auth**: If protected, use the `Auth/Login` request to get a token and set it as an environment variable (usually `{{token}}`).
 

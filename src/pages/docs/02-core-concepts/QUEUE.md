@@ -84,13 +84,76 @@ Queue::push(ProcessImageJob::class, ['id' => 123], 'default', 300);
 
 ## 🏃 Running the Worker
 
-To process the queued jobs, you must run the worker script via CLI.
+To process the queued jobs, you must execute the worker script via the command-line interface.
+
+### 1. Manual Execution (CLI)
+Run the script from your project root directory:
 
 ```bash
-php scripts/queue-worker.php
+# Process jobs on the default queue
+php scripts/queue-worker.php default
 ```
 
-In production, it is recommended to use a process manager like **Supervisor** to ensure the worker keeps running.
+---
+
+## ⏰ Startup & Production Daemon Configuration
+
+In production, you want the queue worker to run continuously in the background, start automatically on server boot, and automatically restart if it crashes. Here is how to configure it:
+
+### A. Linux Systemd Service (Recommended)
+Create a new service configuration file at `/etc/systemd/system/padi-worker.service`:
+
+```ini
+[Unit]
+Description=Padi Queue Worker Daemon
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/my-padi-app
+ExecStart=/usr/bin/php scripts/queue-worker.php default
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Reload systemd and enable the service on startup:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable padi-worker.service
+sudo systemctl start padi-worker.service
+```
+
+### B. Docker Compose Setup
+If deploying via Docker, run the worker as a separate service container:
+
+```yaml
+services:
+  # Main REST API container
+  api:
+    build: .
+    # ... other config ...
+
+  # Queue Worker container
+  queue-worker:
+    build: .
+    command: php scripts/queue-worker.php default
+    restart: always
+    depends_on:
+      - db
+```
+
+### C. Windows Server Task Scheduler
+1. Open **Task Scheduler** and select **Create Basic Task**.
+2. Set Trigger to **When the computer starts**.
+3. Set Action to **Start a program**.
+4. Set Program/script to `php`.
+5. Add arguments: `scripts/queue-worker.php default`.
+6. Set Start in to your project root folder (e.g. `C:\inetpub\wwwroot\my-padi-app`).
+7. In the task settings, uncheck power/battery restrictions to keep it running continuously.
 
 ---
 

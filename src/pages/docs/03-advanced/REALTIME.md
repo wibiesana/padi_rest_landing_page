@@ -107,7 +107,10 @@ public function create()
 ```
 
 ### 2. ORM Hooks (Automatic)
-Use ActiveRecord lifecycle hooks to automatically broadcast updates when data changes in the database:
+Use ActiveRecord lifecycle hooks to automatically broadcast updates when data changes in the database.
+
+#### Option A: Direct / Synchronous (Simple Setup)
+Ideal for small apps or environments where a background queue worker is not configured.
 
 ```php
 namespace App\Models;
@@ -148,6 +151,71 @@ class Notification extends ActiveRecord
     }
 }
 ```
+
+#### Option B: Queue-based / Asynchronous (High-Performance Production)
+Recommended for high-traffic environments to prevent blocking main HTTP threads during broadcasts.
+
+```php
+namespace App\Models;
+
+use App\Jobs\BroadcastRealtimeJob;
+use Wibiesana\Padi\Core\ActiveRecord;
+use Wibiesana\Padi\Core\Queue;
+
+class Notification extends ActiveRecord
+{
+    protected string $table = 'notifications';
+
+    // Automatically trigger real-time notification after saving via Queue
+    protected function afterSave(bool $insert, array $data): void
+    {
+        $event = $insert ? 'notification_created' : 'notification_updated';
+
+        Queue::push(BroadcastRealtimeJob::class, [
+            'topic' => 'user-notifications-' . $this->user_id,
+            'data' => [
+                'event' => $event,
+                'data'  => $this->toArray()
+            ],
+            'private' => true // Private topic
+        ]);
+    }
+
+    // Automatically trigger real-time notification after deleting via Queue
+    protected function afterDelete(int|string|array $id): void
+    {
+        Queue::push(BroadcastRealtimeJob::class, [
+            'topic' => 'user-notifications-' . $this->user_id,
+            'data' => [
+                'event' => 'notification_deleted',
+                'id'    => $id
+            ],
+            'private' => true // Private topic
+        ]);
+    }
+}
+```
+
+### 3. Queue-based Broadcasting (High-Performance Production)
+For high-traffic production environments, calling `Realtime::publish()` directly in the HTTP request thread can block PHP workers. Instead, push broadcasting tasks to the background queue using Padi's built-in Queue system and the pre-built `BroadcastRealtimeJob`:
+
+```php
+use App\Jobs\BroadcastRealtimeJob;
+use Wibiesana\Padi\Core\Queue;
+
+// Inside your Controller or Model:
+Queue::push(BroadcastRealtimeJob::class, [
+    'topic'   => 'new-posts',
+    'data'    => [
+        'event' => 'post_created',
+        'post'  => $post
+    ],
+    'private' => false, // optional
+    'targets' => []      // optional
+]);
+```
+
+This delegates the cURL request to background queue workers, ensuring zero impact on user request latencies under high load.
 
 ---
 

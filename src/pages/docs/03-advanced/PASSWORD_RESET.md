@@ -422,10 +422,10 @@ const handleSubmit = async () => {
 
 ## Testing
 
-### Using Postman
+### Using API Clients (Postman, Insomnia, Bruno, Hoppscotch, etc.)
 
 1. **Import Collection:**
-   - Import `postman/auth_api_collection.json`
+   - Import `api_collection/auth_api_collection.json`
 
 2. **Test Forgot Password:**
    - Request: `POST /auth/forgot-password`

@@ -10,13 +10,17 @@ Introduced native support for pushing real-time messages to connected clients us
   - Added a new light-weight, zero-dependency `Wibiesana\Padi\Core\Realtime` service class.
   - Implements `Realtime::publish()` for pushing JSON payloads to Mercure topics via fast non-blocking cURL.
   - Implements `Realtime::generateSubscriberJwt()` for creating secure subscriber JWT tokens dynamically.
+  - **Fast Fail-Fast Timeout**: Switched to sub-second millisecond-level timeouts (`200ms`) for internal loopback connections to ensure server speed is never compromised under heavy loads.
+- **Background Queue Integration**:
+  - Introduced `BroadcastRealtimeJob` to offload HTTP Mercure publishing tasks to background queue workers, ensuring zero latency impact.
 - **Global Toggle (`.env`)**:
   - Introduced `MERCURE_ENABLED` flag to toggle the real-time server-sent events at runtime with zero overhead when disabled.
 - **Autentikasi Integration**:
   - Automatically attaches `realtime` parameters (hub url and JWT token) to login and register responses only if `MERCURE_ENABLED=true` AND `MERCURE_HUB_URL` is set.
 - **Code Generator Integration**:
   - Adds interactive CLI questions and `--realtime` flag to `generate:crud` and `generate:crud-all` commands.
-  - Automatically writes `afterSave` and `afterDelete` hooks calling `Realtime::publish` into concrete models when enabled.
+  - **Queue-by-default Hooks**: Automatically writes background-ready `afterSave` and `afterDelete` hooks calling `Queue::push(BroadcastRealtimeJob::class, ...)` into concrete models when enabled.
+  - **Synchronous Fallback**: Introduced `--realtime-sync` option/prompt to generate direct `Realtime::publish` synchronous calls if a background queue is not desired.
   - **Dynamic Route Grouping**: Refactored the route builder to dynamically split endpoints into public and protected routing groups.
   - **Strict Default Protection**: Changed the default behavior when `--protected` is omitted so that all CRUD routes (`index`, `all`, `show`, `store`, `update`, `destroy`) require authentication by default. Developers can pass `--protected=none` to keep routes public, or specify exact actions.
 
@@ -24,6 +28,8 @@ Introduced native support for pushing real-time messages to connected clients us
 
 - **Safe Mail Queue Job**: Wrapped `Email::send()` inside `SendEmailJob` in a try-catch block to prevent registration flow crashes if PHPMailer or mail server configuration is missing.
 - **Configurable Welcome Email**: Welcome email queueing is now completely optional and configurable via the `SEND_WELCOME_EMAIL` env variable, dynamically adjusting the registration response messages.
+- **Caddyfile Deletion Notes**: Added clear comment markers in `Caddyfile.standard` and `Caddyfile.worker` to allow developers to cleanly remove unused Mercure server configurations.
+- **API Client Collections Cleanup**: Added a dedicated `examples_api_collection.json` containing test requests for `ExampleRBACController` and `ExampleRealtimeController`, removed the redundant `passwordreset_api_collection.json` file, and integrated all collection details directly into the central docs directory.
 
 ## v2.0.13 (2026-07-13)
 

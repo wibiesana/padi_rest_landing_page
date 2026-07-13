@@ -110,7 +110,7 @@ Essential knowledge for building with Padi REST API.
 - Full command list (App, Make, Migrate, Generate)
 - Global options & flags (`--write`, `--overwrite`, etc.)
 - Deep dive into Base vs. Concrete architecture
-- Smart relationship detection & Postman collection
+- Smart relationship detection & API Client collection
 
 ### Authentication & Security
 
@@ -456,7 +456,7 @@ Ready-to-use code samples and collections.
 
 ### API Collection
 
-**[📄 postman_collection.json](05-examples/postman_collection.json)**
+**[📄 api_collection.json](05-examples/api_collection.json)**
 
 - Complete API collection
 - Pre-configured requests
@@ -593,7 +593,7 @@ docs/
 └── 05-examples/                      # Code Samples
     ├── API_REFERENCE.md              # ✨ Complete API reference
     ├── frontend-examples.js          # Frontend examples
-    └── postman_collection.json       # API collection
+    └── api_collection.json           # API collection
 ```
 
 **✨ NEW** = Newly created in reorganization

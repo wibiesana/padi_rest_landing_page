@@ -262,7 +262,7 @@ TOKEN="your_token_here"
 curl -H "Authorization: Bearer $TOKEN" http://localhost:8085/products
 ```
 
-### 2. Using Postman
+### 2. Using API Clients (Postman, Insomnia, Bruno, Hoppscotch, etc.)
 
 1. Import collection: `api_collection/auth_api_collection.json`
 2. Set environment variable: `API_URL = http://localhost:8085`

@@ -259,4 +259,4 @@ When performing multiple database operations that depend on each other, use `Wib
 
 ### 3. Let Generator do the Heavy Lifting
 
-Use the built-in generator to create models, controllers, and even Postman collections to speed up your development process.
+Use the built-in generator to create models, controllers, and even API collections to speed up your development process.

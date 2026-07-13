@@ -10,7 +10,7 @@ Master your API with **Industrial-Grade Testing Workflows**. Padi REST API is de
 
 - [🕵️ Strategic API Validation](#strategic-api-validation)
 - [Using cURL](#using-curl)
-- [Using API Clients (Postman, Insomnia, etc.)](#using-api-clients-postman-insomnia-etc)
+- [Using API Clients (Postman, Insomnia, Hoppscotch, Bruno, etc.)](#using-api-clients-postman-insomnia-hoppscotch-bruno-etc)
 - [Using JavaScript (Fetch API)](#using-javascript-fetch-api)
 - [Response Codes](#response-codes)
 
@@ -108,7 +108,7 @@ curl -X DELETE http://localhost:8085/products/1 \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
-## Using API Clients (Postman, Insomnia, etc.)
+## Using API Clients (Postman, Insomnia, Hoppscotch, Bruno, etc.)
 
 1. Import collection file (e.g., `api_collection/auth_api_collection.json`) into your preferred API client.
 2. Set the `base_url` variable to `http://localhost:8085`.
