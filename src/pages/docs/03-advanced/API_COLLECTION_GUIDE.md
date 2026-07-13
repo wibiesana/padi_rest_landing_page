@@ -67,7 +67,10 @@ The output will show:
 1. Open your preferred API application (Postman, Insomnia, Hoppscotch, etc.)
 2. Click **Import** in the application
 3. Select the `.json` file from the `api_collection/` folder:
-   - **`auth_api_collection.json`** - Authentication endpoints (Login, Register, Get Me, Forgot/Reset Password)
+   - **`auth_api_collection.json`** - Authentication endpoints (Login, Register, Profile)
+   - **`user_api_collection.json`** - User management endpoints
+   - **`site_api_collection.json`** - Site information and health check endpoints
+   - **`examples_api_collection.json`** - Examples of RBAC and Real-time SSE endpoints
    - **`*_api_collection.json`** - Resource endpoints (auto-generated)
 4. The collection will appear in your sidebar
 
