@@ -59,8 +59,12 @@ class Product extends ActiveRecord
 // Find by ID (static or instance)
 $product = Product::find(1);
 
-// Find a single record by primary key (Yii2-style convenience helper, v2.0.11)
+// Find a single record by primary key
 $product = Product::findOne(1);
+
+// Find multiple records by primary keys or conditions (v2.0.13)
+$products = Product::findAll([1, 2, 3]);
+$activeProducts = Product::findAll(['status' => 'active']);
 
 // Find or throw 404
 $product = Product::findOrFail(1);
@@ -108,8 +112,11 @@ $id = (new Product())->create([
 // Update
 (new Product())->update($id, ['price' => 14.50]);
 
-// Delete
+// Delete single record
 (new Product())->delete($id);
+
+// Delete multiple records matching conditions (v2.0.13)
+Product::deleteAll(['status' => 'inactive']);
 ```
 
 ---
@@ -184,6 +191,21 @@ $affectedRows = (new Product())->updateAll(
     ['sku' => 'PRD-001', 'name' => 'Coffee', 'price' => 15.00],
     ['name', 'price'] // columns to update on duplicate
 );
+
+// Memory-Efficient Batch Retrieval (v2.0.13)
+// Useful for processing huge datasets without running out of RAM
+foreach (Product::find()->where(['status' => 'active'])->batch(100) as $products) {
+    // Yields array of 100 products per iteration
+    foreach ($products as $product) {
+        // ...
+    }
+}
+
+// Memory-Efficient Each Retrieval (v2.0.13)
+// Iterates through records one by one while chunking fetches in the background
+foreach (Product::find()->each(100) as $product) {
+    // Yields single product array
+}
 ```
 
 ### Composite Primary Keys
@@ -338,6 +360,44 @@ $post = $query->one();
 ```
 
 This single fluent pipeline runs high-performance queries, executes the minimum required queries for relationship binding, respects the `$hidden` model configuration, and triggers lifecycle `afterLoad()` hooks automatically.
+
+### 🔗 SQL JOINs via Relations (`joinWith()`)
+
+While `with()` executes separate queries for relationship loading (eager loading), `joinWith()` adds actual **SQL JOIN clauses** into your main query. This allows you to perform operations like filtering, sorting, grouping, or aggregates based on columns inside the related tables.
+
+```php
+// 1. Join with relation using alias and nested paths (v2.0.13)
+$orders = Order::find()
+    ->select([
+        'order.*',
+        'customer.name as customer_name',
+        'COUNT(order_item.id) as total_items'
+    ])
+    ->joinWith([
+        'customer c',           // LEFT JOIN customers c ON ...
+        'orderItems oi',        // LEFT JOIN order_items oi ON ...
+        'orderItems.product p'  // LEFT JOIN products p ON ... (nested)
+    ])
+    ->where(['order.status' => 'completed'])
+    ->andWhere(['p.category_id' => [1, 2, 3]])
+    ->groupBy(['order.id', 'customer.name'])
+    ->having(['>', 'COUNT(order_item.id)', 5])
+    ->all();
+```
+
+* **Default JOIN type** is `LEFT JOIN`. You can change it by passing the second parameter:
+  ```php
+  $products = Product::find()->joinWith('category', 'INNER JOIN')->all();
+  ```
+* **Eager Loading compatibility**: `joinWith()` does NOT automatically assign relation records to rows. To load data models into relations (e.g. `$row['category']`), combine it with `with()` or use specific `select()` mapping.
+
+### 🗃️ Compatibility Methods (`asArray()`)
+
+For ease of transition from other PHP ORMs, `asArray()` is provided. Since Padi ActiveRecord always returns records as plain associative arrays, this method acts as a fluent **no-op**:
+
+```php
+$products = Product::find()->asArray()->all();
+```
 
 ---
 

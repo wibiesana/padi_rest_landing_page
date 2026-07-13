@@ -180,13 +180,32 @@ Adds columns to an existing order by statement.
 $query->orderBy('created_at DESC')->addOrderBy('title ASC');
 ```
 
-### `groupBy($columns)` & `having($condition)`
+### `groupBy($columns)` & `addGroupBy($columns)`
+
+`groupBy()` specifies the grouping criteria, while `addGroupBy()` appends columns without overwriting previous groupings (v2.0.13).
 
 ```php
-$query->select('category, COUNT(*) as total')
-      ->groupBy('category')
-      ->having('total > 5');
+$query->groupBy('category')
+      ->addGroupBy('status');
 ```
+
+### `having($condition)` & `andHaving()` / `orHaving()` (v2.0.13)
+
+Adds a HAVING condition. Supports raw string format, parameter binding, or array criteria:
+
+```php
+// 1. Array format having with aggregate comparison
+$query->groupBy('category')
+      ->having(['>', 'COUNT(id)', 5]);
+
+// 2. Chainable having conditions
+$query->groupBy('category')
+      ->having(['>', 'COUNT(id)', 5])
+      ->andHaving('SUM(price) > :min', ['min' => 1000])
+      ->orHaving(['<', 'AVG(rating)', 3]);
+```
+
+### `limit($limit)` & `offset($offset)`
 
 ```php
 $query->limit(10)->offset(20);
@@ -201,6 +220,33 @@ Enables or disables automatic `ILIKE` conversion for PostgreSQL. Enabled by defa
 $query->autoIlike(false)
       ->where(['like', 'name', 'Laptop']);
 ```
+
+### `indexBy($column)` (v2.0.13)
+
+Indexes the array of query results by the values of a specified column.
+
+```php
+$users = Query::find()->from('users')->indexBy('email')->all();
+// Result:
+// [
+//   'john@example.com' => ['id' => 1, 'name' => 'John', 'email' => 'john@example.com'],
+//   'jane@example.com' => ['id' => 2, 'name' => 'Jane', 'email' => 'jane@example.com'],
+// ]
+```
+
+### `union($query, $all = false)` (v2.0.13)
+
+Combines the results of multiple query builders using SQL `UNION` or `UNION ALL`. Parameters of the subqueries are automatically rewritten internally to prevent name collisions.
+
+```php
+$query1 = Query::find()->from('users')->select('id, name')->where(['role' => 'admin']);
+$query2 = Query::find()->from('users')->select('id, name')->where(['role' => 'manager']);
+
+// Perform UNION ALL
+$allStaff = $query1->union($query2, true)->all();
+```
+
+---
 
 ### `paginate($perPage, $page)`
 

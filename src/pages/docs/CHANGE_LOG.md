@@ -2,6 +2,28 @@
 
 ## v2.0.13 (2026-07-07)
 
+### 🚀 Feature: `joinWith()` for SQL JOIN Queries
+
+Added `joinWith()` method to `ModelQuery`, enabling SQL JOIN-based queries across related models. Unlike `with()` (which uses separate queries for eager loading), `joinWith()` generates SQL JOINs in the main query — allowing you to filter, sort, group, and aggregate across related tables in a single query.
+
+- **`ModelQuery::joinWith()`**: Automatically resolves model relation definitions into SQL `LEFT JOIN` clauses.
+  - Automatically aliases joined tables to their relation names if no manual alias is specified to prevent name resolution issues.
+  - Supports simple relations: `->joinWith(['customer'])`
+  - Supports aliases: `->joinWith(['customer c'])`
+  - Supports nested relations: `->joinWith(['orderItems.product p'])`
+  - Supports `belongsToMany` (double JOIN through pivot table)
+  - Configurable JOIN type (`LEFT JOIN`, `INNER JOIN`, `RIGHT JOIN`)
+- **`Query::having()` & `andHaving()` / `orHaving()` — Chainable HAVING**:
+  - Support for multiple having clauses in string or array format (e.g. `->having(['>', 'COUNT(id)', 5])->andHaving(...)`).
+- **`Query::addGroupBy()`**: Appends columns to the GROUP BY clause without replacing existing ones.
+- **`Query::indexBy()`**: Indexes query results by a specified column name (string) or dynamic callback (callable).
+- **`Query::union()`**: Combines multiple query results using SQL `UNION`/`UNION ALL` (with auto-renaming parameter logic to prevent placeholder collisions).
+- **`ActiveRecord::findAll()` & `ActiveRecord::deleteAll()`**: Mass retrieval and mass deletion based on conditions or lists of primary keys (flat array of IDs).
+- **`ModelQuery::batch()` & `ModelQuery::each()`**: Memory-efficient batch iteration using PHP Generators (perfect for large datasets).
+- **`ModelQuery::asArray()`**: No-op method for transition/compatibility with other ORMs.
+- **`ActiveRecord::getRelationConfig()`**: Public accessor for relation definitions, used internally by `joinWith()`.
+- **`ActiveRecord::getPrimaryKeyName()`**: Public accessor for primary key column name(s).
+
 ### ⚡ Performance & Dependency Optimization
 
 Comprehensive optimizations to reduce per-request resource usage, minimize external dependencies, and ensure the framework runs as lightweight as possible.
