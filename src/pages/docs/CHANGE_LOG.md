@@ -14,6 +14,9 @@ Introduced native support for pushing real-time messages to connected clients us
   - Introduced `MERCURE_ENABLED` flag to toggle the real-time server-sent events at runtime with zero overhead when disabled.
 - **Autentikasi Integration**:
   - Automatically attaches `realtime` parameters (hub url and JWT token) to login and register responses only if `MERCURE_ENABLED=true` AND `MERCURE_HUB_URL` is set.
+- **Code Generator Integration**:
+  - Adds interactive CLI questions and `--realtime` flag to `generate:crud` and `generate:crud-all` commands.
+  - Automatically writes `afterSave` and `afterDelete` hooks calling `Realtime::publish` into concrete models when enabled.
 
 ### 🛡️ Boilerplate Robustness & Mail Upgrades
 

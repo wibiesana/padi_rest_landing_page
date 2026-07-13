@@ -92,6 +92,7 @@ The heart of the framework. It transforms database tables into fully working API
 | `--overwrite` | `generate:crud` | Overwrites existing **Base** files (use after schema changes).      |
 | `--force`     | `generate:crud` | Forces regeneration on protected tables (e.g., `users`).            |
 | `--protected` | `all` / `none`  | RBAC Protection. **Default**: `store,update,destroy` (Read-only public). |
+| `--realtime`  | `generate:crud` | Generates with real-time SSE hooks automatically inside concrete models. |
 | `--tables`    | `users,posts`   | Specific tables for migration execution.                            |
 | `--step`      | `int`           | Number of steps for migration rollback.                             |
 | `--port`      | `int`           | Custom port for the `serve` command.                                |
@@ -125,6 +126,12 @@ php padi generate:crud invoices --protected=all --write
 php padi generate:crud settings --protected=none --write
 ```
 *Result: All endpoints are completely open.*
+
+**4. Real-time Broadcasting (Mercure Integration)**
+```bash
+php padi generate:crud messages --realtime --write
+```
+*Result: Scaffolds full CRUD files and automatically inserts `afterSave` and `afterDelete` hooks calling `Realtime::publish` into the concrete `Message.php` model to push updates to the Mercure Hub.*
 
 ---
 

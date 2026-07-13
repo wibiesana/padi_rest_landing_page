@@ -66,6 +66,22 @@ Ensure the Mercure module is configured in your Caddyfile (both `Caddyfile.worke
 
 ---
 
+## ⚡ CLI Code Generator Integration
+
+Padi's powerful Auto CRUD generator fully supports real-time pub/sub. When generating a new CRUD resource or bulk generating all tables, the CLI will ask whether you want to enable Mercure real-time hooks:
+
+```bash
+# Generate CRUD for a single table with interactive prompts
+php padi generate:crud posts
+
+# Or explicitly pass the --realtime flag (non-interactive friendly)
+php padi generate:crud posts --realtime
+```
+
+If enabled, the generator automatically injects the necessary imports and the `afterSave` and `afterDelete` hooks inside the newly generated concrete model.
+
+---
+
 ## 📡 Publishing Events
 
 You can trigger real-time updates from either your controllers or your ActiveRecord models.
