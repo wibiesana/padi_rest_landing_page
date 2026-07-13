@@ -3,7 +3,7 @@
     <!-- Search Bar (Sticky Header) -->
     <div class="docs-header q-pa-md glass-header shadow-20">
       <div class="container flex justify-between items-center">
-        <div class="flex items-center">
+        <div class="flex items-center q-gutter-x-sm">
           <q-btn
             flat
             round
@@ -14,6 +14,9 @@
           />
           <div class="text-h6 text-weight-bold text-gradient">Framework Documentation Hub</div>
           <q-badge color="primary" class="q-ml-sm q-px-sm text-weight-bold" :label="'v' + APP_CONFIG.version" />
+          
+          <!-- Google Translate Widget Container -->
+          <div id="google_translate_element" class="q-ml-md gt-xs"></div>
         </div>
         <q-input
           v-model="search"
@@ -121,6 +124,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import { APP_CONFIG } from 'src/constants'
@@ -131,6 +135,7 @@ const activeSection = ref('intro')
 const leftDrawerOpen = ref(false)
 const router = useRouter()
 const route = useRoute()
+const { locale } = useI18n()
 
 const categories = []
 
@@ -672,8 +677,54 @@ watch(
   }
 )
 
+// Watch global locale to automatically sync Google Translate
+watch(locale, (newLocale) => {
+  const langCode = newLocale === 'id-ID' ? 'id' : 'en'
+
+  // Update cookies so the translation persists across page refreshes
+  document.cookie = `googtrans=/en/${langCode}; path=/`
+  document.cookie = `googtrans=/en/${langCode}; path=/; domain=${window.location.hostname}`
+
+  // Programmatically trigger Google Translate select combo box
+  const selectEl = document.querySelector('.goog-te-combo')
+  if (selectEl) {
+    selectEl.value = langCode
+    selectEl.dispatchEvent(new Event('change'))
+  }
+})
+
 onMounted(() => {
   loadInitialDoc()
+
+  // Google Translate initialization
+  window.googleTranslateElementInit = function() {
+    new window.google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'id,en',
+      layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+
+    // Auto-apply current active locale on load
+    setTimeout(() => {
+      const langCode = locale.value === 'id-ID' ? 'id' : 'en'
+      const selectEl = document.querySelector('.goog-te-combo')
+      if (selectEl) {
+        selectEl.value = langCode
+        selectEl.dispatchEvent(new Event('change'))
+      }
+    }, 800)
+  }
+
+  // Load script
+  if (!document.getElementById('google-translate-script')) {
+    const script = document.createElement('script')
+    script.id = 'google-translate-script'
+    script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'
+    script.async = true
+    document.head.appendChild(script)
+  } else if (window.google && window.google.translate) {
+    window.googleTranslateElementInit()
+  }
 })
 </script>
 
@@ -971,5 +1022,53 @@ onMounted(() => {
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
   }
+}
+
+/* Google Translate styling to match premium dark theme */
+:deep(.goog-te-gadget) {
+  font-family: inherit !important;
+  color: #94a3b8 !important;
+  font-size: 13px !important;
+}
+
+:deep(.goog-te-gadget-simple) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 6px 12px !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(46, 125, 50, 0.4) !important;
+  }
+}
+
+:deep(.goog-te-menu-value) {
+  display: flex !important;
+  align-items: center !important;
+  color: #cbd5e1 !important;
+  font-weight: 500 !important;
+  
+  img {
+    display: none !important; /* Hide default google logo */
+  }
+
+  span {
+    border-left: none !important;
+    padding-left: 0 !important;
+  }
+}
+
+:deep(.goog-te-banner-frame) {
+  display: none !important; /* Hide translate banner */
+}
+
+:deep(body) {
+  top: 0 !important;
 }
 </style>

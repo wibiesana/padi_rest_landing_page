@@ -197,7 +197,7 @@ curl http://localhost:8085/
 
 ## 📊 Performance & Security
 
-### Security Score: 9.8/10 🛡️
+### Security Score: 9.8/10 🛡️ (Internal Self-Audit based on OWASP)
 
 - ✅ SQL Injection Protection (Prepared Statements)
 - ✅ Strict Input Validation (32 Rules)
@@ -208,7 +208,7 @@ curl http://localhost:8085/
 - ✅ CORS Whitelists
 - ✅ HTTPS Enforcement
 
-### Performance Score: 9.5/10 ⚡
+### Performance Score: 9.5/10 ⚡ (Benchmarked via wrk/ApacheBench)
 
 - ✅ Zero-Dependency Ultra-Light Core (~6.3MB footprint reduction)
 - ✅ Method-Indexed Route Dispatcher

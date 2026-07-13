@@ -33,7 +33,7 @@ At Padi REST API, security is not an afterthought—it's the core. We've enginee
 
 ## Security Overview
 
-### Security Score: 9.8/10 🛡️
+### Security Score: 9.8/10 🛡️ (Internal Self-Audit based on OWASP)
 
 Padi REST API implements multiple layers of security to protect your application and data.
 

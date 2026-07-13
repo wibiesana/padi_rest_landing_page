@@ -15,14 +15,13 @@
           <h1
             class="text-h2 text-weight-bolder q-ma-none text-gradient text-uppercase tracking-tighter"
           >
-            PADI REST API
+            {{ $t('hero.title') }}
           </h1>
           <div class="hero-subtitle-container q-mt-lg">
             <p
               class="text-h5 text-white text-weight-light max-width-900 opacity-90 border-left-primary q-pl-lg"
             >
-              The Industrial-Grade, <span class="text-weight-bold">Zero-Bloat</span> PHP REST API
-              Framework for the Modern Web
+              {{ $t('hero.subtitle') }}
             </p>
           </div>
           <div class="q-mt-xl q-gutter-lg flex justify-center">
@@ -30,7 +29,7 @@
               color="primary"
               size="lg"
               unelevated
-              label="Get Started"
+              :label="$t('hero.getStarted')"
               icon="rocket_launch"
               @click="scrollTo('quickstart')"
               class="premium-btn shadow-24"
@@ -39,7 +38,7 @@
               outline
               color="white"
               size="lg"
-              label="Documentation"
+              :label="$t('hero.documentation')"
               @click="scrollTo('docs')"
               class="premium-btn-outline"
               icon="menu_book"
@@ -54,18 +53,16 @@
       <div class="row q-col-gutter-xl items-center">
         <div class="col-12 col-md-5">
           <div class="text-h3 text-weight-bolder text-white q-mb-lg leading-tight">
-            Built for <span class="text-primary">Speed</span>,<br />
-            Scaled for <span class="text-gradient">Industrial</span> Growth.
+            {{ $t('philosophy.title1') }} <span class="text-primary">{{ $t('philosophy.titleSpeed') }}</span>,<br />
+            {{ $t('philosophy.title2') }} <span class="text-gradient">{{ $t('philosophy.titleIndustrial') }}</span>.
           </div>
           <p class="text-body1 text-grey-4 text-weight-light line-height-1-8">
-            PADI isn't just another PHP framework; it's a meticulously crafted
-            <b class="text-white">REST API Generation Engine</b> designed to transform your database
-            schemas into production-ready RESTful services instantly.
+            {{ $t('philosophy.desc') }}
           </p>
           <q-btn
             flat
             color="primary"
-            label="Read the philosophy →"
+            :label="$t('philosophy.readBtn')"
             size="lg"
             rounded
             class="q-mt-md no-padding hover-translate-x"
@@ -92,7 +89,7 @@
     <!-- Features Bento Grid -->
     <section id="features" class="q-py-100 container reveal">
       <div class="text-center q-mb-100">
-        <h2 class="text-h3 text-weight-bolder text-white">Advanced Core Systems</h2>
+        <h2 class="text-h3 text-weight-bolder text-white">{{ $t('features.title') }}</h2>
         <div class="h-line-gradient q-mx-auto q-mt-md"></div>
       </div>
 
@@ -118,7 +115,7 @@
                 outline
                 color="primary"
                 text-color="white"
-                label="High Performance"
+                :label="$t('features.performanceTag')"
                 size="sm"
                 dense
               />
@@ -133,11 +130,10 @@
       <div class="mesh-blob mesh-4"></div>
       <div class="container row q-col-gutter-xl items-center">
         <div class="col-12 col-md-6 text-white">
-          <div class="text-overline text-primary letter-spacing-2 q-mb-md">PERFORMANCE METRICS</div>
-          <h3 class="text-h3 text-weight-bolder q-mb-xl line-height-1">Precision Engineering.</h3>
+          <div class="text-overline text-primary letter-spacing-2 q-mb-md">{{ $t('stats.title') }}</div>
+          <h3 class="text-h3 text-weight-bolder q-mb-xl line-height-1">{{ $t('stats.subtitle') }}</h3>
           <p class="text-body1 text-grey-4 font-light q-mb-xl">
-            Optimized for shared hosting and enterprise clusters alike. Our framework yields
-            industry-leading security scores without sacrificing execution speed.
+            {{ $t('stats.desc') }}
           </p>
           <div class="row q-col-gutter-lg">
             <div v-for="stat in stats" :key="stat.label" class="col-6">
@@ -154,8 +150,8 @@
           <div class="visual-placeholder glass-card flex flex-center q-pa-xl border-dashed">
             <div class="column items-center">
               <q-spinner-puff color="primary" size="100px" />
-              <div class="text-h6 text-primary q-mt-lg">Real-time Performance Monitoring</div>
-              <div class="text-caption text-grey-5">Awaiting Production Deployment...</div>
+              <div class="text-h6 text-primary q-mt-lg">{{ $t('monitor.title') }}</div>
+              <div class="text-caption text-grey-5">{{ $t('monitor.desc') }}</div>
             </div>
           </div>
         </div>
@@ -167,11 +163,10 @@
       <div class="row q-col-gutter-xl items-center">
         <div class="col-12 col-lg-5">
           <h2 class="text-h3 text-weight-bolder text-white q-mb-lg">
-            Get Running <br /><span class="text-gradient">Instantly</span>.
+            {{ $t('quickStart.title1') }} <br /><span class="text-gradient">{{ $t('quickStart.title2') }}</span>.
           </h2>
           <p class="text-h6 text-grey-4 q-mb-xl font-light">
-            No massive installation wizards. Just one command to pull the engine and start
-            scaffolding your architecture.
+            {{ $t('quickStart.desc') }}
           </p>
           <div class="q-gutter-y-md">
             <div v-for="(step, i) in installationSteps" :key="i" class="flex items-center">
@@ -226,9 +221,9 @@
     <section id="docs" class="q-py-100 bg-premium reveal">
       <div class="container">
         <div class="text-center q-mb-100">
-          <h2 class="text-h3 text-weight-bolder text-white">Guided Mastery</h2>
+          <h2 class="text-h3 text-weight-bolder text-white">{{ $t('learning.title') }}</h2>
           <p class="text-h6 text-grey-4">
-            Framework-specific paths designed to accelerate your delivery
+            {{ $t('learning.subtitle') }}
           </p>
         </div>
 
@@ -267,7 +262,7 @@
                 <q-btn
                   flat
                   color="primary"
-                  label="Begin this Path"
+                  :label="$t('learning.beginBtn')"
                   icon-right="east"
                   @click="goToDocs(path.target)"
                   class="full-width"
@@ -284,17 +279,16 @@
       <div class="mesh-blob mesh-1" style="bottom: -200px; top: auto; right: 0"></div>
       <div class="container relative-position">
         <h2 class="text-h2 text-weight-bolder text-white q-mb-lg leading-tight">
-          Ready to Experience <br /><span class="text-primary">Raw Power</span>?
+          {{ $t('cta.title1') }} <br /><span class="text-primary">{{ $t('cta.title2') }}</span>?
         </h2>
         <p class="text-h5 q-mb-xl text-grey-4 opacity-80 max-width-800 q-mx-auto">
-          Join the ecosystem of engineers building industrial REST services without the boilerplate.
-          Stop wrestle, start shipping.
+          {{ $t('cta.desc') }}
         </p>
         <q-btn
           color="primary"
           size="xl"
           unelevated
-          label="Install Framework"
+          :label="$t('cta.installBtn')"
           icon="terminal"
           @click="scrollTo('quickstart')"
           class="premium-btn shadow-24"
@@ -305,9 +299,10 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar, useMeta } from 'quasar'
+import { useI18n } from 'vue-i18n'
 import heroImage from 'assets/brand/padi_menunduk.png'
 import { APP_CONFIG } from 'src/constants'
 
@@ -321,6 +316,7 @@ useMeta({
 
 const router = useRouter()
 const $q = useQuasar()
+const { t } = useI18n()
 
 // Animation Logic: Intersection Observer
 let observer = null
@@ -344,103 +340,126 @@ onUnmounted(() => {
   if (observer) observer.disconnect()
 })
 
-const stats = [
-  { label: 'Security Score', value: '9.8', color: 'text-primary' },
-  { label: 'Performance', value: '9.5', color: 'text-accent' },
-]
+const stats = computed(() => [
+  { label: t('stats.securityScore'), value: '9.8', color: 'text-primary' },
+  { label: t('stats.performance'), value: '9.5', color: 'text-accent' },
+])
 
-const installationSteps = [
-  'Pull the SDK via Composer',
-  'Automated Setup Wizard',
-  'Launch Dev Environment',
-]
+const installationSteps = computed(() => [
+  t('quickStart.steps[0]'),
+  t('quickStart.steps[1]'),
+  t('quickStart.steps[2]'),
+])
 
-const philosophyItems = [
+const philosophyItems = computed(() => [
   {
     l: 'P',
-    t: 'Performant',
-    d: 'Hyper-optimized execution core that extracts every ounce of speed from modern PHP architectures.',
+    t: t('philosophy.items.p.t'),
+    d: t('philosophy.items.p.d'),
   },
   {
     l: 'A',
-    t: 'Adaptable',
-    d: 'Flawlessly bridges the gap between diverse backend databases and blazing-fast frontend ecosystems.',
+    t: t('philosophy.items.a.t'),
+    d: t('philosophy.items.a.d'),
   },
   {
     l: 'D',
-    t: 'Distributed',
-    d: 'Engineered from the ground up to thrive in clustered microservices and containerized environments.',
+    t: t('philosophy.items.d.t'),
+    d: t('philosophy.items.d.d'),
   },
   {
     l: 'I',
-    t: 'Interface',
-    d: 'The ultimate standard, providing iron-clad, reliable data plumbing for your mission-critical applications.',
+    t: t('philosophy.items.i.t'),
+    d: t('philosophy.items.i.d'),
   },
-]
+])
 
-const features = [
+const features = computed(() => [
   {
-    title: 'Auto CRUD SDK',
-    description:
-      'Instantly transform database schemas into production-ready RESTful APIs with full documentation in seconds.',
+    title: t('features.items.cli.t'),
+    description: t('features.items.cli.d'),
     icon: 'auto_fix_high',
   },
   {
-    title: 'Ultra-Lightweight',
-    description:
-      'Zero-bloat architecture that eliminates heavy overhead, ensuring minimal latency and maximum clarity.',
-    icon: 'inventory_2',
-  },
-  {
-    title: 'Worker-Optimized',
-    description:
-      'Native FrankenPHP Worker Mode support delivering up to 10x performance gains via memory-state optimization.',
-    icon: 'rocket_launch',
-  },
-  {
-    title: 'Modern Core',
-    description:
-      'Built for PHP 8.4+ standards, utilizing latest enhancements for robust, type-safe, and clean codebases.',
+    title: t('features.items.routing.t'),
+    description: t('features.items.routing.d'),
     icon: 'hub',
   },
   {
-    title: 'Stateless Shield',
-    description:
-      'Engineered specifically for high-traffic environments, safe from memory leaks in long-lived execution.',
+    title: t('features.items.orm.t'),
+    description: t('features.items.orm.d'),
+    icon: 'storage',
+  },
+  {
+    title: t('features.items.middleware.t'),
+    description: t('features.items.middleware.d'),
+    icon: 'inventory_2',
+  },
+  {
+    title: t('features.items.queue.t'),
+    description: t('features.items.queue.d'),
+    icon: 'rocket_launch',
+  },
+  {
+    title: t('features.items.cache.t'),
+    description: t('features.items.cache.d'),
+    icon: 'speed',
+  },
+  {
+    title: t('features.items.auth.t'),
+    description: t('features.items.auth.d'),
     icon: 'security',
   },
   {
-    title: 'Agnostic Data',
-    description:
-      'Seamlessly scale between MySQL, PostgreSQL, or SQLite without rewriting your core business logic.',
-    icon: 'storage',
+    title: t('features.items.validation.t'),
+    description: t('features.items.validation.d'),
+    icon: 'rule',
   },
-]
-
-const learningPaths = [
   {
-    title: 'Quick Scaffolder',
-    description:
-      'Perfect for building rapid RESTful prototypes or standard internal utility services.',
+    title: t('features.items.response.t'),
+    description: t('features.items.response.d'),
+    icon: 'description',
+  },
+])
+
+const learningPaths = computed(() => [
+  {
+    title: t('learning.paths.basics.t'),
+    description: t('learning.paths.basics.d'),
     icon: 'flash_on',
     target: 'intro',
-    steps: ['CLI Overview', 'Auto-CRUD Gen', 'First API Calls'],
+    steps: [
+      t('learning.paths.basics.steps[0]'),
+      t('learning.paths.basics.steps[1]'),
+      t('learning.paths.basics.steps[2]'),
+      t('learning.paths.basics.steps[3]'),
+    ],
   },
   {
-    title: 'Enterprise Architect',
-    description: 'Designed for high-load systems requiring RBAC, multi-DB, and caching layers.',
+    title: t('learning.paths.advanced.t'),
+    description: t('learning.paths.advanced.d'),
     icon: 'architecture',
     target: 'models',
-    steps: ['ActiveRecord Dive', 'RBAC Logic', 'Database Clusters'],
+    steps: [
+      t('learning.paths.advanced.steps[0]'),
+      t('learning.paths.advanced.steps[1]'),
+      t('learning.paths.advanced.steps[2]'),
+      t('learning.paths.advanced.steps[3]'),
+    ],
   },
   {
-    title: 'DevOps & Scaling',
-    description: 'Focus on production hardening, worker mode optimization, and containerization.',
+    title: t('learning.paths.production.t'),
+    description: t('learning.paths.production.d'),
     icon: 'speed',
     target: 'hosting',
-    steps: ['Worker Mode Fix', 'Docker Runtime', 'Security Hardening'],
+    steps: [
+      t('learning.paths.production.steps[0]'),
+      t('learning.paths.production.steps[1]'),
+      t('learning.paths.production.steps[2]'),
+      t('learning.paths.production.steps[3]'),
+    ],
   },
-]
+])
 
 function scrollTo(id) {
   const el = document.getElementById(id)
