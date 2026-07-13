@@ -1,6 +1,34 @@
 # CHANGE LOG
 
-## v2.0.13 (2026-07-07)
+## v2.0.13 (2026-07-13)
+
+### 🛡️ Validator Upgrades: 14 New REST-oriented Validation Rules
+
+Expanded the validation engine to support complex REST scenarios with conditional, format-specific, and size-based checks.
+
+- **New Validation Rules**:
+  - **Presence & Conditional**: `sometimes` (skip if absent), `required_if:field,value`, `required_with:fields`, `required_without:fields`.
+  - **Types & Formats**: `string`, `json`, `uuid`, `boolean`, `date_format:format`, `before:date`, `after:date`.
+  - **Size & Sets**: `between:min,max` (string length/numeric value/array count), `size:value`, `not_in:values`, `alpha_dash`.
+- **Worker-Safe Cache Isolation**: Added `LOCK_EX` on rate-limiter file updates and `array_values()` to prevent sparse array representation in storage cache under concurrent server environments.
+
+### ⚙️ Code Generator: Smarter Validation Rules & Partial Update Support
+
+Upgraded `Generator.php` to leverage the new rules and handle updates properly:
+
+- **Partial Updates Support (`sometimes`)**: Concrete models generated now use `sometimes` rule instead of `required` during `update()` calls, preventing errors on partial PUT/PATCH API requests.
+- **Smarter Type Mapping**:
+  - `tinyint(1)` database columns are now automatically mapped to `boolean` rule.
+  - `text`/`longtext` columns map to `string` rule without maximum length limit constraint.
+  - `date` and `datetime/timestamp` columns are mapped to `date_format:Y-m-d` and `date_format:Y-m-d H:i:s` respectively.
+  - Generates semantic `url`, `uuid` and `email` checks based on database column names.
+- **Auditing exclusion**: `created_by` and `updated_by` are now excluded from generated rules since they are automatically populated by the framework.
+
+### 📦 Boilerplate Template Alignments
+
+- **`PasswordReset` model**: Added missing model implementation required by `PasswordResetController`.
+- **`SendEmailJob` cleanup**: Removed simulated `sleep(2)` blocking statement.
+- **`SiteController`**: Streamlined methods to return clean arrays instead of redundant manual `Response` objects.
 
 ### 🚀 Feature: `joinWith()` for SQL JOIN Queries
 
@@ -67,13 +95,13 @@ Comprehensive optimizations to reduce per-request resource usage, minimize exter
 
 ### 📊 Resource Savings Summary
 
-| Metric | Before | After |
-| --- | --- | --- |
-| `header()` calls per response (production, no origin) | 9 | 5 |
-| DB queries per new MySQL connection | 3 | 1 |
-| Route iterations per dispatch (60 routes) | ~60 | ~10 |
-| Object allocations per cache call | 1 | 0 |
-| `getenv()` system calls (repeated key) | N | 1 |
+| Metric                                                | Before | After |
+| ----------------------------------------------------- | ------ | ----- |
+| `header()` calls per response (production, no origin) | 9      | 5     |
+| DB queries per new MySQL connection                   | 3      | 1     |
+| Route iterations per dispatch (60 routes)             | ~60    | ~10   |
+| Object allocations per cache call                     | 1      | 0     |
+| `getenv()` system calls (repeated key)                | N      | 1     |
 
 ## v2.0.12 (2026-07-04)
 

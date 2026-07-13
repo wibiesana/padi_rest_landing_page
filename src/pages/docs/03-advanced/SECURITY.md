@@ -429,23 +429,40 @@ protected function getValidationRules(): array
 
 ### Available Rules
 
-| Rule                  | Example              | Description                     |
-| --------------------- | -------------------- | ------------------------------- |
-| `required`            | `required`           | Field must be present           |
-| `email`               | `email`              | Must be valid email             |
-| `numeric`             | `numeric`            | Must be number                  |
-| `integer`             | `integer`            | Must be integer **(v2.0.2)**    |
-| `min:n`               | `min:8`              | Minimum length (mb_strlen)      |
-| `max:n`               | `max:255`            | Maximum length (mb_strlen)      |
-| `in:a,b`              | `in:active,inactive` | Must be one of values           |
-| `exists:table,column` | `exists:users,id`    | Must exist in table             |
-| `unique:table,column` | `unique:users,email` | Must be unique                  |
-| `confirmed`           | `confirmed`          | Must match \_confirmation field |
-| `date`                | `date`               | Must be valid date              |
-| `boolean`             | `boolean`            | Must be true/false/0/1          |
-| `array`               | `array`              | Must be array **(v2.0.2)**      |
-| `regex:pattern`       | `regex:/^[A-Z]+$/`   | Must match regex **(v2.0.2)**   |
-| `nullable`            | `nullable`           | Allows null values **(v2.0.2)** |
+| Rule | Example | Description |
+| ---- | ------- | ----------- |
+| `required` | `required` | Field must be present and not empty |
+| `sometimes` | `sometimes` | Validated only if present in the input **(v2.0.13)** |
+| `required_if` | `required_if:status,active` | Required if other field equals value **(v2.0.13)** |
+| `required_with` | `required_with:first_name` | Required if any specified field is present **(v2.0.13)** |
+| `required_without` | `required_without:email` | Required if any specified field is absent **(v2.0.13)** |
+| `string` | `string` | Must be a valid string **(v2.0.13)** |
+| `numeric` | `numeric` | Must be a numeric value |
+| `integer` | `integer` | Must be an integer value |
+| `boolean` | `boolean` | Must be true/false/0/1/"0"/"1" |
+| `array` | `array` | Must be an array |
+| `json` | `json` | Must be a valid JSON string **(v2.0.13)** |
+| `email` | `email` | Must be a valid email address |
+| `url` | `url` | Must be a valid URL **(v2.0.13)** |
+| `uuid` | `uuid` | Must be a valid UUID **(v2.0.13)** |
+| `date` | `date` | Must be a valid date |
+| `date_format` | `date_format:Y-m-d` | Must match specific format **(v2.0.13)** |
+| `before` | `before:today` | Must be a date before reference **(v2.0.13)** |
+| `after` | `after:2026-01-01` | Must be a date after reference **(v2.0.13)** |
+| `min:n` | `min:8` | Minimum length (strings/arrays) or value (numbers) |
+| `max:n` | `max:255` | Maximum length (strings/arrays) or value (numbers) |
+| `between:min,max` | `between:1,10` | Value or length must be in range **(v2.0.13)** |
+| `size:n` | `size:6` | Value or length must be exactly n **(v2.0.13)** |
+| `in:values` | `in:active,inactive` | Must be one of the values |
+| `not_in:values` | `not_in:banned` | Must not be one of the values **(v2.0.13)** |
+| `unique:table,col` | `unique:users,email` | Must be unique in table |
+| `exists:table,col` | `exists:users,id` | Must exist in table |
+| `confirmed` | `confirmed` | Must match `_confirmation` field |
+| `alpha` | `alpha` | Must contain only alphabetic characters |
+| `alpha_dash` | `alpha_dash` | Letters, numbers, dashes, underscores **(v2.0.13)** |
+| `alphanumeric` | `alphanumeric` | Must contain only letters and numbers |
+| `regex:pattern` | `regex:/^[A-Z]+$/` | Must match regular expression |
+| `nullable` | `nullable` | Allows null values |
 
 ### Best Practices
 

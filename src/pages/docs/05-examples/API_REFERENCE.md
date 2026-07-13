@@ -278,16 +278,40 @@ GET /products?page=1&per_page=20&search=laptop&sort=price&order=desc
 
 ## Validation Rules
 
-| Rule                  | Description                         |
-| :-------------------- | :---------------------------------- |
-| `required`            | Field must be present and not empty |
-| `string`              | Must be a valid string              |
-| `numeric`             | Must be a numeric value             |
-| `email`               | Must be a valid email format        |
-| `min:n`               | Minimum length/value                |
-| `max:n`               | Maximum length/value                |
-| `unique:table,column` | Must be unique in the database      |
-| `exists:table,column` | Must exist in the database          |
+| Rule                       | Description                                                     |
+| :------------------------- | :-------------------------------------------------------------- |
+| `required`                 | Field must be present and not empty                             |
+| `sometimes`                | Field is validated only if it is present in the input           |
+| `required_if:field,val`    | Field is required if another field equals a specific value       |
+| `required_with:fields`     | Field is required if any of the specified fields are present    |
+| `required_without:fields`  | Field is required if any of the specified fields are absent     |
+| `string`                   | Must be a valid string                                          |
+| `numeric`                  | Must be a numeric value                                         |
+| `integer`                  | Must be an integer value                                        |
+| `boolean`                  | Must be a boolean value (true, false, 0, 1, "0", "1")           |
+| `array`                    | Must be an array                                                |
+| `json`                     | Must be a valid JSON string                                     |
+| `email`                    | Must be a valid email format                                    |
+| `url`                      | Must be a valid URL                                             |
+| `uuid`                     | Must be a valid UUID                                            |
+| `date`                     | Must be a valid date                                            |
+| `date_format:format`       | Must match a specific date format (e.g., `Y-m-d H:i:s`)         |
+| `before:date`              | Must be a date before a given date                              |
+| `after:date`               | Must be a date after a given date                               |
+| `min:n`                    | Minimum length (strings/arrays) or numeric value                |
+| `max:n`                    | Maximum length (strings/arrays) or numeric value                |
+| `between:min,max`          | Value/length must be between min and max                        |
+| `size:n`                   | Value/length must be exactly n                                  |
+| `in:values`                | Must be one of the comma-separated values                       |
+| `not_in:values`            | Must not be one of the comma-separated values                   |
+| `unique:table,column`      | Must be unique in the database                                  |
+| `exists:table,column`      | Must exist in the database                                      |
+| `confirmed`                | Must match a confirmation field (e.g., `password_confirmation`)  |
+| `alpha`                    | Must contain only alphabetic characters                         |
+| `alpha_dash`               | Must contain only letters, numbers, dashes, and underscores      |
+| `alphanumeric`             | Must contain only letters and numbers                           |
+| `regex:pattern`            | Must match the regular expression pattern                       |
+| `nullable`                 | Field is allowed to be null                                     |
 
 ---
 
