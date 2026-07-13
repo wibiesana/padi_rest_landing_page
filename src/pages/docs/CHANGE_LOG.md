@@ -13,7 +13,12 @@ Introduced native support for pushing real-time messages to connected clients us
 - **Global Toggle (`.env`)**:
   - Introduced `MERCURE_ENABLED` flag to toggle the real-time server-sent events at runtime with zero overhead when disabled.
 - **Autentikasi Integration**:
-  - Automatically attaches `realtime` parameters (hub url and JWT token) to login and register payloads in `AuthController.php`.
+  - Automatically attaches `realtime` parameters (hub url and JWT token) to login and register responses only if `MERCURE_ENABLED=true` AND `MERCURE_HUB_URL` is set.
+
+### 🛡️ Boilerplate Robustness & Mail Upgrades
+
+- **Safe Mail Queue Job**: Wrapped `Email::send()` inside `SendEmailJob` in a try-catch block to prevent registration flow crashes if PHPMailer or mail server configuration is missing.
+- **Configurable Welcome Email**: Welcome email queueing is now completely optional and configurable via the `SEND_WELCOME_EMAIL` env variable, dynamically adjusting the registration response messages.
 
 ## v2.0.13 (2026-07-13)
 

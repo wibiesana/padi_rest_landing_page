@@ -165,7 +165,7 @@ eventSource.onerror = (err) => {
 For private channels (e.g. user-specific notifications, chat rooms), you must authorize the subscribers.
 
 ### 1. Active Token via Auth API
-When a user logs in or registers, Padi automatically attaches a secure subscriber JWT token (with authorization to read `'user-notifications-{userId}'`) to the response payload:
+When a user logs in or registers—provided `MERCURE_ENABLED=true` is set and `MERCURE_HUB_URL` is configured in your `.env`—Padi automatically attaches a secure subscriber JWT token (with authorization to read `'user-notifications-{userId}'`) to the response payload:
 
 ```json
 {

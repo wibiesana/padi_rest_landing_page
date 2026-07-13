@@ -195,6 +195,96 @@ RATE_LIMIT_WINDOW=60
 
 ---
 
+## 📖 Complete `.env` Reference Table
+
+Here is the complete reference table for all available environment variables in your `.env` file:
+
+### 1. Application & Debugging
+| Variable | Default | Description |
+|---|---|---|
+| `APP_VERSION` | `1.0.0` | Target version of the application. |
+| `APP_NAME` | `"Padi REST API Framework"` | Name of the API, used in headers and templates. |
+| `APP_ENV` | `development` | Environment mode (`development` or `production`). |
+| `APP_DEBUG` | `true` | Toggles detailed stack traces and debugging information. |
+| `APP_URL` | _(auto)_ | Explicit base URL. Leave empty to auto-detect from requests. |
+| `RESPONSE_FORMAT` | `full` | Format style: `full` (standard), `simple` (flat), or `raw`. |
+| `ENABLE_COMPRESSION` | `true` | Enable gzip compression on HTTP responses. |
+| `DEBUG_SHOW_QUERIES` | `true` | Appends SQL execution queries list in API response payload. |
+| `DEBUG_SHOW_ALL_DB_ERRORS` | `false` | Expose raw database connection errors in response. |
+
+### 2. Database Connections
+| Variable | Default | Description |
+|---|---|---|
+| `DB_CONNECTION` | `mysql` | Target driver: `mysql`, `pgsql`, `sqlite`, or `mariadb`. |
+| `DB_HOST` | `localhost` | Hostname of database server. |
+| `DB_PORT` | `3306` | Port number of database server. |
+| `DB_DATABASE` | `rest_api_db` | Name of the database schema. |
+| `DB_USERNAME` | `root` | Database username. |
+| `DB_PASSWORD` | _(empty)_ | Database password. |
+| `DB_CHARSET` | `utf8mb4` | Connection charset. |
+| `DB_COLLATION` | `utf8mb4_unicode_ci`| Connection collation. |
+
+### 3. JWT Security & CORS
+| Variable | Default | Description |
+|---|---|---|
+| `JWT_SECRET` | _(required)_ | HS256 secret key. Must be a strong 32+ character random hash. |
+| `JWT_ALGORITHM` | `HS256` | JWT signing method: `HS256`, `HS384`, or `HS512`. |
+| `JWT_EXPIRY` | `3600` | Token validity time in seconds. |
+| `CORS_ALLOWED_ORIGINS` | `*` | Allowed client domains (comma-separated). |
+| `RATE_LIMIT_MAX` | `60` | Max requests allowed per window. |
+| `RATE_LIMIT_WINDOW` | `60` | Rate limiter window in seconds. |
+
+### 4. Mail Settings & Queue Tasks
+| Variable | Default | Description |
+|---|---|---|
+| `MAIL_DRIVER` | `smtp` | Mailer method: `smtp` or `mail`. |
+| `MAIL_HOST` | `smtp.mailtrap.io`| SMTP Server hostname. |
+| `MAIL_PORT` | `2525` | SMTP Server port. |
+| `MAIL_USERNAME` | _(empty)_ | SMTP Server username. |
+| `MAIL_PASSWORD` | _(empty)_ | SMTP Server password. |
+| `MAIL_ENCRYPTION` | `tls` | SMTP security protocol (`tls` or `ssl`). |
+| `MAIL_FROM_ADDRESS` | `noreply@...` | Email sender address. |
+| `MAIL_FROM_NAME` | `"${APP_NAME}"`| Email sender display name. |
+| `SEND_WELCOME_EMAIL` | `false` | Toggle automated welcome emails during registration. |
+
+### 5. Caching & Redis Config
+| Variable | Default | Description |
+|---|---|---|
+| `CACHE_DRIVER` | `file` | Cache driver: `file` or `redis`. |
+| `CACHE_L1_MAX` | `1000` | Max entries to hold in memory. |
+| `CACHE_L1_MAX_MEMORY_MB`| `64` | Max RAM usage for L1 cache. |
+| `REDIS_HOST` | `127.0.0.1` | Redis server hostname. |
+| `REDIS_PORT` | `6379` | Redis server port. |
+| `REDIS_PASSWORD` | _(empty)_ | Redis server password. |
+| `REDIS_PREFIX` | `padi:` | Prefix key name for Redis cache. |
+
+### 6. Queue Processing
+| Variable | Default | Description |
+|---|---|---|
+| `QUEUE_DRIVER` | `sync` | Queue driver: `sync` (instant), `database`, or `redis`. |
+| `QUEUE_MAX_ATTEMPTS` | `3` | Maximum task retry limit before marking as failed. |
+| `QUEUE_SLEEP` | `3` | Worker sleep time in seconds when queue is empty. |
+| `QUEUE_GC_INTERVAL` | `100` | Garbage collection trigger interval (job counts). |
+| `QUEUE_MAX_JOBS` | `1000` | Maximum jobs worker processes before restarting. |
+
+### 7. FrankenPHP Workers
+| Variable | Default | Description |
+|---|---|---|
+| `MAX_REQUESTS` | `500` | Restart worker process after N requests to clear leaks. |
+| `GC_INTERVAL` | `50` | Call garbage collector cycle every N requests. |
+| `COLUMNS_CACHE_TTL` | `3600` | Column metadata cache timeout (seconds) for performance. |
+
+### 8. Real-time Broadcasting (Mercure)
+| Variable | Default | Description |
+|---|---|---|
+| `MERCURE_ENABLED` | `false` | Enable or disable SSE broadcasting. |
+| `MERCURE_HUB_URL` | _(empty)_ | Internal Mercure publishing endpoint (PHP curl client). |
+| `MERCURE_PUBLIC_HUB_URL`| _(empty)_ | External client connect endpoint. |
+| `MERCURE_PUBLISHER_JWT_KEY`| _(empty)_| Publisher secret JWT signing key. |
+| `MERCURE_SUBSCRIBER_JWT_KEY`| _(empty)_| Subscriber secret JWT verification key. |
+
+---
+
 ## Generate Strong JWT Secret
 
 ### Method 1: PHP Command
