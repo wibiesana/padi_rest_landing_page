@@ -307,10 +307,10 @@ import heroImage from 'assets/brand/padi_menunduk.png'
 import { APP_CONFIG } from 'src/constants'
 
 useMeta({
-  title: 'Padi REST API - Home',
+  title: 'Padi REST API - Zero-Bloat PHP REST API Framework',
   meta: {
-    description: { name: 'description', content: 'Industrial-grade PHP REST API framework. Zero-bloat, high performance, and secure.' },
-    keywords: { name: 'keywords', content: 'php, rest api, framework, padi, speed' }
+    description: { name: 'description', content: 'Build secure, zero-bloat, and lightweight RESTful APIs in PHP. Native FrankenPHP Worker Mode compatibility, active record ORM, and high performance.' },
+    keywords: { name: 'keywords', content: 'php rest api framework, php rest api, lightweight php framework, php web api, frankenphp api framework, fastest php api, zero dependency php framework, php active record orm, building rest api in php, php routing library, jwt authentication php' }
   }
 })
 

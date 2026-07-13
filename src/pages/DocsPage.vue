@@ -677,20 +677,40 @@ watch(
   }
 )
 
+// Helper to set googtrans cookie safely (handling localhost vs real domain)
+function setGoogtransCookie(langCode) {
+  const host = window.location.hostname
+  const cookieValue = `googtrans=/en/${langCode}; path=/`
+  document.cookie = cookieValue
+  if (host.includes('.')) {
+    document.cookie = `${cookieValue}; domain=.${host}`
+    document.cookie = `${cookieValue}; domain=${host}`
+  }
+}
+
+// Programmatically trigger Google Translate select combo box with retry polling
+function triggerGoogleTranslate(langCode) {
+  let attempts = 0
+  const maxAttempts = 30
+  const interval = setInterval(() => {
+    const selectEl = document.querySelector('.goog-te-combo')
+    if (selectEl) {
+      selectEl.value = langCode
+      selectEl.dispatchEvent(new Event('change'))
+      clearInterval(interval)
+    }
+    attempts++
+    if (attempts >= maxAttempts) {
+      clearInterval(interval)
+    }
+  }, 100)
+}
+
 // Watch global locale to automatically sync Google Translate
 watch(locale, (newLocale) => {
   const langCode = newLocale === 'id-ID' ? 'id' : 'en'
-
-  // Update cookies so the translation persists across page refreshes
-  document.cookie = `googtrans=/en/${langCode}; path=/`
-  document.cookie = `googtrans=/en/${langCode}; path=/; domain=${window.location.hostname}`
-
-  // Programmatically trigger Google Translate select combo box
-  const selectEl = document.querySelector('.goog-te-combo')
-  if (selectEl) {
-    selectEl.value = langCode
-    selectEl.dispatchEvent(new Event('change'))
-  }
+  setGoogtransCookie(langCode)
+  triggerGoogleTranslate(langCode)
 })
 
 onMounted(() => {
@@ -705,14 +725,9 @@ onMounted(() => {
     }, 'google_translate_element');
 
     // Auto-apply current active locale on load
-    setTimeout(() => {
-      const langCode = locale.value === 'id-ID' ? 'id' : 'en'
-      const selectEl = document.querySelector('.goog-te-combo')
-      if (selectEl) {
-        selectEl.value = langCode
-        selectEl.dispatchEvent(new Event('change'))
-      }
-    }, 800)
+    const langCode = locale.value === 'id-ID' ? 'id' : 'en'
+    setGoogtransCookie(langCode)
+    triggerGoogleTranslate(langCode)
   }
 
   // Load script
