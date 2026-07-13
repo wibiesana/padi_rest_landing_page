@@ -17,6 +17,8 @@ Introduced native support for pushing real-time messages to connected clients us
 - **Code Generator Integration**:
   - Adds interactive CLI questions and `--realtime` flag to `generate:crud` and `generate:crud-all` commands.
   - Automatically writes `afterSave` and `afterDelete` hooks calling `Realtime::publish` into concrete models when enabled.
+  - **Strict Default Protection**: Changed the default behavior when `--protected` is omitted so that all CRUD routes (`index`, `all`, `show`, `store`, `update`, `destroy`) require authentication by default.
+  - **Dynamic Route Grouping**: Refactored the route builder to dynamically split endpoints into public and protected routing groups instead of hardcoding them.
 
 ### 🛡️ Boilerplate Robustness & Mail Upgrades
 
