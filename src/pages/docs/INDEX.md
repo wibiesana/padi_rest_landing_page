@@ -296,6 +296,15 @@ Take your API to the next level with advanced features.
 - JWT best practices
 - HTTPS enforcement
 
+### Real-time Pub/Sub (Mercure Hub)
+
+**[📄 REALTIME.md](03-advanced/REALTIME.md)** ✨ NEW
+
+- FrankenPHP Mercure configuration
+- Publishing events (Controllers & ORM hooks)
+- Client-side integration code examples
+- Security & private topics subscription
+
 ### Multi-Database Support
 
 **[📄 MULTI_DATABASE.md](03-advanced/MULTI_DATABASE.md)**

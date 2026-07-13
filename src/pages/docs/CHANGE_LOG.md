@@ -1,5 +1,20 @@
 # CHANGE LOG
 
+## v2.1.0 (2026-07-13)
+
+### ⚡ Native Real-time Pub/Sub Capabilities (FrankenPHP Mercure)
+
+Introduced native support for pushing real-time messages to connected clients using the built-in Mercure SSE Hub inside FrankenPHP.
+
+- **`Realtime` Core Service (`padi_core`)**:
+  - Added a new light-weight, zero-dependency `Wibiesana\Padi\Core\Realtime` service class.
+  - Implements `Realtime::publish()` for pushing JSON payloads to Mercure topics via fast non-blocking cURL.
+  - Implements `Realtime::generateSubscriberJwt()` for creating secure subscriber JWT tokens dynamically.
+- **Global Toggle (`.env`)**:
+  - Introduced `MERCURE_ENABLED` flag to toggle the real-time server-sent events at runtime with zero overhead when disabled.
+- **Autentikasi Integration**:
+  - Automatically attaches `realtime` parameters (hub url and JWT token) to login and register payloads in `AuthController.php`.
+
 ## v2.0.13 (2026-07-13)
 
 ### 🛡️ Validator Upgrades: 14 New REST-oriented Validation Rules

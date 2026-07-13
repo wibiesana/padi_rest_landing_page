@@ -187,6 +187,7 @@ const iconMap = {
 
   // Advanced
   'SECURITY.md': 'security',
+  'REALTIME.md': 'sensors',
   'CACHING.md': 'timer',
   'QUEUE.md': 'playlist_add_check',
   'CLI_INTERFACE.md': 'terminal',

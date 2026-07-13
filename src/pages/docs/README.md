@@ -89,6 +89,7 @@ curl http://localhost:8085/
 | **[Cross-Origin (CORS)](03-advanced/CORS.md)**                  | Whitelisting & security         |
 | **[API Testing](03-advanced/API_TESTING.md)**                   | Testing your API                |
 | **[Security](03-advanced/SECURITY.md)**                         | Security best practices         |
+| **[Realtime](03-advanced/REALTIME.md)**                         | Real-time pub/sub via Mercure   |
 | **[Error Handling](03-advanced/ERROR_HANDLING.md)**             | Complete error & DB error guide |
 
 ### 🚀 Deployment
