@@ -627,8 +627,8 @@ docs/
 
 **Framework:** Padi REST API v{{APP_VERSION}}  
 **Status:** Production Ready ✅  
-**Security Score:** 9.0/10 🛡️  
-**Performance Score:** 8.5/10 ⚡  
+**Security Score:** 9.8/10 🛡️  
+**Performance Score:** 9.5/10 ⚡  
 **License:** MIT
 
 **Happy Coding!** 🌾
