@@ -13,10 +13,11 @@
             @click="leftDrawerOpen = !leftDrawerOpen"
           />
           <div class="text-h6 text-weight-bold text-gradient">Framework Documentation Hub</div>
-          <q-badge color="primary" class="q-ml-sm q-px-sm text-weight-bold" :label="'v' + APP_CONFIG.version" />
-          
-          <!-- Google Translate Widget Container -->
-          <div id="google_translate_element" class="q-ml-md gt-xs"></div>
+          <q-badge
+            color="primary"
+            class="q-ml-sm q-px-sm text-weight-bold"
+            :label="'v' + APP_CONFIG.version"
+          />
         </div>
         <q-input
           v-model="search"
@@ -137,18 +138,17 @@ const router = useRouter()
 const route = useRoute()
 const { locale } = useI18n()
 
-const categories = []
-
 // Markdown Logic
 const selectedMdTitle = ref('Loading Documentation...')
 const selectedMdHtml = ref('')
 
 useMeta(() => ({
-  title: selectedMdTitle.value ? `Padi Docs - ${selectedMdTitle.value}` : 'Padi REST API Documentation'
+  title: selectedMdTitle.value
+    ? `Padi Docs - ${selectedMdTitle.value}`
+    : 'Padi REST API Documentation',
 }))
 
 const mdModules = import.meta.glob('./docs/**/*.md', { query: '?raw', import: 'default' })
-const mdCategoriesMap = {}
 
 const iconMap = {
   // Getting Started
@@ -213,48 +213,6 @@ const iconMap = {
   'CHANGE_LOG.md': 'history',
 }
 
-for (const path in mdModules) {
-  const parts = path.split('/')
-  const filename = parts.pop()
-  if (filename === 'README.md') continue
-
-  let catTitle = ''
-  let label = ''
-
-  if (filename === 'INDEX.md') {
-    catTitle = 'Welcome'
-    label = 'Start Here'
-  } else if (filename === 'CHANGE_LOG.md') {
-    catTitle = 'Releases'
-    label = 'Change Log'
-  } else {
-    const folder = parts.pop()
-    catTitle = folder
-      .replace(/^\d+-/, '')
-      .replace(/-/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase())
-
-    label = filename
-      .replace('.md', '')
-      .replace(/[_|-]/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase())
-  }
-
-  if (!mdCategoriesMap[catTitle]) {
-    mdCategoriesMap[catTitle] = {
-      title: catTitle,
-      items: [],
-    }
-  }
-
-  mdCategoriesMap[catTitle].items.push({
-    id: path,
-    label: label,
-    icon: iconMap[filename] || 'article',
-    isMd: true,
-  })
-}
-
 const categoryOrder = [
   'welcome',
   'getting started',
@@ -286,34 +244,213 @@ const explicitOrder = [
   'change log',
 ]
 
-// Sort and push categories
-const sortedCategories = Object.values(mdCategoriesMap).sort((a, b) => {
-  const idxA = categoryOrder.indexOf(a.title.toLowerCase())
-  const idxB = categoryOrder.indexOf(b.title.toLowerCase())
-  if (idxA !== -1 && idxB !== -1) return idxA - idxB
-  if (idxA !== -1) return -1
-  if (idxB !== -1) return 1
-  return a.title.localeCompare(b.title)
-})
+// Computed menu dynamically switches items and translations based on active locale
+const docsMenu = computed(() => {
+  const mdCategoriesMap = {}
+  const keys = Object.keys(mdModules)
 
-categories.push(
-  ...sortedCategories.map((cat) => {
+  const idKeys = keys.filter((k) => k.includes('/id-ID/'))
+  const enKeys = keys.filter((k) => !k.includes('/id-ID/'))
+
+  let activeKeys = []
+  if (locale.value === 'id-ID') {
+    const resolved = {}
+    enKeys.forEach((k) => {
+      const rel = k.replace(/^\.\/docs\//, '')
+      resolved[rel] = k
+    })
+    idKeys.forEach((k) => {
+      const rel = k.replace(/^\.\/docs\/id-ID\//, '')
+      resolved[rel] = k
+    })
+    activeKeys = Object.values(resolved)
+  } else {
+    activeKeys = enKeys
+  }
+
+  activeKeys.forEach((path) => {
+    const parts = path.split('/')
+    const filename = parts.pop()
+    if (filename.toUpperCase() === 'README.MD') return
+
+    let catTitle = ''
+    let label = ''
+
+    // Helper to translate category and label names for ID
+    const translateLabel = (name) => {
+      if (locale.value !== 'id-ID') return name
+      const dict = {
+        // Categories
+        Welcome: 'Selamat Datang',
+        'Getting Started': 'Memulai',
+        'Core Concepts': 'Konsep Inti',
+        Advanced: 'Lanjutan',
+        Deployment: 'Penyebaran',
+        Examples: 'Contoh',
+        Releases: 'Rilis',
+        // Labels
+        Introduction: 'Pengenalan',
+        'Quick Start': 'Mulai Cepat',
+        Installation: 'Instalasi',
+        'Setup Methods': 'Metode Setup',
+        'First Steps': 'Langkah Pertama',
+        Configuration: 'Konfigurasi',
+        'Init App Guide': 'Panduan Inisialisasi',
+        'Init App Troubleshooting': 'Troubleshooting Inisialisasi',
+        Routing: 'Routing',
+        Controllers: 'Controller',
+        Models: 'Model',
+        'Active Record': 'Active Record',
+        Request: 'Request',
+        Response: 'Response',
+        Authentication: 'Autentikasi',
+        Database: 'Database',
+        Migrations: 'Migrasi',
+        Validation: 'Validasi',
+        'Query Builder': 'Query Builder',
+        Cache: 'Cache',
+        Email: 'Email',
+        'File Upload': 'Upload File',
+        Middleware: 'Middleware',
+        Rbac: 'RBAC',
+        Resources: 'Resource',
+        'Response Structure': 'Struktur Respon',
+        'User Model': 'Model User',
+        Security: 'Keamanan',
+        Caching: 'Caching',
+        Queue: 'Antrean (Queue)',
+        'Cli Interface': 'Antarmuka CLI',
+        'Frontend Integration': 'Integrasi Frontend',
+        'Api Testing': 'Pengujian API',
+        'Multi Database': 'Multi Database',
+        'File Storage': 'Penyimpanan File',
+        Mailer: 'Mailer',
+        Production: 'Produksi',
+        Docker: 'Docker',
+        'Frankenphp Setup': 'Setup FrankenPHP',
+        'Redis Setup': 'Setup Redis',
+        'Mode Switching': 'Peralihan Mode',
+        'Worker Scripts': 'Script Worker',
+        Performance: 'Performa',
+        Troubleshooting: 'Troubleshooting',
+        'Change Log': 'Catatan Perubahan',
+        'Start Here': 'Mulai di Sini',
+      }
+      return dict[name] || name
+    }
+
+    if (filename.toUpperCase() === 'INDEX.MD') {
+      catTitle = translateLabel('Welcome', true)
+      label = translateLabel('Start Here')
+    } else if (filename.toUpperCase() === 'CHANGE_LOG.MD') {
+      catTitle = translateLabel('Releases', true)
+      label = translateLabel('Change Log')
+    } else {
+      // Remove id-ID from folder parts if present
+      const folderParts = parts.filter((p) => p !== 'id-ID')
+      const folder = folderParts.pop()
+      const rawCat = folder
+        .replace(/^\d+-/, '')
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+
+      catTitle = translateLabel(rawCat, true)
+
+      const rawLabel = filename
+        .replace('.md', '')
+        .replace(/[_|-]/g, ' ')
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+
+      label = translateLabel(rawLabel)
+    }
+
+    if (!mdCategoriesMap[catTitle]) {
+      mdCategoriesMap[catTitle] = {
+        title: catTitle,
+        items: [],
+      }
+    }
+
+    mdCategoriesMap[catTitle].items.push({
+      id: path,
+      label: label,
+      icon: iconMap[filename] || 'article',
+      isMd: true,
+    })
+  })
+
+  // Sort categories
+  const sorted = Object.values(mdCategoriesMap).sort((a, b) => {
+    const getEngCat = (title) => {
+      const mapping = {
+        'Selamat Datang': 'welcome',
+        Memulai: 'getting started',
+        'Konsep Inti': 'core concepts',
+        Lanjutan: 'advanced',
+        Penyebaran: 'deployment',
+        Contoh: 'examples',
+        Rilis: 'releases',
+      }
+      return mapping[title] || title.toLowerCase()
+    }
+    const idxA = categoryOrder.indexOf(getEngCat(a.title))
+    const idxB = categoryOrder.indexOf(getEngCat(b.title))
+    if (idxA !== -1 && idxB !== -1) return idxA - idxB
+    if (idxA !== -1) return -1
+    if (idxB !== -1) return 1
+    return a.title.localeCompare(b.title)
+  })
+
+  sorted.forEach((cat) => {
     cat.items.sort((a, b) => {
-      const idxA = explicitOrder.indexOf(a.label.toLowerCase())
-      const idxB = explicitOrder.indexOf(b.label.toLowerCase())
+      const getEngLabel = (lbl) => {
+        const mapping = {
+          'Mulai di Sini': 'start here',
+          'Mulai Cepat': 'quick start',
+          Instalasi: 'installation',
+          'Metode Setup': 'setup methods',
+          'Langkah Pertama': 'first steps',
+          Konfigurasi: 'configuration',
+          'Panduan Inisialisasi': 'init app guide',
+          'Troubleshooting Inisialisasi': 'init app troubleshooting',
+          Controller: 'controllers',
+          Model: 'models',
+          'Model User': 'user model',
+          'Upload File': 'file upload',
+          'Struktur Respon': 'response structure',
+          'Antrean (Queue)': 'queue',
+          'Antarmuka CLI': 'cli interface',
+          'Integrasi Frontend': 'frontend integration',
+          'Pengujian API': 'api testing',
+          'Penyimpanan File': 'file storage',
+          Produksi: 'production',
+          'Setup FrankenPHP': 'frankenphp setup',
+          'Setup Redis': 'redis setup',
+          'Peralihan Mode': 'mode switching',
+          'Script Worker': 'worker scripts',
+          Performa: 'performance',
+          'Catatan Perubahan': 'change log',
+          Keamanan: 'security',
+          Pengenalan: 'introduction',
+        }
+        return mapping[lbl] || lbl.toLowerCase()
+      }
+      const idxA = explicitOrder.indexOf(getEngLabel(a.label))
+      const idxB = explicitOrder.indexOf(getEngLabel(b.label))
       if (idxA !== -1 && idxB !== -1) return idxA - idxB
       if (idxA !== -1) return -1
       if (idxB !== -1) return 1
       return a.label.localeCompare(b.label)
     })
-    return cat
-  }),
-)
+  })
+
+  return sorted
+})
 
 const filteredCategories = computed(() => {
-  if (!search.value) return categories
+  if (!search.value) return docsMenu.value
   const query = search.value.toLowerCase()
-  return categories
+  return docsMenu.value
     .map((cat) => ({
       ...cat,
       items: cat.items.filter(
@@ -347,22 +484,17 @@ async function navigateTo(item) {
     raw = raw.replace(/\{\{APP_VERSION\}\}/g, APP_CONFIG.version)
 
     // Format raw markdown uniformly
-    raw = cleanMarkdownRaw(raw);
+    raw = cleanMarkdownRaw(raw)
 
     selectedMdHtml.value = DOMPurify.sanitize(marked.parse(raw))
     selectedMdTitle.value = item.label
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
     // Dynamically update browser URL without .md extension
-    const cleanSlug = item.id
-      .split('/')
-      .pop()
-      .replace('.md', '')
-      .toLowerCase()
-      .replace(/_/g, '-');
+    const cleanSlug = item.id.split('/').pop().replace('.md', '').toLowerCase().replace(/_/g, '-')
 
-    const newPath = cleanSlug === 'index' ? '/docs' : `/docs/${cleanSlug}`;
-    router.replace(newPath);
+    const newPath = cleanSlug === 'index' ? '/docs' : `/docs/${cleanSlug}`
+    router.replace(newPath)
   }
 }
 
@@ -410,7 +542,7 @@ function handleMarkdownClick(event) {
   }
 
   // Handle internal markdown links (with or without anchor hashes)
-  const isMdLink = href.includes('.md') || href.endsWith('.md');
+  const isMdLink = href.includes('.md') || href.endsWith('.md')
   if (isMdLink) {
     event.preventDefault()
 
@@ -483,14 +615,29 @@ function handleMarkdownClick(event) {
 }
 
 async function loadInitialDoc() {
-  const topic = route.params.topic ? String(route.params.topic).toLowerCase().replace(/-/g, '_') : null
+  const topic = route.params.topic
+    ? String(route.params.topic).toLowerCase().replace(/-/g, '_')
+    : null
 
   // 1. Detect if specific topic is requested (e.g. /docs/active-record)
   if (topic) {
-    const matchedKey = Object.keys(mdModules).find((key) => {
-      const name = key.split('/').pop().replace('.md', '').toLowerCase().replace(/_/g, '_')
-      return name === topic
-    })
+    let matchedKey = null
+    if (locale.value === 'id-ID') {
+      matchedKey = Object.keys(mdModules).find((key) => {
+        if (!key.includes('/id-ID/')) return false
+        const name = key.split('/').pop().replace('.md', '').toLowerCase().replace(/_/g, '_')
+        return name === topic
+      })
+    }
+
+    // Fallback to English version if Indonesian is not found
+    if (!matchedKey) {
+      matchedKey = Object.keys(mdModules).find((key) => {
+        if (key.includes('/id-ID/')) return false
+        const name = key.split('/').pop().replace('.md', '').toLowerCase().replace(/_/g, '_')
+        return name === topic
+      })
+    }
 
     if (matchedKey) {
       if (activeSection.value === matchedKey) return
@@ -505,8 +652,19 @@ async function loadInitialDoc() {
   }
 
   // 2. Legacy Check if hash is #changelog
-  const hasChangelogTarget = window.location.hash === '#changelog' || window.location.search.includes('tab=changelog')
-  const changelogKey = Object.keys(mdModules).find((k) => k.includes('CHANGE_LOG.md'))
+  const hasChangelogTarget =
+    window.location.hash === '#changelog' || window.location.search.includes('tab=changelog')
+  let changelogKey = null
+  if (locale.value === 'id-ID') {
+    changelogKey = Object.keys(mdModules).find(
+      (k) => k.includes('/id-ID/') && k.includes('CHANGE_LOG.md'),
+    )
+  }
+  if (!changelogKey) {
+    changelogKey = Object.keys(mdModules).find(
+      (k) => !k.includes('/id-ID/') && k.includes('CHANGE_LOG.md'),
+    )
+  }
 
   if (hasChangelogTarget && changelogKey) {
     if (activeSection.value === changelogKey) return
@@ -520,9 +678,17 @@ async function loadInitialDoc() {
   }
 
   // 3. Fallback Priority: INDEX.md, then README.md
-  const indexKey =
-    Object.keys(mdModules).find((k) => k.includes('INDEX.md')) ||
-    Object.keys(mdModules).find((k) => k.includes('README.md'))
+  let indexKey = null
+  if (locale.value === 'id-ID') {
+    indexKey =
+      Object.keys(mdModules).find((k) => k.includes('/id-ID/') && k.includes('INDEX.md')) ||
+      Object.keys(mdModules).find((k) => k.includes('/id-ID/') && k.includes('README.md'))
+  }
+  if (!indexKey) {
+    indexKey =
+      Object.keys(mdModules).find((k) => !k.includes('/id-ID/') && k.includes('INDEX.md')) ||
+      Object.keys(mdModules).find((k) => !k.includes('/id-ID/') && k.includes('README.md'))
+  }
 
   if (indexKey) {
     if (activeSection.value === indexKey) return
@@ -531,13 +697,17 @@ async function loadInitialDoc() {
     raw = raw.replace(/\{\{APP_VERSION\}\}/g, APP_CONFIG.version)
 
     // Format raw markdown uniformly
-    raw = cleanMarkdownRaw(raw);
+    raw = cleanMarkdownRaw(raw)
 
     selectedMdHtml.value = DOMPurify.sanitize(marked.parse(raw))
-    selectedMdTitle.value = '🌾 Documentation Hub'
+    selectedMdTitle.value =
+      locale.value === 'id-ID' ? '🌾 Pusat Dokumentasi' : '🌾 Documentation Hub'
   } else {
-    selectedMdTitle.value = 'Welcome'
-    selectedMdHtml.value = '<p>Select a topic from the sidebar.</p>'
+    selectedMdTitle.value = locale.value === 'id-ID' ? 'Selamat Datang' : 'Welcome'
+    selectedMdHtml.value =
+      locale.value === 'id-ID'
+        ? '<p>Pilih topik dari bilah sisi.</p>'
+        : '<p>Select a topic from the sidebar.</p>'
   }
 }
 
@@ -548,121 +718,125 @@ async function loadInitialDoc() {
  *    that don't already start with an emoji/icon.
  */
 function cleanMarkdownRaw(raw) {
-  if (!raw) return '';
+  if (!raw) return ''
 
   // 1. Remove ".md" from label/text inside markdown links
-  raw = raw.replace(/\[([^\]]+)\.md\]\(/gi, '[$1](');
+  raw = raw.replace(/\[([^\]]+)\.md\]\(/gi, '[$1](')
 
   // 2. Format Table of Contents items cleanly
   // Matches list items under the TOC header and adds a matching document emoji from iconMap
-  const tocRegex = /(## 📋 Table of Contents\s*\n)([\s\S]*?)(?=\n## |---|$)/i;
+  const tocRegex = /(## 📋 Table of Contents\s*\n)([\s\S]*?)(?=\n## |---|$)/i
   raw = raw.replace(tocRegex, (match, header, listContent) => {
     // Mapping of Quasar icons to beautiful unicode emojis for Markdown rendering
     const emojiMapping = {
-      'rocket_launch': '🚀',
-      'bolt': '⚡',
-      'settings_remote': '⚙️',
-      'account_tree': '🌱',
-      'directions_walk': '👣',
-      'display_settings': '🔧',
-      'auto_awesome': '✨',
-      'moped': '🛵',
-      'hub': '🛣️',
-      'gamepad': '🎮',
-      'rebase_edit': '🧱',
-      'dataset': '💾',
-      'login': '📥',
-      'logout': '📤',
-      'vpn_key': '🔑',
-      'settings_input_component': '🔌',
-      'dynamic_feed': '📦',
-      'verified_user': '🛡️',
-      'manage_search': '🔍',
-      'cached': '⚡',
-      'send_time_extension': '📬',
-      'upload_file': '📁',
-      'filter_alt': '🎛️',
-      'badge': '🏷️',
-      'inventory': '🗃️',
-      'schema': '📐',
-      'account_circle': '👤',
-      'security': '🛡️',
-      'timer': '⏱️',
-      'playlist_add_check': '📋',
-      'terminal': '💻',
-      'devices': '📱',
-      'rule_folder': '📂',
-      'storage': '🗄️',
-      'folder_shared': '📂',
-      'alternate_email': '✉️',
-      'collections_bookmark': '📚',
-      'language': '🌐',
-      'report_problem': '⚠️',
-      'last_page': '📄',
-      'lock_reset': '🔄',
-      'running_with_errors': '🚀',
-      'anchor': '⚓',
-      'electric_bolt': '⚡',
-      'flash_on': '🔥',
-      'multiple_stop': '🔁',
-      'smart_toy': '🤖',
-      'speed': '📈',
-      'help_center': '❓',
-      'dashboard': '🌾',
-      'history': '📜'
-    };
+      rocket_launch: '🚀',
+      bolt: '⚡',
+      settings_remote: '⚙️',
+      account_tree: '🌱',
+      directions_walk: '👣',
+      display_settings: '🔧',
+      auto_awesome: '✨',
+      moped: '🛵',
+      hub: '🛣️',
+      gamepad: '🎮',
+      rebase_edit: '🧱',
+      dataset: '💾',
+      login: '📥',
+      logout: '📤',
+      vpn_key: '🔑',
+      settings_input_component: '🔌',
+      dynamic_feed: '📦',
+      verified_user: '🛡️',
+      manage_search: '🔍',
+      cached: '⚡',
+      send_time_extension: '📬',
+      upload_file: '📁',
+      filter_alt: '🎛️',
+      badge: '🏷️',
+      inventory: '🗃️',
+      schema: '📐',
+      account_circle: '👤',
+      security: '🛡️',
+      timer: '⏱️',
+      playlist_add_check: '📋',
+      terminal: '💻',
+      devices: '📱',
+      rule_folder: '📂',
+      storage: '🗄️',
+      folder_shared: '📂',
+      alternate_email: '✉️',
+      collections_bookmark: '📚',
+      language: '🌐',
+      report_problem: '⚠️',
+      last_page: '📄',
+      lock_reset: '🔄',
+      running_with_errors: '🚀',
+      anchor: '⚓',
+      electric_bolt: '⚡',
+      flash_on: '🔥',
+      multiple_stop: '🔁',
+      smart_toy: '🤖',
+      speed: '📈',
+      help_center: '❓',
+      dashboard: '🌾',
+      history: '📜',
+    }
 
     // Process each line in the TOC list block
     const updatedLines = listContent.split('\n').map((line) => {
-      const trimmed = line.trim();
+      const trimmed = line.trim()
       // If line is a list item starting with a link: - [label](url)
       if (trimmed.startsWith('- [') || trimmed.startsWith('* [')) {
-        const linkMatch = trimmed.match(/^[-*]\s+\[([^\]]+)\]\(([^)]+)\)/);
+        const linkMatch = trimmed.match(/^[-*]\s+\[([^\]]+)\]\(([^)]+)\)/)
         if (linkMatch) {
-          const text = linkMatch[1];
-          const href = linkMatch[2];
+          const text = linkMatch[1]
+          const href = linkMatch[2]
 
           // Check if link text already starts with a unicode emoji or custom icon
-          const hasEmoji = /^\p{Emoji}/u.test(text) 
-            || /^[\u2700-\u27BF]/u.test(text)
-            || /^[a-zA-Z0-9]/.test(text) === false;
+          const hasEmoji =
+            /^\p{Emoji}/u.test(text) ||
+            /^[\u2700-\u27BF]/u.test(text) ||
+            /^[a-zA-Z0-9]/.test(text) === false
 
           if (!hasEmoji) {
-            let matchedEmoji = '📄';
+            let matchedEmoji = '📄'
 
             // If the link is a local anchor link: e.g. "#requirements"
             if (href.startsWith('#')) {
-              const anchor = href.substring(1).toLowerCase();
-              if (anchor.includes('requirements')) matchedEmoji = '⚙️';
-              else if (anchor.includes('installation') || anchor.includes('step')) matchedEmoji = '🏗️';
-              else if (anchor.includes('verify') || anchor.includes('check')) matchedEmoji = '✓';
-              else if (anchor.includes('troubleshoot') || anchor.includes('error')) matchedEmoji = '❓';
-              else if (anchor.includes('next') || anchor.includes('link')) matchedEmoji = '👣';
-              else if (anchor.includes('routing') || anchor.includes('url')) matchedEmoji = '🛣️';
-              else if (anchor.includes('group') || anchor.includes('version')) matchedEmoji = '👥';
-              else if (anchor.includes('auth') || anchor.includes('security')) matchedEmoji = '🛡️';
-              else if (anchor.includes('method') || anchor.includes('action')) matchedEmoji = '⚡';
-              else if (anchor.includes('parameter') || anchor.includes('variable')) matchedEmoji = '🔢';
-              else if (anchor.includes('auto') || anchor.includes('wizard')) matchedEmoji = '🤖';
+              const anchor = href.substring(1).toLowerCase()
+              if (anchor.includes('requirements')) matchedEmoji = '⚙️'
+              else if (anchor.includes('installation') || anchor.includes('step'))
+                matchedEmoji = '🏗️'
+              else if (anchor.includes('verify') || anchor.includes('check')) matchedEmoji = '✓'
+              else if (anchor.includes('troubleshoot') || anchor.includes('error'))
+                matchedEmoji = '❓'
+              else if (anchor.includes('next') || anchor.includes('link')) matchedEmoji = '👣'
+              else if (anchor.includes('routing') || anchor.includes('url')) matchedEmoji = '🛣️'
+              else if (anchor.includes('group') || anchor.includes('version')) matchedEmoji = '👥'
+              else if (anchor.includes('auth') || anchor.includes('security')) matchedEmoji = '🛡️'
+              else if (anchor.includes('method') || anchor.includes('action')) matchedEmoji = '⚡'
+              else if (anchor.includes('parameter') || anchor.includes('variable'))
+                matchedEmoji = '🔢'
+              else if (anchor.includes('auto') || anchor.includes('wizard')) matchedEmoji = '🤖'
             } else {
               // Standard file link resolution
-              const filePart = href.split('#')[0].split('/').pop() || '';
-              const quasarIcon = iconMap[filePart] || '';
-              matchedEmoji = emojiMapping[quasarIcon] || '📄';
+              const filePart = href.split('#')[0].split('/').pop() || ''
+              const quasarIcon = iconMap[filePart] || ''
+              matchedEmoji = emojiMapping[quasarIcon] || '📄'
             }
-            
+
             // Prepend the matching visual emoji
-            return line.replace(/\[/, `[${matchedEmoji} `);
+            return line.replace(/\[/, `[${matchedEmoji} `)
           }
         }
       }
-      return line;
-    });
+      return line
+    })
 
-    return header + updatedLines.join('\n');
-  });
+    return header + updatedLines.join('\n')
+  })
 
-  return raw;
+  return raw
 }
 
 function handleMobileNav(item) {
@@ -674,72 +848,33 @@ watch(
   () => [route.params.topic, route.hash],
   () => {
     loadInitialDoc()
-  }
+  },
 )
 
-// Helper to set googtrans cookie safely (handling localhost vs real domain)
-function setGoogtransCookie(langCode) {
-  const host = window.location.hostname
-  const cookieValue = `googtrans=/en/${langCode}; path=/`
-  document.cookie = cookieValue
-  if (host.includes('.')) {
-    document.cookie = `${cookieValue}; domain=.${host}`
-    document.cookie = `${cookieValue}; domain=${host}`
+// Watch global locale to automatically reload current documentation in selected language
+watch(locale, async () => {
+  const currentKey = activeSection.value
+  if (!currentKey) return
+
+  const filename = currentKey.split('/').pop()
+
+  // Find the translated item from the updated docsMenu containing the correct localized label
+  let matchedItem = null
+  for (const cat of docsMenu.value) {
+    const item = cat.items.find((i) => i.id.endsWith(filename))
+    if (item) {
+      matchedItem = item
+      break
+    }
   }
-}
 
-// Programmatically trigger Google Translate select combo box with retry polling
-function triggerGoogleTranslate(langCode) {
-  let attempts = 0
-  const maxAttempts = 30
-  const interval = setInterval(() => {
-    const selectEl = document.querySelector('.goog-te-combo')
-    if (selectEl) {
-      selectEl.value = langCode
-      selectEl.dispatchEvent(new Event('change'))
-      clearInterval(interval)
-    }
-    attempts++
-    if (attempts >= maxAttempts) {
-      clearInterval(interval)
-    }
-  }, 100)
-}
-
-// Watch global locale to automatically sync Google Translate
-watch(locale, (newLocale) => {
-  const langCode = newLocale === 'id-ID' ? 'id' : 'en'
-  setGoogtransCookie(langCode)
-  triggerGoogleTranslate(langCode)
+  if (matchedItem) {
+    await navigateTo(matchedItem)
+  }
 })
 
 onMounted(() => {
   loadInitialDoc()
-
-  // Google Translate initialization
-  window.googleTranslateElementInit = function() {
-    new window.google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'id,en',
-      layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element');
-
-    // Auto-apply current active locale on load
-    const langCode = locale.value === 'id-ID' ? 'id' : 'en'
-    setGoogtransCookie(langCode)
-    triggerGoogleTranslate(langCode)
-  }
-
-  // Load script
-  if (!document.getElementById('google-translate-script')) {
-    const script = document.createElement('script')
-    script.id = 'google-translate-script'
-    script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'
-    script.async = true
-    document.head.appendChild(script)
-  } else if (window.google && window.google.translate) {
-    window.googleTranslateElementInit()
-  }
 })
 </script>
 
@@ -1037,53 +1172,5 @@ onMounted(() => {
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
   }
-}
-
-/* Google Translate styling to match premium dark theme */
-:deep(.goog-te-gadget) {
-  font-family: inherit !important;
-  color: #94a3b8 !important;
-  font-size: 13px !important;
-}
-
-:deep(.goog-te-gadget-simple) {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  padding: 6px 12px !important;
-  border-radius: 12px !important;
-  cursor: pointer !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  transition: all 0.3s ease !important;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(46, 125, 50, 0.4) !important;
-  }
-}
-
-:deep(.goog-te-menu-value) {
-  display: flex !important;
-  align-items: center !important;
-  color: #cbd5e1 !important;
-  font-weight: 500 !important;
-  
-  img {
-    display: none !important; /* Hide default google logo */
-  }
-
-  span {
-    border-left: none !important;
-    padding-left: 0 !important;
-  }
-}
-
-:deep(.goog-te-banner-frame) {
-  display: none !important; /* Hide translate banner */
-}
-
-:deep(body) {
-  top: 0 !important;
 }
 </style>
