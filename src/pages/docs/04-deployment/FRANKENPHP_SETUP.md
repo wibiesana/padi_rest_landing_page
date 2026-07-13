@@ -52,45 +52,165 @@ Step into the next generation of web serving. Padi REST API is natively architec
 
 ---
 
-## Installation
+## 📋 Installation & Setup Guide
 
-### Windows
+Choose the method that matches your target deployment environment.
 
-1. Download from [FrankenPHP Releases](https://github.com/dunglas/frankenphp/releases).
-2. Extract `frankenphp.exe` to your project root.
+---
 
-### Linux/Mac
+### 1. 🐧 Linux Setup
 
+#### Method A: Direct Binary
+1. Download the static binary directly:
+   ```bash
+   curl -L https://github.com/dunglas/frankenphp/releases/latest/download/frankenphp-linux-x86_64 -o frankenphp
+   chmod +x frankenphp
+   sudo mv frankenphp /usr/local/bin/
+   ```
+2. Test installation:
+   ```bash
+   frankenphp version
+   ```
+
+#### Method B: Systemd Service (Production Deployment)
+To keep FrankenPHP running reliably in the background on system boot:
+1. Create a service configuration file:
+   ```bash
+   sudo nano /etc/systemd/system/frankenphp.service
+   ```
+2. Paste the following configuration:
+   ```ini
+   [Unit]
+   Description=FrankenPHP Application Server for Padi REST API
+   After=network.target
+
+   [Service]
+   Type=exec
+   User=www-data
+   Group=www-data
+   WorkingDirectory=/var/www/my-api
+   ExecStart=/usr/local/bin/frankenphp run --config /var/www/my-api/Caddyfile
+   Restart=always
+   RestartSec=5s
+   LimitNOFILE=65535
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+3. Enable and start the service:
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable frankenphp
+   sudo systemctl start frankenphp
+   ```
+
+---
+
+### 2. 🪟 Windows Setup
+
+#### Method A: Native Windows Binary
+1. Download the Windows binary (`frankenphp-windows-x86_64.zip`) from the [FrankenPHP Releases Page](https://github.com/dunglas/frankenphp/releases).
+2. Extract the archive and copy `frankenphp.exe` into your Padi REST API project root directory.
+3. Open **PowerShell** as Administrator, navigate to your project folder, and run:
+   ```powershell
+   # Development mode (Hot-reload)
+   .\frankenphp.exe php-server -r public/
+   
+   # Production Worker mode
+   .\frankenphp.exe run --config .\Caddyfile
+   ```
+
+#### Method B: WSL2 (Windows Subsystem for Linux - Recommended)
+For maximum performance and compatibility close to production:
+1. Open your WSL2 terminal (Ubuntu, Debian, etc.).
+2. Follow the **Linux Setup** instructions above.
+3. Run the worker directly in WSL2. Ports will automatically map to your Windows host.
+
+---
+
+### 3. 🐳 Docker Setup
+
+Using Docker is the easiest way to bundle PHP, Caddy, and FrankenPHP with zero configuration on your host machine.
+
+#### Step A: Dockerfile Configuration
+Create a `Dockerfile` in your project root:
+```dockerfile
+FROM dunglas/frankenphp:latest-php8.4
+
+# Install required PHP extensions for Padi REST API
+RUN install-php-extensions \
+    pdo_mysql \
+    pdo_pgsql \
+    redis \
+    opcache \
+    zip
+
+# Set working directory
+WORKDIR /app
+
+# Copy application files
+COPY . /app
+
+# Configure permissions for safe concurrent storage caching
+RUN chown -R www-data:www-data /app/storage
+
+# Run FrankenPHP using the Caddyfile config
+CMD ["frankenphp", "run", "--config", "/app/Caddyfile"]
+```
+
+#### Step B: docker-compose.yml
+Create a `docker-compose.yml` to define your stack:
+```yaml
+services:
+  api:
+    build: .
+    ports:
+      - "8085:8085"
+    volumes:
+      - .:/app
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+    restart: unless-stopped
+```
+Launch the stack:
 ```bash
-# Direct install
-curl -fsSL https://frankenphp.dev/install.sh | sh
-
-# Or using Homebrew (Mac)
-brew install frankenphp
+docker-compose up -d --build
 ```
 
 ---
 
-## How to Run
+### 4. 🐘 Native PHP CLI Setup (No Docker/No Binaries)
 
-### 1. Development Mode (No Worker)
+If you already have PHP 8.4 installed locally on your system, you can use FrankenPHP's native script integration to handle execution.
 
-Ideal for quick debugging and hot reloading.
+1. Ensure the PHP binary is in your PATH.
+2. Download FrankenPHP's server runner script:
+   ```bash
+   curl -fsSL https://frankenphp.dev/install.sh | sh
+   ```
+3. Run the development server:
+   ```bash
+   ./frankenphp php-server -r public/
+   ```
 
+---
+
+## 🚀 How to Run Padi in Worker Mode
+
+Once installed, there are two primary execution modes:
+
+### 1. Development Mode (No Worker, Auto-Reload)
+This behaves like standard PHP-FPM, reloading code on every request so you can write and test changes immediately:
 ```bash
 frankenphp php-server -r public/
 ```
 
-### 2. Worker Mode (Production - Recommended)
-
-Uses the included `Caddyfile` to enable full performance.
-
+### 2. Worker Mode (Production, Persistent Memory)
+Keeps the application bootstrap and classes loaded in memory. **Changes to code require a server restart.**
 ```bash
-# Windows
-.\frankenphp.exe run
-
-# Linux/Mac
-frankenphp run
+# Start with default configuration file (Caddyfile)
+frankenphp run --config Caddyfile
 ```
 
 ---
