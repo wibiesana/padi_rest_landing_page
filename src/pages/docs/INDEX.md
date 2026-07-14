@@ -638,7 +638,7 @@ docs/
 
 #### 🛡️ Security Architecture (9.8/10)
 * **Strict 32-Rule Validation**: Comprehensive input validation covering type safety (`string`, `integer`, `boolean`), specific formats (`uuid`, `json`, `date_format`), and conditional checks (`required_if`, `required_with`, `required_without`) prevents validation bypass.
-* **Worker-Safe Cache Concurrency**: Utilizing exclusive file locks (`LOCK_EX`) on critical rate limiter files prevents race conditions and cache corruption under concurrent environments like FrankenPHP worker mode.
+* **Worker-Safe Cache Concurrency**: Utilizing the unified `Cache` component (supporting Redis or File Cache with `LOCK_EX` atomic writes) for rate limiting and data storage prevents race conditions and cache corruption under concurrent environments like FrankenPHP worker mode.
 * **Smarter CLI Generator**: Automatically maps database schemas to optimal validation rules (e.g. `tinyint(1)` → `boolean`, nullable → `nullable`), and applies `sometimes` to update requests to safely support partial updates (PUT/PATCH).
 
 #### ⚡ Performance Optimizations (9.5/10)

@@ -9,6 +9,8 @@
 - [HTTP Status Codes](#http-status-codes)
 - [Authentication Endpoints](#authentication-endpoints)
 - [CRUD Endpoints](#crud-endpoints)
+- [🛠️ System & Health Monitoring](#️-system--health-monitoring)
+- [⚡ Demo & Real-time Endpoints (Examples)](#-demo--real-time-endpoints-examples)
 - [Validation Rules](#validation-rules)
 - [Rate Limiting](#rate-limiting)
 - [cURL Examples](#curl-examples)
@@ -208,6 +210,76 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
 }
 ```
 
+### Refresh Token
+
+**Endpoint:** `POST /auth/refresh`
+
+**Headers:**
+```
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Token refreshed successfully",
+  "message_code": "SUCCESS",
+  "data": {
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+    "expires_in": 31536000,
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "username": "johndoe",
+      "email": "john@example.com"
+    }
+  }
+}
+```
+
+### Forgot Password (Rate Limited)
+
+**Endpoint:** `POST /auth/forgot-password`
+
+**Request:**
+```json
+{
+  "email": "john@example.com"
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Password reset link sent to your email",
+  "message_code": "SUCCESS"
+}
+```
+
+### Reset Password (Rate Limited)
+
+**Endpoint:** `POST /auth/reset-password`
+
+**Request:**
+```json
+{
+  "token": "reset-token-received-in-email",
+  "password": "NewSecurePass123!",
+  "password_confirmation": "NewSecurePass123!"
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Password reset successfully",
+  "message_code": "SUCCESS"
+}
+```
+
 ---
 
 ## CRUD Endpoints
@@ -221,7 +293,7 @@ All auto-generated resources follow this pattern.
 **Query Parameters:**
 
 - `page` (integer): Page number (default: 1)
-- `per_page` (integer): Items per page (default: 20)
+- `per_page` (integer): Items per page (default: 25)
 - `search` (string): Search keyword
 - `sort` (string): Column to sort by (e.g., `id`, `name`)
 - `order` (string): `asc` or `desc`
@@ -229,7 +301,7 @@ All auto-generated resources follow this pattern.
 **Example:**
 
 ```
-GET /products?page=1&per_page=20&search=laptop&sort=price&order=desc
+GET /products?page=1&per_page=25&search=laptop&sort=price&order=desc
 ```
 
 **Response (200):**
@@ -249,8 +321,8 @@ GET /products?page=1&per_page=20&search=laptop&sort=price&order=desc
   "pagination": {
     "total": 100,
     "page": 1,
-    "per_page": 20,
-    "total_pages": 5
+    "per_page": 25,
+    "total_pages": 4
   }
 }
 ```
@@ -271,6 +343,223 @@ GET /products?page=1&per_page=20&search=laptop&sort=price&order=desc
     "price": 99.99,
     "created_at": "2026-02-09 09:50:00"
   }
+}
+```
+
+### Create Resource
+
+**Endpoint:** `POST /resources`
+
+**Request:**
+```json
+{
+  "name": "New Product",
+  "price": 49.99
+}
+```
+
+**Response (201):**
+```json
+{
+  "success": true,
+  "message": "Resource created successfully",
+  "message_code": "CREATED",
+  "data": {
+    "id": 2,
+    "name": "New Product",
+    "price": 49.99,
+    "created_at": "2026-07-14 18:00:00"
+  }
+}
+```
+
+### Update Resource
+
+**Endpoint:** `PUT /resources/{id}`
+
+**Request:**
+```json
+{
+  "price": 39.99
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Resource updated successfully",
+  "message_code": "SUCCESS",
+  "data": {
+    "id": 2,
+    "name": "New Product",
+    "price": 39.99,
+    "created_at": "2026-07-14 18:00:00",
+    "updated_at": "2026-07-14 18:15:00"
+  }
+}
+```
+
+### Delete Resource
+
+**Endpoint:** `DELETE /resources/{id}`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "Resource deleted successfully",
+  "message_code": "SUCCESS"
+}
+```
+
+---
+
+## 🛠️ System & Health Monitoring
+
+Endpoints built into the framework to monitor system health and inspect endpoints dynamically.
+
+### Health Check
+
+**Endpoint:** `GET /health`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message": "System healthy",
+  "message_code": "SUCCESS",
+  "data": {
+    "status": "healthy",
+    "php_version": "8.4.1",
+    "time": "2026-07-14 18:00:00",
+    "database": "connected",
+    "cache": "connected"
+  }
+}
+```
+
+### Site Information
+
+**Endpoint:** `GET /site/info`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message_code": "SUCCESS",
+  "data": {
+    "name": "Padi REST API",
+    "version": "2.1.0",
+    "environment": "development",
+    "debug": true
+  }
+}
+```
+
+### Endpoints Directory
+
+Get a complete dynamic listing of all registered routes, HTTP methods, and attached middlewares.
+
+**Endpoint:** `GET /site/endpoints`
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "message_code": "SUCCESS",
+  "data": [
+    {
+      "method": "GET",
+      "uri": "/",
+      "action": "SiteController@index",
+      "middleware": []
+    },
+    {
+      "method": "POST",
+      "uri": "/auth/login",
+      "action": "AuthController@login",
+      "middleware": ["RateLimitMiddleware"]
+    }
+  ]
+}
+```
+
+---
+
+## ⚡ Demo & Real-time Endpoints (Examples)
+
+Examples built into the boilerplate to showcase role access and Server-Sent Events (SSE).
+
+### Public Chat Broadcast
+
+**Endpoint:** `POST /examples/realtime/chat`
+
+**Request:**
+```json
+{
+  "username": "Al",
+  "message": "Hello people!"
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "topic": "public-chat",
+  "payload": {
+    "username": "Al",
+    "message": "Hello people!",
+    "sent_at": "2026-07-14 18:00:00"
+  },
+  "message": "Message broadcasted successfully"
+}
+```
+
+### Private Notifications
+
+**Endpoint:** `POST /examples/realtime/notify`
+
+**Request:**
+```json
+{
+  "user_id": 1,
+  "message": "Welcome back!"
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "topic": "user-notifications-1",
+  "payload": {
+    "title": "Personal Notification",
+    "message": "Welcome back!",
+    "timestamp": 1789312800
+  },
+  "message": "Private notification pushed successfully"
+}
+```
+
+### Subscriber JWT Token Generation
+
+**Endpoint:** `POST /examples/realtime/token`
+
+**Request:**
+```json
+{
+  "topics": ["user-notifications-1"]
+}
+```
+
+**Response (200):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "hub_url": "http://localhost:8085/.well-known/mercure",
+  "topics": ["user-notifications-1"]
 }
 ```
 

@@ -228,15 +228,53 @@ const categoryOrder = [
 ]
 
 const explicitOrder = [
+  // Welcome
   'start here',
+
+  // Getting Started
   'quick start',
   'installation',
-  'setup methods',
-  'first steps',
   'configuration',
+  'first steps',
+  'setup methods',
   'init app guide',
   'init app troubleshooting',
 
+  // Core Concepts
+  'cli interface',
+  'authentication',
+  'rbac',
+  'models',
+  'controllers',
+  'routing',
+  'middleware',
+  'response structure',
+  'resources',
+  'email',
+  'queue',
+  'cache',
+  'file upload',
+  'database',
+  'query builder',
+  'active record',
+  'user model',
+
+  // Advanced
+  'error handling',
+  'security',
+  'realtime',
+  'caching',
+  'frontend integration',
+  'api testing',
+  'multi database',
+  'file storage',
+  'mailer',
+  'api collection guide',
+  'cors',
+  'pagination',
+  'password reset',
+
+  // Deployment
   'production',
   'docker',
   'frankenphp setup',
@@ -245,6 +283,8 @@ const explicitOrder = [
   'worker scripts',
   'performance',
   'troubleshooting',
+
+  // Releases
   'change log',
 ]
 
@@ -274,8 +314,20 @@ for (const path in mdModules) {
 
     label = filename
       .replace('.md', '')
+      .toLowerCase()
       .replace(/[_|-]/g, ' ')
       .replace(/\b\w/g, (c) => c.toUpperCase())
+      // Restore acronyms to uppercase for professional look
+      .replace(/\bCli\b/g, 'CLI')
+      .replace(/\bRbac\b/g, 'RBAC')
+      .replace(/\bCors\b/g, 'CORS')
+      .replace(/\bApi\b/g, 'API')
+      .replace(/\bJwt\b/g, 'JWT')
+      .replace(/\bPhp\b/g, 'PHP')
+      .replace(/\bCrud\b/g, 'CRUD')
+      .replace(/\bSql\b/g, 'SQL')
+      .replace(/\bMvc\b/g, 'MVC')
+      .replace(/\bIp\b/g, 'IP')
   }
 
   if (!mdCategoriesMap[catTitle]) {

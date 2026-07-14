@@ -15,6 +15,7 @@
 - [Angular Integration](#angular-integration)
 - [Next.js Integration](#nextjs-integration)
 - [Vanilla JavaScript](#vanilla-javascript)
+- [⚡ Real-time Pub/Sub Integration (Mercure SSE)](#-real-time-pubsub-integration-mercure-sse)
 - [CORS Configuration](#cors-configuration)
 
 ---
@@ -436,6 +437,190 @@ export default new ApiService();
   }
   document.addEventListener("DOMContentLoaded", loadProducts);
 </script>
+```
+
+---
+
+## ⚡ Real-time Pub/Sub Integration (Mercure SSE)
+
+Padi REST API features native support for real-time Server-Sent Events (SSE) via the built-in Mercure Hub (**exclusive to FrankenPHP environments**). When Mercure is enabled, login and registration responses include a `realtime` payload containing the Hub URL and a temporary subscriber JWT token.
+
+### JavaScript Client Subscription (Basic)
+
+Here is a basic example of how to connect to the Mercure Hub and listen for real-time updates in your frontend using native `EventSource`:
+
+```javascript
+// 1. Get the hub URL and subscriber token from your Auth response
+const { hub_url, token } = authResponse.realtime; 
+
+// 2. Build the subscription URL with the target topic(s)
+const url = new URL(hub_url);
+url.searchParams.append('topic', 'http://localhost:8085/api/v1/products'); // Target topic
+
+// Note: For private topics, pass the JWT token to authorize the subscription
+url.searchParams.append('authorization', `Bearer ${token}`); 
+
+// 3. Establish the connection
+const eventSource = new EventSource(url);
+
+// 4. Listen for real-time events
+eventSource.onmessage = (event) => {
+  const payload = JSON.parse(event.data);
+  console.log('Received real-time update:', payload);
+};
+
+eventSource.onerror = (error) => {
+  console.error('SSE Connection failed:', error);
+};
+```
+
+### Vue 3 Implementation (Composition API)
+
+A complete Vue 3 component showcasing state synchronization and connection cleanup on unmount:
+
+```vue
+<template>
+  <div class="product-catalog">
+    <h3>Live Product Catalog</h3>
+    <ul>
+      <li v-for="product in products" :key="product.id">
+        {{ product.name }} - ${{ product.price }}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
+import { EventSourcePolyfill } from 'event-source-polyfill';
+
+const products = ref([]);
+let eventSource = null;
+
+// Fetch initial data
+const fetchProducts = async () => {
+  const response = await fetch('http://localhost:8085/api/v1/products');
+  const result = await response.json();
+  products.value = result.data || result;
+};
+
+onMounted(async () => {
+  await fetchProducts();
+
+  // Retrieve Realtime details from auth storage
+  const authData = JSON.parse(localStorage.getItem('auth_data') || '{}');
+  if (!authData.realtime) return;
+
+  const { hub_url, token } = authData.realtime;
+  const url = new URL(hub_url);
+  url.searchParams.append('topic', 'http://localhost:8085/api/v1/products');
+
+  // Establish SSE Connection with JWT Auth Header Polyfill
+  eventSource = new EventSourcePolyfill(url, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  // Handle incoming real-time notifications
+  eventSource.onmessage = (event) => {
+    const payload = JSON.parse(event.data);
+    const { event: eventType, data } = payload;
+
+    if (eventType === 'product_created') {
+      products.value.push(data);
+    } else if (eventType === 'product_updated') {
+      const index = products.value.findIndex(p => p.id === data.id);
+      if (index !== -1) products.value[index] = data;
+    } else if (eventType === 'product_deleted') {
+      products.value = products.value.filter(p => p.id !== data.id);
+    }
+  };
+
+  eventSource.onerror = (err) => {
+    console.error('Real-time connection error:', err);
+  };
+});
+
+onUnmounted(() => {
+  // Prevent memory leaks by closing connection
+  if (eventSource) {
+    eventSource.close();
+  }
+});
+</script>
+```
+
+### React Implementation (Hooks)
+
+A complete React component showcasing state synchronization and connection cleanup inside `useEffect`:
+
+```jsx
+import React, { useEffect, useState } from 'react';
+import { EventSourcePolyfill } from 'event-source-polyfill';
+
+export function LiveProductList() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    // 1. Fetch initial products list
+    fetch('http://localhost:8085/api/v1/products')
+      .then(res => res.json())
+      .then(result => setProducts(result.data || result));
+
+    // 2. Establish Real-time Connection
+    const authData = JSON.parse(localStorage.getItem('auth_data') || '{}');
+    if (!authData.realtime) return;
+
+    const { hub_url, token } = authData.realtime;
+    const url = new URL(hub_url);
+    url.searchParams.append('topic', 'http://localhost:8085/api/v1/products');
+
+    const eventSource = new EventSourcePolyfill(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    eventSource.onmessage = (event) => {
+      const payload = JSON.parse(event.data);
+      const { event: eventType, data } = payload;
+
+      setProducts((prevProducts) => {
+        if (eventType === 'product_created') {
+          return [...prevProducts, data];
+        }
+        if (eventType === 'product_updated') {
+          return prevProducts.map(p => p.id === data.id ? data : p);
+        }
+        if (eventType === 'product_deleted') {
+          return prevProducts.filter(p => p.id !== data.id);
+        }
+        return prevProducts;
+      });
+    };
+
+    eventSource.onerror = (err) => {
+      console.error('Real-time connection error:', err);
+    };
+
+    // 3. Clean up subscription on component unmount
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
+  return (
+    <div className="product-catalog">
+      <h3>Live Product Catalog</h3>
+      <ul>
+        {products.map(product => (
+          <li key={product.id}>{product.name} - ${product.price}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 ```
 
 ---

@@ -9,6 +9,7 @@ Deliver professional, high-reliability communications with the Padi REST API Ema
 ## 📋 Table of Contents
 
 - [🏎️ Industrial-Grade Communication Layer](#industrial-grade-communication-layer)
+- [🛠️ Installation](#️-installation)
 - [Configuration](#configuration)
 - [Basic Usage](#basic-usage)
 - [Sending with Attachments](#sending-with-attachments)
@@ -17,6 +18,13 @@ Deliver professional, high-reliability communications with the Padi REST API Ema
 
 ---
 
+## 🛠️ Installation
+
+> [!IMPORTANT]
+> **PHPMailer** is not installed by default to keep the framework core ultra-lightweight. Before using the Email Engine, you must install PHPMailer in your project:
+> ```bash
+> composer require phpmailer/phpmailer
+> ```
 
 ## ⚙️ Configuration
 

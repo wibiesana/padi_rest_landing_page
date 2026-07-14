@@ -39,7 +39,7 @@ Padi REST API implements multiple layers of security to protect your application
 
 #### Key Security Pillar Details:
 * **Strict 32-Rule Validation**: Robust input validation containing type checks (`string`, `integer`, `boolean`), specific formats (`uuid`, `json`, `date_format`), and conditional rules (`required_if`, `required_with`, `required_without`) ensures zero data-integrity bypass.
-* **Worker-Safe Cache Concurrency**: Utilizing exclusive file locks (`LOCK_EX`) on critical rate limiter files prevents race conditions and cache corruption in concurrent worker mode environments (e.g. FrankenPHP).
+* **Worker-Safe Cache Concurrency**: Utilizing the unified `Cache` component (supporting Redis or File Cache with `LOCK_EX` atomic writes) for rate limiting and data storage prevents race conditions and cache corruption in concurrent worker mode environments (e.g. FrankenPHP).
 * **Automated Generator Mapping**: The CLI code generator automatically maps MySQL database schemas to optimal validation rules (e.g. `tinyint(1)` → `boolean`, nullable → `nullable`), and applies the `sometimes` rule to update requests to safely support partial updates.
 
 ---

@@ -50,6 +50,13 @@ The framework supports two caching drivers:
 
 1.  **File**: Stores cached items in the local filesystem (`storage/cache/`). This is the default and requires no additional setup. Files are distributed across 256 subdirectories for filesystem performance.
 2.  **Redis**: Stores cached items in a Redis database. This is much faster and recommended for production. Includes automatic reconnection if the connection drops.
+    
+    > [!IMPORTANT]
+    > **Redis Requirements**: To use the Redis driver, you must either have the PHP Redis extension (`ext-redis` - recommended for maximum speed) installed on your server, or install the `predis/predis` package via Composer:
+    > ```bash
+    > composer require predis/predis
+    > ```
+    > The framework automatically detects and utilizes the native C extension `ext-redis` if present, falling back to `predis/predis` if the extension is not loaded.
 
 ---
 
