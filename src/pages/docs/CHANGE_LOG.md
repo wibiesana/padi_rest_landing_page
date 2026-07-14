@@ -1,6 +1,24 @@
 # CHANGE LOG
 
-## v2.1.0 (2026-07-13)
+## v2.1.0 (2026-07-14)
+
+### 🐞 Bug Fixes & Refactoring
+
+- **Authentication & Registration**:
+  - Added strict `required` validation for `username` and `password` fields in `AuthController::register()`.
+  - Replaced manual password confirmation matching checks with the framework's native `confirmed` validation rule.
+  - Resolved status check inconsistency in `User::findActiveByEmail` and `User::findActiveByUsername` models to correctly support both numeric (`1`) and string (`'active'`) values.
+- **User Management**:
+  - Corrected validation type error on `email_verified_at` field from `'email'` to `'nullable|date'` in `UserController::store()` and `UserController::update()`.
+- **Worker Mode & Process Resiliency (FrankenPHP)**:
+  - Fixed request failure crash vulnerability by catching all `\Throwable` instances instead of just `\Exception` in `Router::dispatch()`.
+  - Hardened exception handling in `Application::handleException()` to hide internal error traces and debug messages on production environments for 5xx status codes.
+  - Guarded `ActiveRecord::create()` against parsing issues when dealing with composite primary keys by only mapping `lastInsertId` if the primary key is a string.
+- **Middleware & Cache Performance**:
+  - Refactored `RateLimitMiddleware.php` to leverage the core unified `Cache` component, eliminating potential file I/O race conditions under concurrency and utilizing Redis when available.
+  - Enhanced `Validator`'s `min` and `max` constraints to properly check numerical values (numerical comparisons) and array sizes (counts) in addition to character lengths.
+  - Added `JSON_THROW_ON_ERROR` to `Response::json()` output formatting logic with try-catch fallback handling to prevent silent serialization failures.
+  - Cleaned up duplicate docblocks on relation-loading methods inside the `ActiveRecord` class.
 
 ### ⚡ Native Real-time Pub/Sub Capabilities (FrankenPHP Mercure)
 
