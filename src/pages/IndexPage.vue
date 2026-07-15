@@ -10,7 +10,7 @@
       <div class="container relative-position">
         <div class="column items-center">
           <div class="hero-icon-container q-mb-lg">
-            <q-img :src="heroImage" width="120px" class="animate-float shadow-glow" />
+            <q-img :src="heroImage" width="120px" class="animate-float shadow-glow" alt="Padi REST API Framework Logo" />
           </div>
           <h1
             class="text-h2 text-weight-bolder q-ma-none text-gradient text-uppercase tracking-tighter"
