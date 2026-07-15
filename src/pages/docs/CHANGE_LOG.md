@@ -1,6 +1,6 @@
 # CHANGE LOG
 
-## v2.1.0 (2026-07-14)
+## v2.1.0 (2026-07-15)
 
 ### 🐞 Bug Fixes & Refactoring
 
