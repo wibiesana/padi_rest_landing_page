@@ -304,6 +304,7 @@ Take your API to the next level with advanced features.
 - Publishing events (Controllers & ORM hooks)
 - Client-side integration code examples
 - Security & private topics subscription
+- **[Real-time Example Application Repo](https://github.com/wibiesana/padi-rest-realtime-example)** 🚀
 
 ### Multi-Database Support
 

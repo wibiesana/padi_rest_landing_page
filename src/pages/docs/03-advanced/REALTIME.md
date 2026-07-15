@@ -8,6 +8,10 @@ Padi REST API Framework features native support for real-time pub/sub messaging 
 
 By using **Server-Sent Events (SSE)**, you can push notifications, messages, and state updates from your PHP backend directly to web/mobile clients instantly and securely, with **zero external server dependencies** (no Pusher, socket.io, or complex WebSocket daemons required).
 
+> [!TIP]
+> **Complete Example Application**  
+> We have provided a fully-functional real-time sample project (integrated with a frontend chat and notification UI) in this repository: [wibiesana/padi-rest-realtime-example](https://github.com/wibiesana/padi-rest-realtime-example).
+
 ---
 
 ## 📋 Table of Contents

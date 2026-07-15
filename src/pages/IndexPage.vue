@@ -44,6 +44,11 @@
               icon="menu_book"
             />
           </div>
+          <div class="q-mt-lg text-body2 text-grey-5 flex items-center justify-center reveal delay-2">
+            <q-icon name="bolt" color="warning" size="20px" class="q-mr-xs" />
+            <span>Looking for a real-time demo? Check out the</span>
+            <a href="https://github.com/wibiesana/padi-rest-realtime-example" target="_blank" class="text-primary text-weight-bold q-ml-xs hover-underline" style="text-decoration: none; color: var(--q-primary);">Real-time Example App</a>
+          </div>
         </div>
       </div>
     </section>
@@ -811,5 +816,8 @@ php padi serve`
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.hover-underline:hover {
+  text-decoration: underline !important;
 }
 </style>

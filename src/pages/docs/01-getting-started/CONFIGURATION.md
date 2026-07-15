@@ -263,7 +263,7 @@ Here is the complete reference table for all available environment variables in 
 |---|---|---|
 | `QUEUE_DRIVER` | `sync` | Queue driver: `sync` (instant), `database`, or `redis`. |
 | `QUEUE_MAX_ATTEMPTS` | `3` | Maximum task retry limit before marking as failed. |
-| `QUEUE_SLEEP` | `3` | Worker sleep time in seconds when queue is empty. |
+| `QUEUE_SLEEP` | `3` | Worker sleep time in seconds when queue is empty. Supports decimal/float values (e.g., `0.5` for half a second). |
 | `QUEUE_GC_INTERVAL` | `100` | Garbage collection trigger interval (job counts). |
 | `QUEUE_MAX_JOBS` | `1000` | Maximum jobs worker processes before restarting. |
 

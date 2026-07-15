@@ -168,7 +168,7 @@ QUEUE_MAX_ATTEMPTS=3
 # Default queue name
 QUEUE_NAME=default
 
-# Seconds to sleep between job polls (default: 3)
+# Seconds to sleep between job polls (default: 3, supports decimal/float values, e.g. 0.5)
 QUEUE_SLEEP=3
 ```
 

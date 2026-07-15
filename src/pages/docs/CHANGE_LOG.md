@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## v2.1.1 (2026-07-15)
+
+### ⚡ Queue Performance & Sub-Second Polling
+
+- **Sub-Second Queue Polling**: Updated `Queue::work()` to parse `QUEUE_SLEEP` as a float/decimal value and use `usleep()` for sub-second values (e.g., `0.5`). This allows background jobs to execute almost instantly without high CPU overhead or waiting 3 seconds.
+- **Improved Queue Documentation**: Added description to `.env.example`, `CONFIGURATION.md`, and `QUEUE.md` explaining support for decimal/float queue sleep seconds.
+
 ## v2.1.0 (2026-07-15)
 
 ### 🐞 Bug Fixes & Refactoring
