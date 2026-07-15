@@ -4,6 +4,9 @@
 
 ### 🐞 Bug Fixes & Refactoring
 
+- **Database & PHP 8.4+ Compatibility**:
+  - Replaced deprecated `PDO::MYSQL_ATTR_FOUND_ROWS` with `Pdo\Mysql::ATTR_FOUND_ROWS` in `DatabaseManager` to support PHP 8.4+.
+  - Removed deprecated `curl_close()` call in `Realtime` since cURL uses `CurlHandle` objects starting from PHP 8.0.
 - **Authentication & Registration**:
   - Added strict `required` validation for `username` and `password` fields in `AuthController::register()`.
   - Replaced manual password confirmation matching checks with the framework's native `confirmed` validation rule.
