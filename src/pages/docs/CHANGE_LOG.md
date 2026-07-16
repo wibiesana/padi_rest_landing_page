@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## v2.1.2 (2026-07-16)
+
+### 🐞 Bug Fixes & Validation Hardening
+
+- **Dynamic Number Validation Fix**: Fixed validation rules (`min`, `max`, `between`, `size`) in `Validator.php` which incorrectly cast string identifiers consisting entirely of digits (e.g. `nip`, `nik`, `nuptk`) to numeric types. These identifiers are now evaluated by string length unless they are explicitly declared as `numeric` or `integer`.
+
 ## v2.1.1 (2026-07-16)
 
 ### ⚡ Queue Performance & Sub-Second Polling
