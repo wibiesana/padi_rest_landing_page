@@ -1,11 +1,21 @@
 # CHANGE LOG
 
-## v2.1.1 (2026-07-15)
+## v2.1.1 (2026-07-16)
 
 ### ⚡ Queue Performance & Sub-Second Polling
 
 - **Sub-Second Queue Polling**: Updated `Queue::work()` to parse `QUEUE_SLEEP` as a float/decimal value and use `usleep()` for sub-second values (e.g., `0.5`). This allows background jobs to execute almost instantly without high CPU overhead or waiting 3 seconds.
 - **Improved Queue Documentation**: Added description to `.env.example`, `CONFIGURATION.md`, and `QUEUE.md` explaining support for decimal/float queue sleep seconds.
+
+### ⚙️ DevOps & Configuration Hardening
+
+- **Caddyfile Path Verification & Flexibility**: Verified and aligned Caddyfile configuration paths (`Caddyfile.standard` and `Caddyfile.worker`) with the Docker/FrankenPHP working directory structure, adding customizable environment variable overrides (e.g., `PUBLIC_ROOT`, `WORKER_INDEX_PATH`, and `MERCURE_DB_PATH`).
+- **Mercure Routing Isolation**: Added route match rules (`@notMercure` and `not path /.well-known/mercure*`) to ensure the built-in Mercure SSE hub endpoints are bypassed by the PHP/FrankenPHP handler.
+
+### 🐞 Bug Fixes & Database Compatibility
+
+- **SQLite Database Path Auto-Resolution**: Enhanced SQLite connection logic in `config/database.php` to automatically detect absolute vs relative paths, resolving relative database paths from the project root while retaining support for `:memory:` mode.
+- **Driver-Independent Migrations**: Hardened the `002_create_password_resets_table.php` migration by detecting the active database driver (`sqlite`, `pgsql`, or `mysql`/`mariadb`) and executing compatible schema and index statements for each specific driver.
 
 ## v2.1.0 (2026-07-15)
 
