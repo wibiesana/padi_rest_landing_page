@@ -5,6 +5,7 @@
 ### 🐞 Bug Fixes & Validation Hardening
 
 - **Dynamic Number Validation Fix**: Fixed validation rules (`min`, `max`, `between`, `size`) in `Validator.php` which incorrectly cast string identifiers consisting entirely of digits (e.g. `nip`, `nik`, `nuptk`) to numeric types. These identifiers are now evaluated by string length unless they are explicitly declared as `numeric` or `integer`.
+- **User Model Audit Field Fix**: Fixed `User` model timestamp/audit field saving by changing `$timestampFormat` to `'unix'` to match the database column data type (`int(11)`) and ensuring `parent::beforeSave($data, $insert)` is called in `User::beforeSave()`. This resolves the `SQLSTATE[HY000]: General error: 1364 Field 'created_at' doesn't have a default value` error when creating new users/teachers.
 
 ## v2.1.1 (2026-07-16)
 
