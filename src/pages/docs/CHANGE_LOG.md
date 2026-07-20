@@ -1,6 +1,6 @@
 # CHANGE LOG
 
-## v2.1.2 (2026-07-16)
+## v2.1.2 (2026-07-20)
 
 ### 🐞 Bug Fixes & Validation Hardening
 
