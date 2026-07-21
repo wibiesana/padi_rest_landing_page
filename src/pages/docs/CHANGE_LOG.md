@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## v2.1.3 (2026-07-21)
+
+### 🐞 Double Slash Route Matching Fix
+
+- **Double Slash (`//`) URL Normalization**: Fixed route dispatch failure ("Route not found" / `ROUTE_NOT_FOUND`) when accessing URLs containing double slashes (e.g. `http://domain.com//auth/login`) on VPS and FrankenPHP. PHP's native `parse_url()` misinterprets leading double slashes as a scheme-relative authority/host, stripping the first path segment. Normalized `REQUEST_URI` handling in `Request.php` and `Application.php` to collapse leading and consecutive slashes for path matching while preserving query string parameters.
+
 ## v2.1.2 (2026-07-20)
 
 ### 🐞 Bug Fixes & Validation Hardening
