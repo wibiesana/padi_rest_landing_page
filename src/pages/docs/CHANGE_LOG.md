@@ -2,6 +2,14 @@
 
 ## v2.1.3 (2026-07-21)
 
+### ⚡ FrankenPHP Console Commands (Worker & Standard Mode)
+
+- **Native FrankenPHP Console Integration**: Added direct CLI support to run FrankenPHP in both Standard and Worker modes via `php padi`:
+  - `php padi serve:frankenphp` / `php padi frankenphp`: Launches FrankenPHP server in Standard Mode.
+  - `php padi serve:worker` / `php padi frankenphp:worker`: Launches FrankenPHP server in Worker Mode (`public/index.php`).
+  - Added CLI flags for `php padi serve`: `--frankenphp` / `--driver=frankenphp` (Standard Mode), `--worker` / `--mode=worker` (Worker Mode), `--workers=<N>` (Worker count), and `--config=<path>` (Caddyfile path).
+  - Added intelligent biner resolution (`findFrankenphpBinary`) to detect local `frankenphp` / `frankenphp.exe` in project root or system `PATH` with clear user guidance if missing.
+
 ### 🐞 Double Slash Route Matching Fix
 
 - **Double Slash (`//`) URL Normalization**: Fixed route dispatch failure ("Route not found" / `ROUTE_NOT_FOUND`) when accessing URLs containing double slashes (e.g. `http://domain.com//auth/login`) on VPS and FrankenPHP. PHP's native `parse_url()` misinterprets leading double slashes as a scheme-relative authority/host, stripping the first path segment. Normalized `REQUEST_URI` handling in `Request.php` and `Application.php` to collapse leading and consecutive slashes for path matching while preserving query string parameters.

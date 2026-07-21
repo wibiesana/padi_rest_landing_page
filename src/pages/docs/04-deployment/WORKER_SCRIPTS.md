@@ -146,7 +146,9 @@ $app->run(); // Automatically detects Standard vs Worker mode
 
 | Command | Description |
 | :--- | :--- |
-| `frankenphp run --config Caddyfile.worker` | Start server in Worker Mode |
+| `php padi serve:worker` | Start server in **Worker Mode** via Padi CLI |
+| `php padi serve:frankenphp` | Start server in **Standard Mode** via Padi CLI |
+| `frankenphp run --config Caddyfile.worker` | Start server in Worker Mode via Caddyfile |
 | `docker compose restart padi_worker` | Refresh worker memory after code change |
 
 ---

@@ -110,14 +110,17 @@ To keep FrankenPHP running reliably in the background on system boot:
 
 #### Method A: Native Windows Binary
 1. Download the Windows binary (`frankenphp-windows-x86_64.zip`) from the [FrankenPHP Releases Page](https://github.com/dunglas/frankenphp/releases).
-2. Extract the archive and copy `frankenphp.exe` into your Padi REST API project root directory.
-3. Open **PowerShell** as Administrator, navigate to your project folder, and run:
+2. Extract the archive and copy `frankenphp.exe` into your Padi REST API project root directory (or ensure `frankenphp` is in your system `PATH`).
+3. Open **PowerShell** or Command Prompt, navigate to your project folder, and run via **Padi Console CLI**:
    ```powershell
-   # Development mode (Hot-reload)
-   .\frankenphp.exe php-server -r public/
-   
-   # Production Worker mode
-   .\frankenphp.exe run --config .\Caddyfile
+   # Standard / Development mode
+   php padi serve:frankenphp
+
+   # Worker mode (High performance)
+   php padi serve:worker
+
+   # Direct binary invocation alternative:
+   .\frankenphp.exe php-server --worker public/index.php
    ```
 
 #### Method B: WSL2 (Windows Subsystem for Linux - Recommended)

@@ -50,10 +50,14 @@ php padi help
 
 ### 📂 Application Management (App)
 
-| Command          | Description                                                      |
-| :--------------- | :--------------------------------------------------------------- |
-| `php padi init`  | Runs the interactive Setup Wizard (configures .env, DB, & Keys). |
-| `php padi serve` | Starts the local development server (Default port: 8085).        |
+| Command                   | Description                                                      |
+| :------------------------ | :--------------------------------------------------------------- |
+| `php padi init`           | Runs the interactive Setup Wizard (configures .env, DB, & Keys). |
+| `php padi serve`          | Starts the local development server (PHP Built-in / FrankenPHP).  |
+| `php padi serve:frankenphp` | Starts FrankenPHP server in **Standard Mode**.                   |
+| `php padi serve:worker`    | Starts FrankenPHP server in **Worker Mode** (`public/index.php`). |
+| `php padi frankenphp`      | Alias for `serve:frankenphp`.                                    |
+| `php padi frankenphp:worker` | Alias for `serve:worker`.                                      |
 
 ### 🔨 Scaffolding (Make)
 
@@ -96,7 +100,12 @@ The heart of the framework. It transforms database tables into fully working API
 | `--realtime-sync` | `generate:crud` | Forces real-time SSE hooks to run synchronously (no Queue) instead of utilizing background workers. |
 | `--tables`        | `users,posts`   | Specific tables for migration execution.                            |
 | `--step`          | `int`           | Number of steps for migration rollback.                             |
-| `--port`          | `int`           | Custom port for the `serve` command.                                |
+| `--port`          | `int`           | Custom port for `serve` / `serve:frankenphp` / `serve:worker`.      |
+| `--host`          | `string`        | Custom host IP/domain for server commands (default: `localhost`).  |
+| `--frankenphp`    | `serve`         | Forces `serve` command to run FrankenPHP in **Standard Mode**.      |
+| `--worker`        | `serve`         | Forces `serve` command to run FrankenPHP in **Worker Mode**.        |
+| `--workers`       | `int`           | Number of worker threads for FrankenPHP worker mode (`--nb-workers`).|
+| `--config`        | `path`          | Path to custom Caddyfile config (e.g., `--config=Caddyfile.worker`).|
 
 ### 🛡️ Route Protection (`--protected`)
 
