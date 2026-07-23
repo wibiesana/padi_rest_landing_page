@@ -176,6 +176,7 @@ The generator automatically detects foreign keys and writes relationship methods
 - **`hasMany`**: Detected from non-unique foreign keys in other tables pointing back.
 - **`hasOne`**: Detected from unique foreign keys in other tables.
 - **`belongsToMany`**: Detected from pivot tables (tables with only two foreign keys linking two different models).
+- **Relational Sorting**: Automatically generates sorting maps in Base Controllers so API consumers can sort by relation names (e.g., `?sort_by=subject&order=asc`) via `LEFT JOIN` on target display columns without writing manual queries.
 
 ---
 

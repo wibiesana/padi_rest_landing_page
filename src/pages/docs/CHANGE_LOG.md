@@ -10,6 +10,10 @@
   - Added CLI flags for `php padi serve`: `--frankenphp` / `--driver=frankenphp` (Standard Mode), `--worker` / `--mode=worker` (Worker Mode), `--workers=<N>` (Worker count), and `--config=<path>` (Caddyfile path).
   - Added intelligent biner resolution (`findFrankenphpBinary`) to detect local `frankenphp` / `frankenphp.exe` in project root or system `PATH` with clear user guidance if missing.
 
+### 🔗 Automatic Relation Sorting in CRUD Generator
+
+- **Auto Relational Sorting**: Enhanced CRUD generator (`php padi generate:crud`) to automatically generate relational sorting logic in controllers. When foreign key relations are present, passing `sort_by={relation_name}` (e.g. `sort_by=subject`) automatically joins the referenced table and orders results by the target display column (e.g. `subject.name`), without requiring manual controller modifications or duplicate SQL joins.
+
 ### 🐞 Double Slash Route Matching Fix
 
 - **Double Slash (`//`) URL Normalization**: Fixed route dispatch failure ("Route not found" / `ROUTE_NOT_FOUND`) when accessing URLs containing double slashes (e.g. `http://domain.com//auth/login`) on VPS and FrankenPHP. PHP's native `parse_url()` misinterprets leading double slashes as a scheme-relative authority/host, stripping the first path segment. Normalized `REQUEST_URI` handling in `Request.php` and `Application.php` to collapse leading and consecutive slashes for path matching while preserving query string parameters.
