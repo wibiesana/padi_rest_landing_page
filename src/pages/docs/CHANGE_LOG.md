@@ -1,6 +1,6 @@
 # CHANGE LOG
 
-## v2.1.3 (2026-07-21)
+## v2.1.3 (2026-07-23)
 
 ### ⚡ FrankenPHP Console Commands (Worker & Standard Mode)
 
