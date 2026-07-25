@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## v2.1.4 (2026-07-25)
+
+### 🛡️ Production Debug Exposure Prevention
+
+- **Strict Environment Debug Guarding**: Enforced dual condition (`APP_ENV === 'development'` AND `APP_DEBUG === 'true'`) across framework core classes (`Router.php`, `Controller.php`, `Database.php`, `Auth.php`, `Validator.php`). Prevents internal debug payloads (`file`, `line`, `trace`) from being exposed in error responses when running in production, even if `APP_DEBUG=true` remains in environment settings.
+
 ## v2.1.3 (2026-07-23)
 
 ### ⚡ FrankenPHP Console Commands (Worker & Standard Mode)
