@@ -383,15 +383,24 @@ const filteredCategories = computed(() => {
     .filter((cat) => cat.items.length > 0)
 })
 
-// Custom Renderer to add IDs to headings (Slugger is internal to marked)
+// Custom Renderer to add IDs to headings matching GitHub style slugs
 const renderer = {
   heading({ text, depth, raw }) {
-    const slug = (raw || text || '')
+    const rawText = raw || text || ''
+    // Strip HTML tags if any
+    const plainText = rawText.replace(/<[^>]*>/g, '')
+    // Strip emojis and non-alphanumeric characters except spaces and hyphens
+    const cleanText = plainText
+      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+      .trim()
+
+    const slug = cleanText
       .toLowerCase()
-      .replace(/[^\w\s-]/g, '') // Remove symbols
-      .replace(/\s+/g, '-') // Convert spaces to hyphens
-      .replace(/-+$/g, '') // Trim trailing hyphens
-      .replace(/^-+/, (m) => (m.length > 1 ? '-' : m)) // Keep single leading hyphen if emoji was there
+      .replace(/[^\w\s-]/g, '') // Remove non-word characters except spaces and hyphens
+      .replace(/\s+/g, '-')     // Convert spaces to hyphens
+      .replace(/-+/g, '-')      // Collapse multiple hyphens
+      .replace(/^-+|-+$/g, '')  // Trim leading/trailing hyphens
+
     return `<h${depth} id="${slug}">${text}</h${depth}>`
   },
 }
@@ -431,16 +440,21 @@ function handleMarkdownClick(event) {
   if (href.startsWith('#')) {
     event.preventDefault()
     const targetId = href.substring(1)
+    const decodedId = decodeURIComponent(targetId)
 
     // Attempt multiple ID matches (due to varied slug generation styles)
     const possibleIds = [
-      targetId, // Exact match: "architecture"
-      targetId.replace(/^-+/, ''), // No leading hyphen: "-architecture" -> "architecture"
-      '-' + targetId.replace(/^-+/, ''), // Leading hyphen: "architecture" -> "-architecture"
+      targetId,
+      decodedId,
+      targetId.replace(/^-+/, ''),
+      decodedId.replace(/^-+/, ''),
+      targetId.replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'),
+      decodedId.replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-'),
     ]
 
     let element = null
     for (const id of possibleIds) {
+      if (!id) continue
       element = document.getElementById(id)
       if (element) break
     }
@@ -537,8 +551,9 @@ function handleMarkdownClick(event) {
 }
 
 async function loadInitialDoc() {
-  const topic = route.params.topic
-    ? String(route.params.topic).toLowerCase().replace(/-/g, '_')
+  const topicParam = route.params.topic || route.query.section
+  const topic = topicParam
+    ? String(topicParam).toLowerCase().replace(/-/g, '_')
     : null
 
   // 1. Detect if specific topic is requested (e.g. /docs/active-record)
@@ -811,10 +826,7 @@ onMounted(() => {
 .docs-page {
   min-height: 100vh;
   padding-top: 110px;
-  background:
-    radial-gradient(circle at top right, rgba(46, 125, 50, 0.15), transparent 40%),
-    radial-gradient(circle at bottom left, rgba(46, 125, 50, 0.1), transparent 40%);
-  background-attachment: fixed;
+  background-color: #0b0f17;
 
   @media (max-width: 1023px) {
     padding-top: 80px;
@@ -935,10 +947,11 @@ onMounted(() => {
   min-height: 50vh;
 
   .text-gradient {
-    background: linear-gradient(135deg, var(--q-primary) 0%, #fff 80%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: initial !important;
+    color: #f59e0b !important;
   }
 
   @media (max-width: 599px) {

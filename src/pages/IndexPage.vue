@@ -82,8 +82,10 @@
                 :class="{ 'mt-xl': index % 2 !== 0 }"
               >
                 <div class="philosophy-watermark pointer-events-none">{{ item.l }}</div>
-                <div class="text-h6 text-weight-bold text-white q-mb-sm">{{ item.t }}</div>
-                <div class="text-body2 text-grey-4 leading-relaxed">{{ item.d }}</div>
+                <div class="relative-position z-top">
+                  <div class="text-h6 text-weight-bold text-white q-mb-sm">{{ item.t }}</div>
+                  <div class="text-body2 text-grey-4 leading-relaxed">{{ item.d }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -142,10 +144,14 @@
           </p>
           <div class="row q-col-gutter-lg">
             <div v-for="stat in stats" :key="stat.label" class="col-6">
-              <div class="stat-item">
+              <div class="stat-item cursor-pointer" @click="goToDocs(stat.target)">
                 <div class="text-h3 text-weight-bolder" :class="stat.color">{{ stat.value }}</div>
-                <div class="text-subtitle1 text-grey-5 text-uppercase tracking-widest">
+                <div class="text-subtitle1 text-grey-5 text-uppercase tracking-widest q-mb-xs">
                   {{ stat.label }}
+                </div>
+                <div class="text-caption text-primary hover-underline flex items-center">
+                  <span>{{ stat.methodologyLabel }}</span>
+                  <q-icon name="east" size="14px" class="q-ml-xs" />
                 </div>
               </div>
             </div>
@@ -156,7 +162,18 @@
             <div class="column items-center">
               <q-spinner-puff color="primary" size="100px" />
               <div class="text-h6 text-primary q-mt-lg">{{ $t('monitor.title') }}</div>
-              <div class="text-caption text-grey-5">{{ $t('monitor.desc') }}</div>
+              <div class="text-caption text-grey-5 q-mb-md">{{ $t('monitor.desc') }}</div>
+              <q-btn
+                flat
+                dense
+                color="primary"
+                icon="sensors"
+                icon-right="east"
+                label="Real-time Pub/Sub Documentation"
+                @click="goToDocs('realtime')"
+                class="hover-underline text-weight-bold q-mt-xs"
+                style="text-transform: none"
+              />
             </div>
           </div>
         </div>
@@ -346,8 +363,20 @@ onUnmounted(() => {
 })
 
 const stats = computed(() => [
-  { label: t('stats.securityScore'), value: '9.8', color: 'text-primary' },
-  { label: t('stats.performance'), value: '9.5', color: 'text-accent' },
+  {
+    label: t('stats.securityScore'),
+    value: '9.8',
+    color: 'text-primary',
+    target: 'security',
+    methodologyLabel: 'OWASP Audit Breakdown',
+  },
+  {
+    label: t('stats.performance'),
+    value: '9.5',
+    color: 'text-accent',
+    target: 'performance',
+    methodologyLabel: 'wrk Benchmark Method',
+  },
 ])
 
 const installationSteps = computed(() => [
@@ -549,50 +578,9 @@ php padi serve`
   }
 }
 
-/* Enhanced Mesh Backgrounds with Breathing */
+/* Solid Clean Background Accents (Non-AI look) */
 .mesh-blob {
-  position: absolute;
-  width: 800px;
-  height: 800px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(100px);
-  animation: breathing 15s ease-in-out infinite alternate;
-
-  @media (max-width: 599px) {
-    width: 300px;
-    height: 300px;
-  }
-}
-
-@keyframes breathing {
-  from {
-    transform: scale(1) translate(0, 0);
-    opacity: 0.7;
-  }
-  to {
-    transform: scale(1.2) translate(50px, -30px);
-    opacity: 0.4;
-  }
-}
-
-.mesh-1 {
-  top: -200px;
-  right: -200px;
-  animation-duration: 20s;
-}
-.mesh-2 {
-  top: 40%;
-  left: -300px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-  animation-duration: 25s;
-}
-.mesh-3 {
-  bottom: 10%;
-  right: -200px;
-  animation-duration: 18s;
+  display: none;
 }
 
 /* Hero Styling */
@@ -610,26 +598,16 @@ php padi serve`
 }
 
 .hero-icon-container {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+  background: #1f2937;
   padding: 40px;
   border-radius: 50%;
-  animation: pulse-glow 4s ease-in-out infinite;
+  border: 1px solid #374151;
 
   @media (max-width: 599px) {
     padding: 20px;
     .q-img {
       width: 80px !important;
     }
-  }
-}
-
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0);
-  }
-  50% {
-    box-shadow: 0 0 60px rgba(16, 185, 129, 0.25);
   }
 }
 
@@ -646,64 +624,124 @@ php padi serve`
 }
 
 .premium-btn {
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 800;
   padding: 12px 42px;
-  background: linear-gradient(135deg, var(--q-primary) 0%, #2e7d32 100%);
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #f59e0b;
+  color: #0b0f17;
+  transition: all 0.2s ease;
+  border: none;
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(46, 125, 50, 0.4);
-    filter: brightness(1.1);
+    transform: translateY(-2px);
+    background-color: #d97706;
   }
 }
 
-.premium-btn-outline {
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  font-weight: 800;
-  padding: 10px 40px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+.secondary-btn {
+  border-radius: 10px;
+  font-weight: 700;
+  padding: 12px 32px;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  color: #f3f4f6;
+  transition: all 0.2s ease;
   &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.8);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.05);
+    border-color: #f59e0b;
+    color: #f59e0b;
   }
+}
+
+.tech-pill {
+  border: 1px solid #1f2937;
+  transition: all 0.2s ease;
+  background: #111827;
+  &:hover {
+    border-color: #f59e0b;
+    background: #1f2937;
+  }
+}
+
+.solid-card {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #f59e0b;
+  }
+}
+
+.h-line-gradient {
+  height: 2px;
+  width: 100px;
+  background-color: #f59e0b;
+}
+
+/* Tab Active State Styling */
+:deep(.tab-active) {
+  background: #1f2937 !important;
+  color: #f59e0b !important;
+  border-left: 3px solid #f59e0b;
+}
+
+.code-container {
+  background: #0b0f17;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.code-content {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #e5e7eb;
+}
+
+.step-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #1f2937;
+  color: #f59e0b;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #374151;
 }
 
 /* Philosophy Cards */
 .philosophy-card {
   height: 100%;
-  border-radius: 24px;
+  border-radius: 20px;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #1f2937;
+  transition: all 0.3s ease;
   &:hover {
-    border-color: var(--q-primary);
-    background: rgba(46, 125, 50, 0.05);
-    transform: translateY(-15px);
+    border-color: #f59e0b;
+    transform: translateY(-5px);
     .philosophy-watermark {
-      opacity: 0.4;
-      transform: scale(1.1);
+      opacity: 0.5;
+      transform: scale(1.05);
     }
   }
 }
 
 .philosophy-watermark {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 5px;
+  left: 15px;
   font-size: 130px;
   font-weight: 900;
-  color: var(--q-primary);
-  opacity: 0.15;
-  transition: all 0.5s ease;
-  z-index: -1;
+  color: #f59e0b;
+  opacity: 0.35;
+  transition: all 0.3s ease;
+  z-index: 0;
+  user-select: none;
 }
 
 /* Feature Boxes */
@@ -812,10 +850,11 @@ php padi serve`
   line-height: 1.1;
 }
 .text-gradient {
-  background: linear-gradient(135deg, var(--q-primary) 0%, #fff 80%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #f59e0b !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
 }
 .hover-underline:hover {
   text-decoration: underline !important;
