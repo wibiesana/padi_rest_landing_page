@@ -9,8 +9,14 @@
     <section class="hero-section text-center flex flex-center reveal">
       <div class="container relative-position">
         <div class="column items-center">
-          <div class="hero-icon-container q-mb-lg">
-            <q-img :src="heroImage" width="120px" class="animate-float shadow-glow" alt="Padi REST API Framework Logo" />
+          <div class="q-mb-md">
+            <q-img
+              :src="heroImage"
+              width="150px"
+              height="150px"
+              fit="contain"
+              alt="Padi REST API Framework Logo"
+            />
           </div>
           <h1
             class="text-h2 text-weight-bolder q-ma-none text-gradient text-uppercase tracking-tighter"
@@ -44,10 +50,18 @@
               icon="menu_book"
             />
           </div>
-          <div class="q-mt-lg text-body2 text-grey-5 flex items-center justify-center reveal delay-2">
+          <div
+            class="q-mt-lg text-body2 text-grey-5 flex items-center justify-center reveal delay-2"
+          >
             <q-icon name="bolt" color="warning" size="20px" class="q-mr-xs" />
             <span>Looking for a real-time demo? Check out the</span>
-            <a href="https://github.com/wibiesana/padi-rest-realtime-example" target="_blank" class="text-primary text-weight-bold q-ml-xs hover-underline" style="text-decoration: none; color: var(--q-primary);">Real-time Example App</a>
+            <a
+              href="https://github.com/wibiesana/padi-rest-realtime-example"
+              target="_blank"
+              class="text-primary text-weight-bold q-ml-xs hover-underline"
+              style="text-decoration: none; color: var(--q-primary)"
+              >Real-time Example App</a
+            >
           </div>
         </div>
       </div>
@@ -58,8 +72,12 @@
       <div class="row q-col-gutter-xl items-center">
         <div class="col-12 col-md-5">
           <div class="text-h3 text-weight-bolder text-white q-mb-lg leading-tight">
-            {{ $t('philosophy.title1') }} <span class="text-primary">{{ $t('philosophy.titleSpeed') }}</span>,<br />
-            {{ $t('philosophy.title2') }} <span class="text-gradient">{{ $t('philosophy.titleIndustrial') }}</span>.
+            {{ $t('philosophy.title1') }}
+            <span class="text-primary">{{ $t('philosophy.titleSpeed') }}</span
+            >,<br />
+            {{ $t('philosophy.title2') }}
+            <span class="text-gradient">{{ $t('philosophy.titleIndustrial') }}</span
+            >.
           </div>
           <p class="text-body1 text-grey-4 text-weight-light line-height-1-8">
             {{ $t('philosophy.desc') }}
@@ -137,8 +155,12 @@
       <div class="mesh-blob mesh-4"></div>
       <div class="container row q-col-gutter-xl items-center">
         <div class="col-12 col-md-6 text-white">
-          <div class="text-overline text-primary letter-spacing-2 q-mb-md">{{ $t('stats.title') }}</div>
-          <h3 class="text-h3 text-weight-bolder q-mb-xl line-height-1">{{ $t('stats.subtitle') }}</h3>
+          <div class="text-overline text-primary letter-spacing-2 q-mb-md">
+            {{ $t('stats.title') }}
+          </div>
+          <h3 class="text-h3 text-weight-bolder q-mb-xl line-height-1">
+            {{ $t('stats.subtitle') }}
+          </h3>
           <p class="text-body1 text-grey-4 font-light q-mb-xl">
             {{ $t('stats.desc') }}
           </p>
@@ -185,7 +207,10 @@
       <div class="row q-col-gutter-xl items-center">
         <div class="col-12 col-lg-5">
           <h2 class="text-h3 text-weight-bolder text-white q-mb-lg">
-            {{ $t('quickStart.title1') }} <br /><span class="text-gradient">{{ $t('quickStart.title2') }}</span>.
+            {{ $t('quickStart.title1') }} <br /><span class="text-gradient">{{
+              $t('quickStart.title2')
+            }}</span
+            >.
           </h2>
           <p class="text-h6 text-grey-4 q-mb-xl font-light">
             {{ $t('quickStart.desc') }}
@@ -206,7 +231,9 @@
                 <div class="t-dot dot-yellow"></div>
                 <div class="t-dot dot-green"></div>
               </div>
-              <div class="q-mx-auto text-caption text-grey-6 font-mono">{{ APP_CONFIG.cliName }} v{{ APP_CONFIG.version }}</div>
+              <div class="q-mx-auto text-caption text-grey-6 font-mono">
+                {{ APP_CONFIG.cliName }} v{{ APP_CONFIG.version }}
+              </div>
               <q-btn
                 flat
                 round
@@ -301,7 +328,8 @@
       <div class="mesh-blob mesh-1" style="bottom: -200px; top: auto; right: 0"></div>
       <div class="container relative-position">
         <h2 class="text-h2 text-weight-bolder text-white q-mb-lg leading-tight">
-          {{ $t('cta.title1') }} <br /><span class="text-primary">{{ $t('cta.title2') }}</span>?
+          {{ $t('cta.title1') }} <br /><span class="text-primary">{{ $t('cta.title2') }}</span
+          >?
         </h2>
         <p class="text-h5 q-mb-xl text-grey-4 opacity-80 max-width-800 q-mx-auto">
           {{ $t('cta.desc') }}
@@ -331,9 +359,17 @@ import { APP_CONFIG } from 'src/constants'
 useMeta({
   title: 'Padi REST API - Zero-Bloat PHP REST API Framework',
   meta: {
-    description: { name: 'description', content: 'Build secure, zero-bloat, and lightweight RESTful APIs in PHP. Native FrankenPHP Worker Mode compatibility, active record ORM, and high performance.' },
-    keywords: { name: 'keywords', content: 'php rest api framework, php rest api, lightweight php framework, php web api, frankenphp api framework, fastest php api, zero dependency php framework, php active record orm, building rest api in php, php routing library, jwt authentication php' }
-  }
+    description: {
+      name: 'description',
+      content:
+        'Build secure, zero-bloat, and lightweight RESTful APIs in PHP. Native FrankenPHP Worker Mode compatibility, active record ORM, and high performance.',
+    },
+    keywords: {
+      name: 'keywords',
+      content:
+        'php rest api framework, php rest api, lightweight php framework, php web api, frankenphp api framework, fastest php api, zero dependency php framework, php active record orm, building rest api in php, php routing library, jwt authentication php',
+    },
+  },
 })
 
 const router = useRouter()
@@ -563,7 +599,7 @@ php padi serve`
 }
 
 .index-page {
-  background: #090d16;
+  background: #0b0f17;
   color: white;
   min-height: 100vh;
 }
@@ -572,7 +608,7 @@ php padi serve`
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 40px;
-  
+
   @media (max-width: 599px) {
     padding: 0 16px;
   }
@@ -585,28 +621,33 @@ php padi serve`
 
 /* Hero Styling */
 .hero-section {
-  min-height: 90vh;
-  padding-top: 120px;
-  padding-bottom: 60px;
+  min-height: 75vh;
+  padding-top: 30px;
+  padding-bottom: 40px;
   position: relative;
-  
+
   @media (max-width: 599px) {
     min-height: auto;
-    padding-top: 100px;
-    padding-bottom: 40px;
+    padding-top: 20px;
+    padding-bottom: 30px;
   }
 }
 
 .hero-icon-container {
-  background: #1f2937;
-  padding: 40px;
-  border-radius: 50%;
-  border: 1px solid #374151;
+  background: #111827;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @media (max-width: 599px) {
-    padding: 20px;
+    padding: 8px;
     .q-img {
-      width: 80px !important;
+      width: 48px !important;
+      height: 48px !important;
     }
   }
 }
