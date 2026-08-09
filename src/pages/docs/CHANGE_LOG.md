@@ -2,6 +2,19 @@
 
 ## v2.1.5 (2026-08-09)
 
+### ⚡ Realtime Service FrankenPHP Worker Mode Optimization & Robustness
+
+- **In-Memory Publisher JWT Caching**: Implemented static `$jwtCache` in `Realtime.php` to prevent CPU-intensive HMAC SHA-256 regeneration on every `publish()` call during long-running worker processes.
+- **Worker Process Memory Leak Fix**: Ensured `curl_close()` is always executed to release cURL handles immediately.
+- **Persistent Connections & Optimized Defaults**: Added `Connection: keep-alive` HTTP headers and `curl_setopt_array()` for faster execution. Standardized connection and request timeouts (500ms / 1000ms).
+- **Batch Realtime Publishing**: Introduced `Realtime::publishBatch(array $events)` to allow publishing multiple SSE events in a single loop efficiently.
+- **Enhanced Security & Validation**: Enforced strict `MERCURE_ENABLED` boolean check, strict `JSON_THROW_ON_ERROR` handling, `iat` & `exp` claims on Publisher JWTs, and environment-aware SSL verification.
+
+### 📚 Documentation Enhancements
+
+- **ActiveRecord CRUD Guide Improvements**: Enhanced Create, Update, and Delete documentation in `ACTIVE_RECORD.md` with beginner-friendly, real-world controller examples and input validation (`$this->validate()`).
+- **Response Engine Documentation**: Expanded `RESPONSE_STRUCTURE.md` with complete controller methods and matching HTTP JSON payloads (including Single Item, Paginated, Collection, Custom Array Return `return [...]`, and API Resource Transformers).
+
 ### 🧹 Template Migration Cleanup & Setup Wizard Alignment
 
 - **Removal of Default Example Migrations**: Removed legacy example migrations (`posts`, `tags`, `post_tags`, `comments`) from `padi_template/database/migrations/` to streamline starter migrations (`users` and `password_resets` only).
