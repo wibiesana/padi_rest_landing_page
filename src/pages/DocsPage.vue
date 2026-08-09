@@ -1,8 +1,8 @@
 <template>
   <q-page class="docs-page bg-premium">
     <!-- Search Bar (Sticky Header) -->
-    <div class="docs-header q-pa-md glass-header shadow-20">
-      <div class="container flex justify-between items-center">
+    <div class="docs-header q-py-none q-px-md glass-header shadow-20">
+      <div class="full-width flex justify-between items-center q-px-sm">
         <div class="flex items-center q-gutter-x-sm">
           <q-btn
             flat
@@ -825,28 +825,20 @@ onMounted(() => {
 <style lang="scss" scoped>
 .docs-page {
   min-height: 100vh;
-  padding-top: 110px;
+  margin-top: -76px;
   background-color: #0b0f17;
-
-  @media (max-width: 1023px) {
-    padding-top: 80px;
-  }
 }
 
 .docs-header {
-  position: fixed;
-  top: 50px;
-  left: 0;
-  right: 0;
-  z-index: 100;
+  position: relative;
+  z-index: 10;
   backdrop-filter: blur(20px);
-  background: rgba(15, 23, 42, 0.7);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-
-  @media (max-width: 1023px) {
-    top: 50px; // Offset for main toolbar if exists
-    padding: 8px 16px;
-  }
+  background: rgba(11, 15, 23, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 16px !important;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
 }
 
 .search-input {
@@ -864,7 +856,7 @@ onMounted(() => {
 
 .search-input:focus-within {
   width: 480px;
-  background: rgba(46, 125, 50, 0.1);
+  background: rgba(245, 158, 11, 0.1);
 
   @media (max-width: 599px) {
     width: 100%;
@@ -873,7 +865,7 @@ onMounted(() => {
 
 .sticky-sidebar {
   position: sticky;
-  top: 160px;
+  top: 80px;
 }
 
 .docs-nav {

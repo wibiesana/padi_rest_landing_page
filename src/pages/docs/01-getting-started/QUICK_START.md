@@ -9,7 +9,6 @@ Experience the ultimate developer fast-track. Padi REST API is engineered for **
 ## 📋 Table of Contents
 
 - [⚡ Speed to Market: Zero to API in Seconds](#speed-to-market-zero-to-api-in-seconds)
-
 - [📝 Prerequisites](#prerequisites)
 - [🤖 Automated Setup](#automated-setup)
 - [📦 What You Get](#what-you-get)
@@ -26,9 +25,6 @@ Experience the ultimate developer fast-track. Padi REST API is engineered for **
 - **Database:** MySQL/MariaDB/PostgreSQL/SQLite
 
 ---
-
-
-
 
 ## Automated Setup
 
