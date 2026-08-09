@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## v2.1.5 (2026-08-09)
+
+### 🧹 Template Migration Cleanup & Setup Wizard Alignment
+
+- **Removal of Default Example Migrations**: Removed legacy example migrations (`posts`, `tags`, `post_tags`, `comments`) from `padi_template/database/migrations/` to streamline starter migrations (`users` and `password_resets` only).
+- **Setup Wizard Streamlining**: Updated interactive setup wizard migration options in `scripts/init.php` to align with base migrations.
+
 ## v2.1.4 (2026-08-09)
 
 ### 🛡️ Production Debug Exposure Prevention
