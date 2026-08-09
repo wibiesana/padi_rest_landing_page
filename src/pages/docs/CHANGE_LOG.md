@@ -1,10 +1,14 @@
 # CHANGE LOG
 
-## v2.1.4 (2026-07-25)
+## v2.1.4 (2026-08-09)
 
 ### 🛡️ Production Debug Exposure Prevention
 
 - **Strict Environment Debug Guarding**: Enforced dual condition (`APP_ENV === 'development'` AND `APP_DEBUG === 'true'`) across framework core classes (`Router.php`, `Controller.php`, `Database.php`, `Auth.php`, `Validator.php`). Prevents internal debug payloads (`file`, `line`, `trace`) from being exposed in error responses when running in production, even if `APP_DEBUG=true` remains in environment settings.
+
+### 🐛 ModelQuery & ActiveRecord Return Type Fix
+
+- **Strict `ModelQuery` Return Type on `ActiveRecord::find()`**: Fixed static analyzer / IDE error ("Undefined method 'with'") when chaining `$query->with()`. Split `ActiveRecord::find()` to exclusively return `ModelQuery` for fluent query building, and introduced `ActiveRecord::findByPk()` specifically for primary key lookups. Updated `findOne()` to utilize `findByPk()` internally.
 
 ## v2.1.3 (2026-07-23)
 

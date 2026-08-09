@@ -20,7 +20,7 @@ The `Wibiesana\Padi\Core\Query` class is an **Industrial-Grade Data Engine** des
 
 ## 🚀 Getting Started
 
-You can use the Query Builder through ActiveRecord or directly.
+You can use the Query Builder through ActiveRecord or directly as a standalone query builder.
 
 ### 1. Through ActiveRecord (Recommended)
 
@@ -38,178 +38,282 @@ $query = Post::find();
 Use this if you want to query a table that does not have a Model.
 
 ```php
-use Core\Query;
+use Wibiesana\Padi\Core\Query;
 
 $query = Query::find()->from('some_table_name');
 ```
 
 ---
 
-## 🛠️ Query Methods
+## 🧩 Progressive Query Building
 
-### `select($columns)`
+Padi's Query Builder is designed for fluent method chaining. Below is a step-by-step demonstration showing how a raw SQL query pipeline is constructed progressively from ground up:
 
-Specifies the columns to retrieve. Defaults to `*`.
-
+#### 1. Initialize & Set Target Table (`find()`, `from()`)
+Start the builder and bind the target database table:
 ```php
-$query->select(['id', 'title', 'slug']);
-// or as a string
-$query->select('id, title');
+$query = Query::find()->from('orders');
 ```
 
-### `addSelect($columns)`
+#### 2. Specify Select Columns (`select()`)
+Continuing from step 1, define specific columns to retrieve instead of `*`:
+```php
+$query = Query::find()
+    ->from('orders')
+    ->select(['id', 'customer_id', 'total_amount', 'status', 'created_at']);
+```
 
-Adds columns to an existing select statement.
+#### 3. Apply Base Filter (`where()`)
+Continuing from step 2, attach the initial filtering clause:
+```php
+$query = Query::find()
+    ->from('orders')
+    ->select(['id', 'customer_id', 'total_amount', 'status', 'created_at'])
+    ->where(['status' => 'completed']);
+```
+
+#### 4. Add Range Filter (`whereBetween()`)
+Continuing from step 3, filter records created within a specific date range:
+```php
+$query = Query::find()
+    ->from('orders')
+    ->select(['id', 'customer_id', 'total_amount', 'status', 'created_at'])
+    ->where(['status' => 'completed'])
+    ->whereBetween('created_at', '2026-01-01', '2026-12-31');
+```
+
+#### 5. Add Value Filter with Operator (`andWhere()`)
+Continuing from step 4, chain additional filter conditions using operator comparison:
+```php
+$query = Query::find()
+    ->from('orders')
+    ->select(['id', 'customer_id', 'total_amount', 'status', 'created_at'])
+    ->where(['status' => 'completed'])
+    ->whereBetween('created_at', '2026-01-01', '2026-12-31')
+    ->andWhere(['total_amount', '>=', 100.00]);
+```
+
+#### 6. Add Table Join (`leftJoin()`)
+Continuing from step 5, join a related table to access external columns:
+```php
+$query = Query::find()
+    ->from('orders')
+    ->select(['orders.id', 'orders.total_amount', 'customers.name as customer_name'])
+    ->leftJoin('customers', 'orders.customer_id = customers.id')
+    ->where(['orders.status' => 'completed'])
+    ->whereBetween('orders.created_at', '2026-01-01', '2026-12-31')
+    ->andWhere(['orders.total_amount', '>=', 100.00]);
+```
+
+#### 7. Add Sorting & Pagination Limit (`orderBy()`, `limit()`)
+Continuing from step 6, apply ordering and restrict the result count:
+```php
+$query = Query::find()
+    ->from('orders')
+    ->select(['orders.id', 'orders.total_amount', 'customers.name as customer_name'])
+    ->leftJoin('customers', 'orders.customer_id = customers.id')
+    ->where(['orders.status' => 'completed'])
+    ->whereBetween('orders.created_at', '2026-01-01', '2026-12-31')
+    ->andWhere(['orders.total_amount', '>=', 100.00])
+    ->orderBy('orders.total_amount DESC')
+    ->limit(10);
+```
+
+#### 8. Execute Terminal Methods
+
+Once the pipeline is composed, invoke one of the terminal execution methods:
 
 ```php
-$query->select(['id'])->addSelect(['title']);
+// A. Execute & fetch all matching rows (array of associative arrays)
+$orders = Query::find()
+    ->from('orders')
+    ->select(['orders.id', 'orders.total_amount', 'customers.name as customer_name'])
+    ->leftJoin('customers', 'orders.customer_id = customers.id')
+    ->where(['orders.status' => 'completed'])
+    ->whereBetween('orders.created_at', '2026-01-01', '2026-12-31')
+    ->andWhere(['orders.total_amount', '>=', 100.00])
+    ->orderBy('orders.total_amount DESC')
+    ->limit(10)
+    ->all();
+
+// B. Fetch single row (associative array or null)
+$firstOrder = Query::find()
+    ->from('orders')
+    ->where(['status' => 'completed'])
+    ->orderBy('id ASC')
+    ->one();
+
+// C. Fetch aggregated count
+$totalCompleted = Query::find()
+    ->from('orders')
+    ->where(['status' => 'completed'])
+    ->count();
+
+// D. Fetch paginated result set with metadata
+$paginatedOrders = Query::find()
+    ->from('orders')
+    ->where(['status' => 'completed'])
+    ->orderBy('id DESC')
+    ->paginate(page: 1, perPage: 20);
+```
+
+
+---
+
+## 🛠️ Query Methods Reference
+
+Below is a detailed breakdown of all builder methods. Each method demonstrates how it appends to a continuous query pipeline:
+
+### `select($columns)` & `addSelect($columns)`
+
+Specifies columns to retrieve (defaults to `*`), or appends columns to an existing query.
+
+```php
+// Step 1: Base select
+$query = Query::find()->from('orders')->select(['id', 'order_number']);
+
+// Step 2: Dynamically add more columns later in the code
+$query->addSelect(['total_amount', 'status']);
 ```
 
 ### `distinct()`
 
-Adds the `DISTINCT` keyword to the query.
+Adds the `DISTINCT` keyword to suppress duplicate rows.
 
 ```php
-$query->distinct()->select('category');
+$query = Query::find()
+    ->from('orders')
+    ->select(['status'])
+    ->distinct();
 ```
 
 ### `from($table)`
 
-Specifies the table (only if not using via a Model).
+Specifies the target table name.
 
 ```php
-$query->from('users');
+$query = Query::find()->from('orders');
 ```
 
 ### `where($condition, $params = [])`
 
-Adds a WHERE condition. This will overwrite previous conditions.
+Adds the initial WHERE clause. Supports key-value pairs, operator syntax `[col, op, val]`, `LIKE`, `IN`, `BETWEEN`, and `NULL`.
 
 ```php
-// Associative array (column = value)
-$query->where(['status' => 'published', 'type' => 'post']);
+// Step 1: Base table selection
+$query = Query::find()->from('orders');
 
-// Unified format: [column, operator, value] — works for ALL operators
-$query->where(['views', '>', 100]);
+// Step 2: Apply primary status condition
+$query->where(['status' => 'completed']);
 
-// LIKE — auto-wraps % if not present, auto-converts to ILIKE on PostgreSQL
-$query->where(['title', 'LIKE', 'announcement']);
-
-// IN condition (Hash format shortcut)
-$query->where(['id' => [1, 2, 3]]);
-
-// BETWEEN condition
-$query->where(['created_at', 'BETWEEN', ['2023-01-01', '2023-12-31']]);
-
-// NULL handling
-$query->where(['deleted_at', '=', null]);  // → IS NULL
-$query->where(['verified_at', '!=', null]); // → IS NOT NULL
+// Step 3: Add operator comparison
+$query->andWhere(['total_amount', '>=', 100.00]);
 ```
 
-> **Note:** Legacy format `['LIKE', column, value]` is still supported for backward compatibility, but the canonical format is `[column, 'LIKE', value]`.
+### `andWhere()` & `orWhere()`
 
-### `andWhere()` / `orWhere()`
-
-Adds additional conditions with AND or OR operators.
+Chains additional filtering conditions using SQL `AND` or `OR`.
 
 ```php
-$query->where(['status' => 'active'])
-      ->andWhere(['views', '>', 50])
-      ->orWhere(['is_featured' => 1]);
+$query = Query::find()
+    ->from('orders')
+    ->where(['status' => 'completed'])
+    ->andWhere(['total_amount', '>=', 100.00])
+    ->orWhere(['is_priority' => 1]);
 ```
 
-### Quick Where Helpers
+### Quick Where Helpers (`whereIn`, `whereBetween`, `whereNull`, etc.)
 
-For common conditions, you can use these helper methods:
+Expressive shortcuts for standard SQL conditional filters:
 
 ```php
-// WHERE id IN (1, 2, 3)
-$query->whereIn('id', [1, 2, 3]);
-
-// WHERE id NOT IN (4, 5)
-$query->whereNotIn('id', [4, 5]);
-
-// WHERE created_at BETWEEN '2023-01-01' AND '2023-12-31'
-$query->whereBetween('created_at', '2023-01-01', '2023-12-31');
-
-// WHERE amount NOT BETWEEN 10 AND 50
-$query->whereNotBetween('amount', 10, 50);
-
-// WHERE deleted_at IS NULL
-$query->whereNull('deleted_at');
-
-// WHERE updated_at IS NOT NULL
-$query->whereNotNull('updated_at');
+$query = Query::find()
+    ->from('orders')
+    ->where(['status' => 'completed'])
+    ->whereIn('payment_method', ['credit_card', 'bank_transfer'])  // WHERE payment_method IN (...)
+    ->whereNotIn('flag', ['cancelled', 'refunded'])                // WHERE flag NOT IN (...)
+    ->whereBetween('created_at', '2026-01-01', '2026-12-31')      // WHERE created_at BETWEEN ... AND ...
+    ->whereNotBetween('total_amount', 0, 10)                        // WHERE total_amount NOT BETWEEN ...
+    ->whereNull('deleted_at')                                      // WHERE deleted_at IS NULL
+    ->whereNotNull('shipped_at');                                  // WHERE shipped_at IS NOT NULL
 ```
 
 ### `whereRaw($expression, $params)` (v2.0.3)
 
-For complex WHERE conditions that require raw SQL (subqueries, `CASE WHEN`, etc.). **Always bind parameters** to prevent SQL injection.
+Injects custom raw SQL WHERE conditions safely using bound parameters to prevent SQL injection:
 
 ```php
-// Raw condition with bound parameter
-$query->whereRaw('price > :min_price', [':min_price' => 100]);
-
-// Subquery
-$query->whereRaw('category_id IN (SELECT id FROM categories WHERE active = 1)');
+$query = Query::find()
+    ->from('orders')
+    ->where(['status' => 'completed'])
+    ->whereRaw('DATEDIFF(NOW(), created_at) <= :days', [':days' => 30]);
 ```
 
-### `join($type, $table, $on)`
+### Table Joins (`leftJoin`, `rightJoin`, `innerJoin`, `join`)
 
-Adds a JOIN. Shortcuts available: `innerJoin()`, `leftJoin()`, `rightJoin()`.
+Connects external database tables using explicit JOIN clauses:
 
 ```php
-$query->innerJoin('users', 'users.id = posts.user_id');
+$query = Query::find()
+    ->from('orders')
+    ->select(['orders.id', 'orders.total_amount', 'c.name as customer_name', 'p.status as payment_status'])
+    ->leftJoin('customers c', 'orders.customer_id = c.id')
+    ->innerJoin('payments p', 'orders.id = p.order_id')
+    ->rightJoin('shipping_addresses s', 'orders.shipping_id = s.id')
+    ->where(['orders.status' => 'completed']);
 ```
 
-### `orderBy($columns)`
+### `orderBy($columns)` & `addOrderBy($columns)`
 
-Specifies the sorting order.
-
-```php
-$query->orderBy('created_at DESC');
-// or as an array
-$query->orderBy(['created_at' => SORT_DESC, 'title' => SORT_ASC]);
-```
-
-### `addOrderBy($columns)`
-
-Adds columns to an existing order by statement.
+Specifies and appends sorting columns.
 
 ```php
-$query->orderBy('created_at DESC')->addOrderBy('title ASC');
+$query = Query::find()
+    ->from('orders')
+    ->where(['status' => 'completed'])
+    ->orderBy('created_at DESC')
+    ->addOrderBy('total_amount DESC');
 ```
 
 ### `groupBy($columns)` & `addGroupBy($columns)`
 
-`groupBy()` specifies the grouping criteria, while `addGroupBy()` appends columns without overwriting previous groupings (v2.0.13).
+Applies aggregation grouping across table columns:
 
 ```php
-$query->groupBy('category')
-      ->addGroupBy('status');
+$query = Query::find()
+    ->from('orders')
+    ->select(['customer_id', 'status', 'COUNT(id) as total_orders', 'SUM(total_amount) as total_revenue'])
+    ->groupBy('customer_id')
+    ->addGroupBy('status');
 ```
 
-### `having($condition)` & `andHaving()` / `orHaving()` (v2.0.13)
+### `having($condition)`, `andHaving()`, `orHaving()` (v2.0.13)
 
-Adds a HAVING condition. Supports raw string format, parameter binding, or array criteria:
+Filters aggregated group results using SQL `HAVING` clauses:
 
 ```php
-// 1. Array format having with aggregate comparison
-$query->groupBy('category')
-      ->having(['>', 'COUNT(id)', 5]);
-
-// 2. Chainable having conditions
-$query->groupBy('category')
-      ->having(['>', 'COUNT(id)', 5])
-      ->andHaving('SUM(price) > :min', ['min' => 1000])
-      ->orHaving(['<', 'AVG(rating)', 3]);
+$query = Query::find()
+    ->from('orders')
+    ->select(['customer_id', 'COUNT(id) as total_orders', 'SUM(total_amount) as total_spent'])
+    ->groupBy('customer_id')
+    ->having(['>', 'COUNT(id)', 3])
+    ->andHaving('SUM(total_amount) >= :min_spent', [':min_spent' => 500])
+    ->orHaving(['>', 'MAX(total_amount)', 1000]);
 ```
 
 ### `limit($limit)` & `offset($offset)`
 
+Restricts total rows returned and sets row offset for custom pagination:
+
 ```php
-$query->limit(10)->offset(20);
+$query = Query::find()
+    ->from('orders')
+    ->where(['status' => 'completed'])
+    ->orderBy('id DESC')
+    ->limit(10)
+    ->offset(20);
 ```
+
 
 ### `autoIlike(bool $value)`
 

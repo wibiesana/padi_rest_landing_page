@@ -53,39 +53,196 @@ class Product extends ActiveRecord
 
 ## 📦 Basic CRUD
 
-### Retrieving Data
+### Retrieving Data (Progressive Query Building)
+
+Padi ActiveRecord utilizes the `ModelQuery` builder which inherits all raw `Query` builder capabilities. Below is a comprehensive step-by-step example showing how a query pipeline is constructed progressively from basic building blocks to a fully composed query using every query method:
+
+#### 1. Initialize Builder (`find()`)
+Start the fluent query builder (table is automatically bound from the Model):
+```php
+$query = Product::find();
+```
+
+#### 2. Select Specific Columns (`select()`)
+Continuing from `find()`, choose specific columns instead of retrieving `*`:
+```php
+$query = Product::find()
+    ->select(['id', 'name', 'slug', 'price', 'status', 'category_id']);
+```
+
+#### 3. Apply Initial Filter (`where()`)
+Continuing from `select()`, append basic equality filtering criteria:
+```php
+$query = Product::find()
+    ->select(['id', 'name', 'slug', 'price', 'status', 'category_id'])
+    ->where(['status' => 'active']);
+```
+
+#### 4. Add AND Condition with Operator (`andWhere()`)
+Continuing from `where()`, chain an additional AND condition using operator syntax:
+```php
+$query = Product::find()
+    ->select(['id', 'name', 'slug', 'price', 'status', 'category_id'])
+    ->where(['status' => 'active'])
+    ->andWhere(['stock', '>', 0]);
+```
+
+#### 5. Add Alternative Condition (`orWhere()`)
+Continuing from `andWhere()`, add an OR condition for featured items:
+```php
+$query = Product::find()
+    ->select(['id', 'name', 'slug', 'price', 'status', 'category_id'])
+    ->where(['status' => 'active'])
+    ->andWhere(['stock', '>', 0])
+    ->orWhere(['is_featured' => 1]);
+```
+
+#### 6. Add Range Filter (`whereBetween()`)
+Continuing from `orWhere()`, restrict prices within a minimum and maximum range:
+```php
+$query = Product::find()
+    ->select(['id', 'name', 'slug', 'price', 'status', 'category_id'])
+    ->where(['status' => 'active'])
+    ->andWhere(['stock', '>', 0])
+    ->orWhere(['is_featured' => 1])
+    ->whereBetween('price', 10.00, 500.00);
+```
+
+#### 7. Add Set Filter (`whereIn()`)
+Continuing from `whereBetween()`, filter by a list of allowed category IDs:
+```php
+$query = Product::find()
+    ->select(['id', 'name', 'slug', 'price', 'status', 'category_id'])
+    ->where(['status' => 'active'])
+    ->andWhere(['stock', '>', 0])
+    ->orWhere(['is_featured' => 1])
+    ->whereBetween('price', 10.00, 500.00)
+    ->whereIn('category_id', [1, 3, 5, 8]);
+```
+
+#### 8. Add Null Checks (`whereNull()` / `whereNotNull()`)
+Continuing from `whereIn()`, ensure non-deleted and verified items:
+```php
+$query = Product::find()
+    ->select(['id', 'name', 'slug', 'price', 'status', 'category_id'])
+    ->where(['status' => 'active'])
+    ->andWhere(['stock', '>', 0])
+    ->orWhere(['is_featured' => 1])
+    ->whereBetween('price', 10.00, 500.00)
+    ->whereIn('category_id', [1, 3, 5, 8])
+    ->whereNull('deleted_at');
+```
+
+#### 9. Add SQL Table Joins (`joinWith()`)
+Continuing from `whereNull()`, perform SQL JOINs via relationship mappings:
+```php
+$query = Product::find()
+    ->select(['products.*', 'c.name as category_name'])
+    ->joinWith('category c')
+    ->where(['products.status' => 'active'])
+    ->andWhere(['products.stock', '>', 0])
+    ->whereBetween('products.price', 10.00, 500.00)
+    ->whereIn('products.category_id', [1, 3, 5, 8])
+    ->whereNull('products.deleted_at');
+```
+
+#### 10. Add Sorting (`orderBy()`) & Limit (`limit()`)
+Continuing from `joinWith()`, specify sorting criteria and limit result size:
+```php
+$query = Product::find()
+    ->select(['products.*', 'c.name as category_name'])
+    ->joinWith('category c')
+    ->where(['products.status' => 'active'])
+    ->andWhere(['products.stock', '>', 0])
+    ->whereBetween('products.price', 10.00, 500.00)
+    ->whereIn('products.category_id', [1, 3, 5, 8])
+    ->whereNull('products.deleted_at')
+    ->orderBy('products.price DESC')
+    ->limit(10);
+```
+
+#### 11. Add Relationship Eager Loading (`with()`)
+Continuing from `limit()`, eagerly load related data objects to prevent N+1 queries:
+```php
+$query = Product::find()
+    ->select(['products.*', 'c.name as category_name'])
+    ->joinWith('category c')
+    ->where(['products.status' => 'active'])
+    ->andWhere(['products.stock', '>', 0])
+    ->whereBetween('products.price', 10.00, 500.00)
+    ->whereIn('products.category_id', [1, 3, 5, 8])
+    ->whereNull('products.deleted_at')
+    ->orderBy('products.price DESC')
+    ->limit(10)
+    ->with('category', 'tags');
+```
+
+#### 12. Execute Terminal Methods
+
+Once the complete query pipeline is composed, invoke one of the terminal methods:
 
 ```php
-// Find by ID (static or instance)
-$product = Product::find(1);
+// A. Fetch all matching records (array of associative arrays)
+$products = Product::find()
+    ->select(['products.*'])
+    ->where(['products.status' => 'active'])
+    ->andWhere(['products.stock', '>', 0])
+    ->whereBetween('products.price', 10.00, 500.00)
+    ->whereIn('products.category_id', [1, 3, 5, 8])
+    ->whereNull('products.deleted_at')
+    ->orderBy('products.price DESC')
+    ->limit(10)
+    ->with('category', 'tags')
+    ->all();
 
+// B. Fetch single row (associative array or null)
+$product = Product::find()
+    ->where(['status' => 'active'])
+    ->andWhere(['stock', '>', 0])
+    ->whereBetween('price', 10.00, 500.00)
+    ->with('category', 'tags')
+    ->one();
+
+// C. Count total records matching criteria
+$totalActive = Product::find()
+    ->where(['status' => 'active'])
+    ->andWhere(['stock', '>', 0])
+    ->whereBetween('price', 10.00, 500.00)
+    ->count();
+
+// D. Fetch paginated result set with metadata
+$paginated = Product::find()
+    ->where(['status' => 'active'])
+    ->andWhere(['stock', '>', 0])
+    ->whereBetween('price', 10.00, 500.00)
+    ->orderBy('price DESC')
+    ->with('category', 'tags')
+    ->paginate(page: 1, perPage: 15);
+```
+
+
+---
+
+### Quick Helpers (By Primary Key / Direct Static Call)
+
+In addition to the fluent builder pattern above, Padi ActiveRecord provides concise static helper methods:
+
+```php
 // Find a single record by primary key
 $product = Product::findOne(1);
 
-// Find multiple records by primary keys or conditions (v2.0.13)
+// Find a single record by primary key or automatically throw HTTP 404 Exception if not found
+$product = Product::findOrFail(1);
+
+// Find multiple records by primary keys or short condition array
 $products = Product::findAll([1, 2, 3]);
 $activeProducts = Product::findAll(['status' => 'active']);
 
-// Find or throw 404
-$product = Product::findOrFail(1);
-
-// Get all records (using fluent ModelQuery builder)
-$all = Product::find()->all();
-
-// Filtered results
-$active = Product::find()->where(['status' => 'active'])->all();
-
-// Count records
-$total = Product::find()->count();
-$activeCount = Product::find()->where(['status' => 'active'])->count();
-
-// Global Search (v2.0.10+)
-// Automatically searches through all $fillable and joined display fields
-$results = Product::search($keyword)->all();
-
-// Search with pagination
-$paginatedResults = Product::search($keyword)->paginate(1, 25);
+// Global Search (automatically searches across $fillable columns and joined display fields)
+$searchResults = Product::search($keyword)->paginate(1, 25);
 ```
+
+
 
 > [!NOTE]
 > ### 💡 `findOrFail()` vs `findOrFailByPk()`
