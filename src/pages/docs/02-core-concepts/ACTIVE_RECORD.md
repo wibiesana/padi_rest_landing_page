@@ -257,23 +257,111 @@ $searchResults = Product::search($keyword)->paginate(1, 25);
 >   $product = Product::find()->with('category', 'tags')->findOrFailByPk(5);
 >   ```
 
-### Writing Data
+### ✍️ Writing Data (Create, Update, Delete)
+
+Below is a step-by-step guide and clear real-world examples for **Create**, **Update**, and **Delete** operations in Padi Framework Controllers & Models. The framework features **Automatic Response Formatting**, meaning you can directly `return` models, arrays, or scalars without manually calling response helpers.
+
+> [!NOTE]
+> For complete details on response structure options, manual HTTP headers, API Resources, or custom status formatting, see the [Response Structure Guide](./RESPONSE_STRUCTURE.md).
+
+#### 1. ➕ Create (Inserting New Records)
+
+To create a new record, validate incoming data using `$this->validate()` before calling `create()`. Set the HTTP status code (e.g. `201 Created`) via `$this->response->status(201)` and directly `return` the created model.
+
+**Controller Example (`ProductController.php`):**
 
 ```php
-// Create
-$id = (new Product())->create([
-    'name' => 'Premium Coffee',
-    'price' => 15.00
-]);
+use App\Models\Product;
+use Wibiesana\Padi\Core\Controller;
 
-// Update
-(new Product())->update($id, ['price' => 14.50]);
+class ProductController extends Controller
+{
+    public function store()
+    {
+        // 1. Validate incoming request data
+        $validated = $this->validate([
+            'name'        => 'required|string|max:100|unique:products,name',
+            'price'       => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'status'      => 'string|in:active,inactive',
+        ]);
 
-// Delete single record
-(new Product())->delete($id);
+        // 2. Insert into database using validated data
+        // Note: create() returns the newly created primary key ID (int|string), not the model object
+        $productId = (new Product())->create($validated);
 
-// Delete multiple records matching conditions (v2.0.13)
-Product::deleteAll(['status' => 'inactive']);
+        // 3. Fetch the full record with database-generated fields (id, timestamps, default values)
+        $product = Product::findOne($productId);
+
+        // 4. Set optional HTTP Status Code 201 Created
+        $this->response->status(201);
+
+        // 5. Return the new model directly (Framework auto-formats to standard JSON)
+        return $product;
+    }
+}
+```
+
+---
+
+#### 2. ✏️ Update (Modifying Records)
+
+To update a record, verify its existence using `Product::findOrFail($id)`, validate the input, invoke `update()`, and return the updated model directly.
+
+**Controller Example (`ProductController.php`):**
+
+```php
+public function update($id)
+{
+    // 1. Ensure the record exists (throws 404 if missing)
+    Product::findOrFail($id);
+
+    // 2. Validate input payload (ignore unique constraint check for current record ID)
+    $validated = $this->validate([
+        'name'  => 'string|max:100|unique:products,name,' . $id,
+        'price' => 'numeric|min:0',
+    ]);
+
+    // 3. Execute update operation
+    (new Product())->update($id, $validated);
+
+    // 4. Return updated record directly
+    return Product::findOne($id);
+}
+```
+
+---
+
+#### 3. 🗑️ Delete (Removing Records)
+
+You can remove a single record by primary key or perform bulk deletions based on custom filter criteria.
+
+**A. Delete a Single Record (By ID):**
+
+```php
+public function destroy($id)
+{
+    // 1. Ensure the record exists
+    Product::findOrFail($id);
+
+    // 2. Delete the record
+    (new Product())->delete($id);
+
+    // 3. Return response array directly
+    return [
+        'message' => 'Product deleted successfully'
+    ];
+}
+```
+
+**B. Delete Multiple Records (Bulk Delete):**
+
+```php
+// Delete all products with 'discontinued' status
+$deletedRows = Product::deleteAll(['status' => 'discontinued']);
+
+// Delete products matching an array of IDs [1, 2, 3]
+$deletedRows = Product::deleteAll(['id' => [1, 2, 3]]);
 ```
 
 ---
