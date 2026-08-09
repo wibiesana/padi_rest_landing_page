@@ -1,12 +1,13 @@
 # ⚡ Real-time Pub/Sub (Mercure Hub)
 
-Padi REST API Framework features native support for real-time pub/sub messaging using the built-in **Mercure Hub** inside FrankenPHP.
+Padi REST API Framework features native support for real-time pub/sub messaging using **Server-Sent Events (SSE)** via **Mercure Hub**.
 
-> [!WARNING]
-> **FrankenPHP Exclusive Feature**  
-> Real-time capabilities (Mercure) are **only supported when running under FrankenPHP** (both Standard and Worker modes). This features relies on the built-in Mercure module compiled into FrankenPHP's web server, and is **not compatible** with traditional web servers like Apache, Nginx, or standard PHP-FPM setups.
+> [!NOTE]
+> **Flexible Deployment Options**  
+> - **FrankenPHP (Recommended)**: Mercure Hub is built-in out of the box with zero external dependencies.
+> - **Apache & Nginx**: Fully supported by running a standalone Mercure Hub (via Docker or binary) alongside your Nginx/Apache web server with a simple reverse proxy configuration.
 
-By using **Server-Sent Events (SSE)**, you can push notifications, messages, and state updates from your PHP backend directly to web/mobile clients instantly and securely, with **zero external server dependencies** (no Pusher, socket.io, or complex WebSocket daemons required).
+By using **Server-Sent Events (SSE)**, you can push notifications, live data updates, and chat messages from your PHP backend directly to web or mobile clients instantly, securely, and with ultra-low latency.
 
 > [!TIP]
 > **Complete Example Application**  
@@ -16,21 +17,27 @@ By using **Server-Sent Events (SSE)**, you can push notifications, messages, and
 
 ## 📋 Table of Contents
 
-- [⚙️ Configuration](#configuration)
+- [⚙️ Setup & Configuration](#setup--configuration)
+  - [Option A: FrankenPHP Setup (Built-in)](#option-a-frankenphp-setup-built-in)
+  - [Option B: Nginx Setup (Reverse Proxy + Standalone Mercure)](#option-b-nginx-setup-reverse-proxy--standalone-mercure)
+  - [Option C: Apache Setup (Reverse Proxy + Standalone Mercure)](#option-c-apache-setup-reverse-proxy--standalone-mercure)
 - [📡 Publishing Events](#publishing-events)
   - [1. Controller-based (Explicit)](#1-controller-based-explicit)
   - [2. ORM Hooks (Automatic)](#2-orm-hooks-automatic)
+  - [3. Batch Publishing (High-Performance)](#3-batch-publishing-high-performance)
 - [💻 Client-side Integration (JavaScript)](#client-side-integration-javascript)
-- [🛡️ Security \& Private Topics](#security--private-topics)
+- [🛡️ Security & Private Topics](#security--private-topics)
 - [📖 Complete End-to-End Example (Live Books Sync)](#-complete-end-to-end-example-live-books-sync)
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Setup & Configuration
 
-### 1. Enable in `.env`
+### Option A: FrankenPHP Setup (Built-in)
 
-To enable real-time messaging, configure the Mercure settings in your `.env` file:
+When running Padi Framework under **FrankenPHP** (both Standard and Worker modes), Mercure Hub is embedded directly in the web server engine.
+
+#### 1. Configure `.env`
 
 ```env
 # Enable real-time broadcasting
@@ -49,9 +56,9 @@ MERCURE_PUBLISHER_JWT_KEY="padi_mercure_publisher_secret_key_change_me_in_prod"
 MERCURE_SUBSCRIBER_JWT_KEY="padi_mercure_subscriber_secret_key_change_me_in_prod"
 ```
 
-### 2. Verify Caddyfile
+#### 2. Verify Caddyfile
 
-Ensure the Mercure module is configured in your Caddyfile (both `Caddyfile.worker` and `Caddyfile.standard` have this enabled by default in v2.1.0):
+Ensure the Mercure module is configured in your `Caddyfile.worker` or `Caddyfile.standard`:
 
 ```caddyfile
 # Global block
@@ -73,6 +80,118 @@ Ensure the Mercure module is configured in your Caddyfile (both `Caddyfile.worke
 
     php_server
 }
+```
+
+---
+
+### Option B: Nginx Setup (Reverse Proxy + Standalone Mercure)
+
+If your environment uses **Nginx with PHP-FPM**, run a lightweight standalone Mercure Hub via Docker or binary, and configure Nginx to proxy SSE connections without response buffering.
+
+#### 1. Run Standalone Mercure Hub (Docker)
+
+Run Mercure Hub on an internal port (e.g., port `3000`):
+
+```bash
+docker run -d \
+  --name mercure-hub \
+  -p 3000:80 \
+  -e MERCURE_PUBLISHER_JWT_KEY='padi_mercure_publisher_secret_key_change_me_in_prod' \
+  -e MERCURE_SUBSCRIBER_JWT_KEY='padi_mercure_subscriber_secret_key_change_me_in_prod' \
+  dunglas/mercure
+```
+
+#### 2. Configure Nginx (`/etc/nginx/sites-available/default`)
+
+Add a dedicated `location /.well-known/mercure` block and turn off `proxy_buffering`:
+
+```nginx
+server {
+    listen 80;
+    server_name example.com;
+    root /var/www/my-app/public;
+
+    index index.php;
+
+    # 1. PHP-FPM Request Handling
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    # 2. Reverse Proxy for Mercure Real-time SSE
+    location /.well-known/mercure {
+        proxy_pass http://127.0.0.1:3000/.well-known/mercure;
+        proxy_read_timeout 24h;               # Prevent SSE connection timeouts
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        
+        # CRITICAL: Disable Nginx buffering for instantaneous SSE pushes
+        proxy_buffering off;
+        proxy_cache off;
+        chunked_transfer_encoding off;
+    }
+}
+```
+
+#### 3. Configure `.env` for Nginx Setup
+
+```env
+MERCURE_ENABLED=true
+
+# Internal cURL URL for PHP backend to post events to Mercure Hub
+MERCURE_HUB_URL="http://127.0.0.1:3000/.well-known/mercure"
+
+# Public URL used by frontend browser clients
+MERCURE_PUBLIC_HUB_URL="http://example.com/.well-known/mercure"
+
+MERCURE_PUBLISHER_JWT_KEY="padi_mercure_publisher_secret_key_change_me_in_prod"
+MERCURE_SUBSCRIBER_JWT_KEY="padi_mercure_subscriber_secret_key_change_me_in_prod"
+```
+
+---
+
+### Option C: Apache Setup (Reverse Proxy + Standalone Mercure)
+
+If using **Apache HTTP Server** with `mod_php` or `PHP-FPM`, configure Apache to proxy Mercure SSE endpoints.
+
+#### 1. Enable Required Apache Modules
+
+```bash
+sudo a2enmod proxy proxy_http headers
+sudo systemctl restart apache2
+```
+
+#### 2. Configure Apache VirtualHost (`/etc/apache2/sites-available/000-default.conf`)
+
+```apache
+<VirtualHost *:80>
+    ServerName example.com
+    DocumentRoot /var/www/my-app/public
+
+    <Directory /var/www/my-app/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    # Reverse Proxy SSE endpoint to internal Mercure Hub container (port 3000)
+    ProxyPass /.well-known/mercure http://127.0.0.1:3000/.well-known/mercure
+    ProxyPassReverse /.well-known/mercure http://127.0.0.1:3000/.well-known/mercure
+
+    # Disable buffering for SSE stream
+    SetEnvIf Request_URI "^/\.well-known/mercure" no-gzip dont-variate
+</VirtualHost>
+```
+
+#### 3. Configure `.env` for Apache Setup
+
+```env
+MERCURE_ENABLED=true
+MERCURE_HUB_URL="http://127.0.0.1:3000/.well-known/mercure"
+MERCURE_PUBLIC_HUB_URL="http://example.com/.well-known/mercure"
+MERCURE_PUBLISHER_JWT_KEY="padi_mercure_publisher_secret_key_change_me_in_prod"
+MERCURE_SUBSCRIBER_JWT_KEY="padi_mercure_subscriber_secret_key_change_me_in_prod"
 ```
 
 ---
