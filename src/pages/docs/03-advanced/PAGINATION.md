@@ -12,7 +12,7 @@ Padi REST API handles massive datasets with surgical precision. Our pagination e
 - [💎 The Standardized Response](#the-standardized-response)
 - [📦 Meta-Data Intelligence](#meta-data-intelligence)
 - [🎨 Frontend Implementation (Vue, React, Hooks)](#frontend-implementation)
-- [🏎️ Performance Benchmarks](#performance-benchmarks)
+- [⚡ Performance Benchmarks](#performance-benchmarks)
 
 ---
 

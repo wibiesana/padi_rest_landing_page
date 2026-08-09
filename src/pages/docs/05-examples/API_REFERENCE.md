@@ -4,16 +4,16 @@
 
 ## 📋 Table of Contents
 
-- [Standard Response Format](#standard-response-format)
+- [💎 Standard Response Format](#standard-response-format)
 - [🔑 Message Codes](#message-codes)
-- [HTTP Status Codes](#http-status-codes)
-- [Authentication Endpoints](#authentication-endpoints)
-- [CRUD Endpoints](#crud-endpoints)
+- [🔢 HTTP Status Codes](#http-status-codes)
+- [🔐 Authentication Endpoints](#authentication-endpoints)
+- [📝 CRUD Endpoints](#crud-endpoints)
 - [🛠️ System & Health Monitoring](#️-system--health-monitoring)
 - [⚡ Demo & Real-time Endpoints (Examples)](#-demo--real-time-endpoints-examples)
-- [Validation Rules](#validation-rules)
-- [Rate Limiting](#rate-limiting)
-- [cURL Examples](#curl-examples)
+- [✅ Validation Rules](#validation-rules)
+- [⏱️ Rate Limiting](#rate-limiting)
+- [💻 cURL Examples](#curl-examples)
 
 ---
 

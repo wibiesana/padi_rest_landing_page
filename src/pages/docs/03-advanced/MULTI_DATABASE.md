@@ -15,13 +15,13 @@ Break free from single-database constraints. Padi REST API empowers your applica
 ## 📋 Table of Contents
 
 - [🏗️ Enterprise-Grade Multi-Database Engine](#enterprise-grade-multi-database-engine)
-- [Database Configuration](#database-configuration)
-- [Basic Usage](#basic-usage)
-- [Model with Specific Database](#model-with-specific-database)
-- [Multiple Databases in One Controller](#multiple-databases-in-one-controller)
-- [Direct Database Access](#direct-database-access)
-- [Transactions](#transactions)
-- [Real-World Examples](#real-world-examples)
+- [⚙️ Database Configuration](#database-configuration)
+- [💡 Basic Usage](#basic-usage)
+- [📦 Model with Specific Database](#model-with-specific-database)
+- [🎮 Multiple Databases in One Controller](#multiple-databases-in-one-controller)
+- [🔌 Direct Database Access](#direct-database-access)
+- [🛡️ Transactions](#transactions)
+- [💡 Real-World Examples](#real-world-examples)
 
 ---
 

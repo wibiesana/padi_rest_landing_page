@@ -9,7 +9,6 @@ Tailor your environment with the **Padi Intelligence Hub**. Whether you prefer o
 ## 📋 Table of Contents
 
 - [🤖 Adaptive Deployment & Orchestration](#adaptive-deployment-orchestration)
-
 - [✨ The Padi Console (The Ultimate CLI Hub)](#the-padi-console-the-ultimate-cli-hub)
 - [🎨 The Unified Command (Universal Method)](#the-unified-command-universal-method)
 - [📊 Comparison](#comparison)

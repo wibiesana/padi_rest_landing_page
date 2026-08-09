@@ -9,14 +9,14 @@ The Padi REST API File Engine is not just about storage—it's about **Strategic
 ## 📋 Table of Contents
 
 - [🛡️ Industrial-Grade Asset Protection](#industrial-grade-asset-protection)
-- [Configuration](#configuration)
-- [Basic Upload](#basic-upload)
-- [Validation (Types & Size)](#validation-types--size)
-- [Security Features (v2.0.2)](#security-features-v202)
-- [Organizing with Subdirectories](#organizing-with-subdirectories)
-- [Complete Controller Example](#complete-controller-example)
-- [Deleting Files](#deleting-files)
-- [Generating File URLs](#generating-file-urls)
+- [⚙️ Configuration](#configuration)
+- [📁 Basic Upload](#basic-upload)
+- [✅ Validation (Types & Size)](#validation-types--size)
+- [🔒 Security Features (v2.0.2)](#security-features-v202)
+- [📂 Organizing with Subdirectories](#organizing-with-subdirectories)
+- [💻 Complete Controller Example](#complete-controller-example)
+- [🗑️ Deleting Files](#deleting-files)
+- [🌐 Generating File URLs](#generating-file-urls)
 
 ---
 

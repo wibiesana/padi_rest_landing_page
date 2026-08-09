@@ -10,11 +10,11 @@ Deliver professional, high-reliability communications with the Padi REST API Ema
 
 - [🏎️ Industrial-Grade Communication Layer](#industrial-grade-communication-layer)
 - [🛠️ Installation](#️-installation)
-- [Configuration](#configuration)
-- [Basic Usage](#basic-usage)
-- [Sending with Attachments](#sending-with-attachments)
-- [Queued Emails (Recommended)](#queued-emails-recommended)
-- [Troubleshooting](#troubleshooting)
+- [⚙️ Configuration](#configuration)
+- [📧 Basic Usage](#basic-usage)
+- [📎 Sending with Attachments](#sending-with-attachments)
+- [🚀 Queued Emails (Recommended)](#queued-emails-recommended)
+- [❓ Troubleshooting](#troubleshooting)
 
 ---
 

@@ -9,16 +9,16 @@ Turn failure into clarity. Padi REST API’s Error Handling architecture is a **
 ## 📋 Table of Contents
 
 - [🛡️ Strategic Resilience & Deterministic Responses](#strategic-resilience--deterministic-responses)
-- [Overview](#overview)
-- [Response Structure](#response-structure)
-- [Message Codes Reference](#message-codes-reference)
-- [Success Codes](#success-codes)
-- [Error Codes](#error-codes)
-- [Database Error Handling](#database-error-handling)
-- [Frontend Integration](#frontend-integration)
-- [Custom Error Handling](#custom-error-handling)
-- [Best Practices](#best-practices)
-- [Debugging](#debugging)
+- [📖 Overview](#overview)
+- [🏗️ Response Structure](#response-structure)
+- [📚 Message Codes Reference](#message-codes-reference)
+- [✅ Success Codes](#success-codes)
+- [🛑 Error Codes](#error-codes)
+- [🗄️ Database Error Handling](#database-error-handling)
+- [📱 Frontend Integration](#frontend-integration)
+- [🛠️ Custom Error Handling](#custom-error-handling)
+- [⭐ Best Practices](#best-practices)
+- [🔍 Debugging](#debugging)
 
 ## Overview
 

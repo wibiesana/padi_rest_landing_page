@@ -9,15 +9,15 @@ Step into the next generation of web serving. Padi REST API is natively architec
 ## 📋 Table of Contents
 
 - [🏎️ The Future of High-Performance PHP](#the-future-of-high-performance-php)
-- [Performance Gains](#performance-gains)
-- [Installation](#installation)
-- [How to Run](#how-to-run)
-- [Implementation Details](#implementation-details)
-- [Technical Reference](#technical-reference)
-- [Configuration](#configuration)
-- [Docker Deployment](#docker-deployment)
-- [Troubleshooting](#troubleshooting)
-- [FAQ](#faq)
+- [⚡ Performance Gains](#performance-gains)
+- [📦 Installation](#installation)
+- [🏃 How to Run](#how-to-run)
+- [🛠️ Implementation Details](#implementation-details)
+- [📖 Technical Reference](#technical-reference)
+- [⚙️ Configuration](#configuration)
+- [🐳 Docker Deployment](#docker-deployment)
+- [❓ Troubleshooting](#troubleshooting)
+- [💡 FAQ](#faq)
 
 ---
 

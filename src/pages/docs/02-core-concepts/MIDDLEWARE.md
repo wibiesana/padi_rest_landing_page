@@ -9,12 +9,12 @@ Middleware is the **Strategic Filter** of the Padi REST API. It empowers you to 
 ## 📋 Table of Contents
 
 - [🛣️ Adaptive Request Interception](#adaptive-request-interception)
-- [Overview](#overview)
-- [Defining Middleware](#defining-middleware)
-- [Registering Middleware](#registering-middleware)
-- [Middleware Parameters](#middleware-parameters)
-- [Built-in Middleware](#built-in-middleware)
-- [FrankenPHP Worker Mode Compatibility](#frankenphp-worker-mode-compatibility)
+- [📖 Overview](#overview)
+- [🛠️ Defining Middleware](#defining-middleware)
+- [📝 Registering Middleware](#registering-middleware)
+- [⚙️ Middleware Parameters](#middleware-parameters)
+- [📦 Built-in Middleware](#built-in-middleware)
+- [⚡ FrankenPHP Worker Mode Compatibility](#frankenphp-worker-mode-compatibility)
 
 ---
 

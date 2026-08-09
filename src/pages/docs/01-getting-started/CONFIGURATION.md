@@ -9,15 +9,14 @@ Master your application's environment with our **Industrial-Grade Configuration 
 ## 📋 Table of Contents
 
 - [⚙️ Precision-Tuned Control Center](#precision-tuned-control-center)
-
-- [Environment Variables (.env)](#environment-variables-env)
-- [Development Configuration](#development-configuration)
-- [Production Configuration](#production-configuration)
-- [Configuration Sections](#configuration-sections)
-- [Generate Strong JWT Secret](#generate-strong-jwt-secret)
-- [Environment-Specific Best Practices](#environment-specific-best-practices)
-- [Configuration Validation](#configuration-validation)
-- [Next Steps](#next-steps)
+- [🌐 Environment Variables (.env)](#environment-variables-env)
+- [🛠️ Development Configuration](#development-configuration)
+- [🚀 Production Configuration](#production-configuration)
+- [🎛️ Configuration Sections](#configuration-sections)
+- [🔑 Generate Strong JWT Secret](#generate-strong-jwt-secret)
+- [🛡️ Environment-Specific Best Practices](#environment-specific-best-practices)
+- [✅ Configuration Validation](#configuration-validation)
+- [👣 Next Steps](#next-steps)
 
 ---
 

@@ -10,15 +10,15 @@ When it's time to move beyond development, Padi REST API scales with you. Our fr
 
 - [🏗️ Battle-Tested Enterprise Deployment](#battle-tested-enterprise-deployment)
 - [📋 Pre-Deployment Checklist](#pre-deployment-checklist)
-- [Server Requirements](#server-requirements)
-- [Deployment Methods](#deployment-methods)
-- [Environment Configuration](#environment-configuration)
-- [Security Hardening](#security-hardening)
-- [Database & Backups](#database-backups)
-- [Monitoring & Health Checks](#monitoring-health-checks)
-- [Performance Optimization](#performance-optimization)
-- [Troubleshooting](#troubleshooting)
-- [Maintenance Schedule](#maintenance-schedule)
+- [⚙️ Server Requirements](#server-requirements)
+- [🚀 Deployment Methods](#deployment-methods)
+- [🌐 Environment Configuration](#environment-configuration)
+- [🛡️ Security Hardening](#security-hardening)
+- [🗄️ Database & Backups](#database-backups)
+- [📊 Monitoring & Health Checks](#monitoring-health-checks)
+- [⚡ Performance Optimization](#performance-optimization)
+- [❓ Troubleshooting](#troubleshooting)
+- [📅 Maintenance Schedule](#maintenance-schedule)
 
 ---
 

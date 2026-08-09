@@ -9,12 +9,12 @@ The Padi REST API Router is the **Strategic Gateway** to your application. Desig
 ## 📋 Table of Contents
 
 - [🌐 Intelligent Traffic Orchestration](#intelligent-traffic-orchestration)
-- [Basic Routing](#basic-routing)
-- [Route Parameters](#route-parameters)
-- [Route Groups](#route-groups)
-- [API Versioning](#api-versioning)
-- [Middleware Assignment](#middleware-assignment)
-- [Special Route Methods](#special-route-methods)
+- [📍 Basic Routing](#basic-routing)
+- [🔢 Route Parameters](#route-parameters)
+- [👥 Route Groups](#route-groups)
+- [🏷️ API Versioning](#api-versioning)
+- [🛡️ Middleware Assignment](#middleware-assignment)
+- [⚡ Special Route Methods](#special-route-methods)
 
 ---
 

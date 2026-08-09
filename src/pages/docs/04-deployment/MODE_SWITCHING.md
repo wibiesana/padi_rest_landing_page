@@ -9,12 +9,12 @@ Seamlessly pivot between development agility and production velocity. Padi REST 
 ## 📋 Table of Contents
 
 - [🔄 Dynamic Engine Switching](#dynamic-engine-switching)
-- [Available Modes](#available-modes)
-- [How to Use](#how-to-use)
-- [Configuration Files](#configuration-files)
-- [Performance Testing](#performance-testing)
-- [Recommendations](#recommendations)
-- [Troubleshooting](#troubleshooting)
+- [📦 Available Modes](#available-modes)
+- [💻 How to Use](#how-to-use)
+- [⚙️ Configuration Files](#configuration-files)
+- [⚡ Performance Testing](#performance-testing)
+- [⭐ Recommendations](#recommendations)
+- [❓ Troubleshooting](#troubleshooting)
 
 ---
 

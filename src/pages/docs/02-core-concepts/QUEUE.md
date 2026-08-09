@@ -9,12 +9,12 @@ Unlock the full potential of asynchronous execution. Padi REST API’s Queue sys
 ## 📋 Table of Contents
 
 - [🏎️ Distributable Workload Orchestration](#distributable-workload-orchestration)
-- [Overview](#overview)
-- [Defining a Job](#defining-a-job)
-- [Pushing onto Queue](#pushing-onto-queue)
-- [Running the Worker](#running-the-worker)
-- [Configuration](#configuration)
-- [Best Practices](#best-practices)
+- [📖 Overview](#overview)
+- [🛠️ Defining a Job](#defining-a-job)
+- [📤 Pushing onto Queue](#pushing-onto-queue)
+- [🏃 Running the Worker](#running-the-worker)
+- [⚙️ Configuration](#configuration)
+- [⭐ Best Practices](#best-practices)
 
 ---
 

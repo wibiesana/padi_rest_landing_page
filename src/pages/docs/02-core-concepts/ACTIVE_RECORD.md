@@ -9,18 +9,18 @@ The `ActiveRecord` class is the **Industrial-Grade Backbone** of the Padi REST A
 ## 📋 Table of Contents
 
 - [💎 The Heart of Data Persistence](#the-heart-of-data-persistence)
-- [Core Concepts](#core-concepts)
-- [Basic CRUD](#basic-crud)
-- [Pagination](#pagination)
-- [Advanced Operations](#advanced-operations)
-- [Relationships & Eager Loading](#relationships-eager-loading)
-- [Automatic Relationship Detection](#automatic-relationship-detection)
-- [Model Security (Hidden Fields)](#model-security-hidden-fields)
-- [Automatic Auditing](#automatic-auditing)
-- [Default Ordering](#default-ordering)
-- [Lifecycle Hooks (Yii Style)](#lifecycle-hooks)
-- [Database Connection Switching](#database-connection-switching)
-- [Worker Mode & Shared Hosting (v2.0.3)](#worker-mode-shared-hosting-v203)
+- [🛠️ Core Concepts](#core-concepts)
+- [📝 Basic CRUD](#basic-crud)
+- [📄 Pagination](#pagination)
+- [⚡ Advanced Operations](#advanced-operations)
+- [🔗 Relationships & Eager Loading](#relationships-eager-loading)
+- [🤖 Automatic Relationship Detection](#automatic-relationship-detection)
+- [🛡️ Model Security (Hidden Fields)](#model-security-hidden-fields)
+- [🕵️ Automatic Auditing](#automatic-auditing)
+- [🔢 Default Ordering](#default-ordering)
+- [🪝 Lifecycle Hooks (Yii Style)](#lifecycle-hooks)
+- [🌐 Database Connection Switching](#database-connection-switching)
+- [🚀 Worker Mode & Shared Hosting (v2.0.3)](#worker-mode-shared-hosting-v203)
 
 ---
 

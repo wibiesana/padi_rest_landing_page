@@ -9,10 +9,10 @@ Master your API with **Industrial-Grade Testing Workflows**. Padi REST API is de
 ## 📋 Table of Contents
 
 - [🕵️ Strategic API Validation](#strategic-api-validation)
-- [Using cURL](#using-curl)
-- [Using API Clients (Postman, Insomnia, Hoppscotch, Bruno, etc.)](#using-api-clients-postman-insomnia-hoppscotch-bruno-etc)
-- [Using JavaScript (Fetch API)](#using-javascript-fetch-api)
-- [Response Codes](#response-codes)
+- [💻 Using cURL](#using-curl)
+- [📮 Using API Clients (Postman, Insomnia, Hoppscotch, Bruno, etc.)](#using-api-clients-postman-insomnia-hoppscotch-bruno-etc)
+- [🌐 Using JavaScript (Fetch API)](#using-javascript-fetch-api)
+- [🔢 Response Codes](#response-codes)
 
 ---
 

@@ -17,8 +17,8 @@ The Padi REST API User Model is more than just a data structure—it is a **Soph
 - [🗂️ Database Table Structure](#database-table-structure)
 - [🎨 Possible User Statuses](#possible-user-statuses)
 - [🔒 Security Features](#security-features)
-- [📊 Role-Based Access Control](#role-based-access-control)
-- [✨ Best Practices](#best-practices)
+- [🎭 Role-Based Access Control](#role-based-access-control)
+- [⭐ Best Practices](#best-practices)
 
 ---
 

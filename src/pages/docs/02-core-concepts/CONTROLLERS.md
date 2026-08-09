@@ -9,13 +9,13 @@ Controllers are the **Command Center** of the Padi REST API. They are engineered
 ## 📋 Table of Contents
 
 - [🧠 Logic Orchestration & Command Center](#logic-orchestration--command-center)
-- [Controller Structure](#controller-structure)
-- [Base Controller Methods](#base-controller-methods)
-- [Request Handling](#request-handling)
-- [Response Methods](#response-methods)
-- [Validation](#validation)
-- [Role-Based Access (RBAC)](#role-based-access-rbac)
-- [Overriding Base Methods](#overriding-base-methods)
+- [🏗️ Controller Structure](#controller-structure)
+- [🛠️ Base Controller Methods](#base-controller-methods)
+- [📥 Request Handling](#request-handling)
+- [📤 Response Methods](#response-methods)
+- [✅ Validation](#validation)
+- [🛡️ Role-Based Access (RBAC)](#role-based-access-rbac)
+- [🔄 Overriding Base Methods](#overriding-base-methods)
 
 ---
 

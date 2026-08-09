@@ -9,18 +9,18 @@ The Padi REST API Caching System is a **Precision-Engineered Performance Acceler
 ## 📋 Table of Contents
 
 - [🏎️ Multi-Tier Performance Layer](#multi-tier-performance-layer)
-- [Architecture](#architecture)
-- [Drivers](#drivers)
-- [Configuration](#configuration)
-- [Basic Usage](#basic-usage)
-- [The Remember Pattern](#the-remember-pattern)
-- [Counters](#counters)
-- [Bulk Operations](#bulk-operations)
-- [Memory Management](#memory-management)
-- [Clearing the Cache](#clearing-the-cache)
-- [Worker Mode](#worker-mode)
-- [Security](#security)
-- [Best Practices](#best-practices)
+- [🏗️ Architecture](#architecture)
+- [🔌 Drivers](#drivers)
+- [⚙️ Configuration](#configuration)
+- [💡 Basic Usage](#basic-usage)
+- [🧠 The Remember Pattern](#the-remember-pattern)
+- [🔢 Counters](#counters)
+- [📦 Bulk Operations](#bulk-operations)
+- [💾 Memory Management](#memory-management)
+- [🧹 Clearing the Cache](#clearing-the-cache)
+- [⚡ Worker Mode](#worker-mode)
+- [🛡️ Security](#security)
+- [⭐ Best Practices](#best-practices)
 
 ---
 

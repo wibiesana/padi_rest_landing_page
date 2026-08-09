@@ -14,9 +14,9 @@ Padi CLI is the **Central Intelligence** of your development workflow. Far beyon
 - [🛠️ Command Reference](#command-reference)
 - [⚙️ Options & Flags](#options-flags)
 - [🏗️ Architecture: Base vs. Concrete](#architecture-base-vs-concrete)
-- [� What Gets Generated?](#what-gets-generated)
+- [📦 What Gets Generated?](#what-gets-generated)
 - [📮 API Collection & Client Integration](#api-collection-client-integration)
-- [� Best Practices](#best-practices)
+- [⭐ Best Practices](#best-practices)
 - [🔍 Troubleshooting](#troubleshooting)
 
 ---

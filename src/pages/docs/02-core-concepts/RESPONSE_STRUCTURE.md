@@ -16,7 +16,7 @@ The Padi REST API Response Engine is a **High-Precision Data Orchestrator**. It 
 - [🔍 Auto-Detection Features](#auto-detection-features)
 - [📝 Complete CRUD Example](#complete-crud-example)
 - [🛑 Error Handling](#error-handling)
-- [🏎️ FrankenPHP Worker Mode](#frankenphp-worker-mode)
+- [⚡ FrankenPHP Worker Mode](#frankenphp-worker-mode)
 - [🔄 Migration Guide](#migration-guide)
 - [🤖 Code Generator](#code-generator)
 

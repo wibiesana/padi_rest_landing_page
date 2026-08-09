@@ -9,14 +9,14 @@
 ## 📋 Table of Contents
 
 - [🚀 Seamless Universal Connectivity](#seamless-universal-connectivity)
-- [Overview](#overview)
-- [Vue.js Integration](#vuejs-integration)
-- [React Integration](#react-integration)
-- [Angular Integration](#angular-integration)
-- [Next.js Integration](#nextjs-integration)
-- [Vanilla JavaScript](#vanilla-javascript)
+- [📖 Overview](#overview)
+- [💚 Vue.js Integration](#vuejs-integration)
+- [⚛️ React Integration](#react-integration)
+- [🅰️ Angular Integration](#angular-integration)
+- [▲ Next.js Integration](#nextjs-integration)
+- [💻 Vanilla JavaScript](#vanilla-javascript)
 - [⚡ Real-time Pub/Sub Integration (Mercure SSE)](#-real-time-pubsub-integration-mercure-sse)
-- [CORS Configuration](#cors-configuration)
+- [🌐 CORS Configuration](#cors-configuration)
 
 ---
 

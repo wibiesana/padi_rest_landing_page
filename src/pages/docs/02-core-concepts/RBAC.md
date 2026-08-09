@@ -9,14 +9,14 @@ Define and enforce access with **Surgical Precision**. Padi REST API’s Role-Ba
 ## 📋 Table of Contents
 
 - [🛡️ Granular Authorization & Security Orchestration](#granular-authorization--security-orchestration)
-- [Overview](#overview)
-- [Quick Start](#quick-start)
-- [RoleMiddleware](#rolemiddleware)
-- [Controller Helper Methods](#controller-helper-methods)
-- [Implementation Patterns](#implementation-patterns)
-- [Error Responses](#error-responses)
-- [Best Practices](#best-practices)
-- [Testing](#testing)
+- [📖 Overview](#overview)
+- [⚡ Quick Start](#quick-start)
+- [🎭 RoleMiddleware](#rolemiddleware)
+- [🛠️ Controller Helper Methods](#controller-helper-methods)
+- [📝 Implementation Patterns](#implementation-patterns)
+- [⚠️ Error Responses](#error-responses)
+- [⭐ Best Practices](#best-practices)
+- [🧪 Testing](#testing)
 
 ---
 

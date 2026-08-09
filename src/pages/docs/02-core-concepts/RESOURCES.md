@@ -9,13 +9,13 @@ API Resources are the **Precision Transformers** of the Padi REST API. They prov
 ## 📋 Table of Contents
 
 - [💎 Elegant Data Transformation](#elegant-data-transformation)
-- [Overview](#overview)
-- [Resource Structure](#resource-structure)
-- [Creating Resources](#creating-resources)
-- [Core Methods](#core-methods)
-- [Helper Methods](#helper-methods)
-- [Usage in Controllers](#usage-in-controllers)
-- [Best Practices](#best-practices)
+- [📖 Overview](#overview)
+- [🏗️ Resource Structure](#resource-structure)
+- [🚀 Creating Resources](#creating-resources)
+- [🛠️ Core Methods](#core-methods)
+- [🔧 Helper Methods](#helper-methods)
+- [🎮 Usage in Controllers](#usage-in-controllers)
+- [⭐ Best Practices](#best-practices)
 
 ---
 

@@ -8,13 +8,13 @@ Performance is in our DNA. Padi REST API is engineered for **Extreme Throughput*
 
 ## 📋 Table of Contents
 
-- [Blazing-Fast Technical Excellence](#blazing-fast-technical-excellence)
-- [Performance Comparison](#performance-comparison)
-- [Performance Score Calculation](#performance-score-calculation-95--10-methodology)
-- [Performance Improvements](#performance-improvements)
-- [Recommendations](#recommendations)
-- [Quick Commands](#quick-commands)
-- [Environment Variables for Performance](#environment-variables-for-performance)
+- [⚡ Blazing-Fast Technical Excellence](#blazing-fast-technical-excellence)
+- [📈 Performance Comparison](#performance-comparison)
+- [📊 Performance Score Calculation](#performance-score-calculation-95--10-methodology)
+- [🚀 Performance Improvements](#performance-improvements)
+- [💡 Recommendations](#recommendations)
+- [💻 Quick Commands](#quick-commands)
+- [⚙️ Environment Variables for Performance](#environment-variables-for-performance)
 
 ---
 

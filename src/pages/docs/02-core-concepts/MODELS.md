@@ -9,14 +9,14 @@ Models are the **Structural Blueprint** of your application's intelligence. Padi
 ## 📋 Table of Contents
 
 - [🏛️ Robust Data Foundations](#robust-data-foundations)
-- [Overview](#overview)
-- [Model Structure](#model-structure)
-- [Model Features](#model-features)
-- [Creating Models](#creating-models)
-- [Model Properties](#model-properties)
-- [Audit Fields (created_by / updated_by)](#audit-fields-created_by-updated_by)
-- [Query Methods](#query-methods)
-- [Best Practices](#best-practices)
+- [📖 Overview](#overview)
+- [🏗️ Model Structure](#model-structure)
+- [✨ Model Features](#model-features)
+- [🚀 Creating Models](#creating-models)
+- [⚙️ Model Properties](#model-properties)
+- [🛡️ Audit Fields (created_by / updated_by)](#audit-fields-created_by-updated_by)
+- [🔍 Query Methods](#query-methods)
+- [⭐ Best Practices](#best-practices)
 
 ---
 

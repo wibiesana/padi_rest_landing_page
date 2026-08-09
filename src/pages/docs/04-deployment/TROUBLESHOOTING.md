@@ -9,11 +9,11 @@ Even the most robust systems require surgical precision when anomalies occur. Th
 ## 📋 Table of Contents
 
 - [🛠️ Industrial-Grade Diagnostics](#industrial-grade-diagnostics)
-- [Common Issues](#common-issues)
-- [Debugging Tools](#debugging-tools)
-- [Getting Help](#getting-help)
-- [Quick Fixes](#quick-fixes)
-- [Prevention Tips](#prevention-tips)
+- [⚠️ Common Issues](#common-issues)
+- [🔍 Debugging Tools](#debugging-tools)
+- [💬 Getting Help](#getting-help)
+- [⚡ Quick Fixes](#quick-fixes)
+- [🛡️ Prevention Tips](#prevention-tips)
 
 
 ## Common Issues

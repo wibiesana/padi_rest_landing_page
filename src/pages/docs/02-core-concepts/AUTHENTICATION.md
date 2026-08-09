@@ -14,18 +14,15 @@ Security is the cornerstone of the Padi REST API. Our Authentication system is a
 ## 📋 Table of Contents
 
 - [🛡️ Fortified Identity Management](#fortified-identity-management)
-- [Prerequisites](#prerequisites)
-- [Quick start (example requests)](#quick-start-example-flows)
-- [Authentication endpoints](#authentication-endpoints-details)
-- [How JWT tokens are validated](#how-jwt-tokens-are-validated-server-side)
-- [Password rules & hashing](#password-rules--hashing)
-- [Common errors & troubleshooting](#common-errors--troubleshooting)
-- [Security best practices](#security-best-practices)
-- [Password Recovery](#password-recovery)
-
----
-
-- [Frontend Integration](#frontend-integration)
+- [⚙️ Prerequisites](#prerequisites)
+- [⚡ Quick start (example requests)](#quick-start-example-flows)
+- [🔑 Authentication endpoints](#authentication-endpoints-details)
+- [🔍 How JWT tokens are validated](#how-jwt-tokens-are-validated-server-side)
+- [🔒 Password rules & hashing](#password-rules--hashing)
+- [❓ Common errors & troubleshooting](#common-errors--troubleshooting)
+- [🛡️ Security best practices](#security-best-practices)
+- [🔄 Password Recovery](#password-recovery)
+- [📱 Frontend Integration](#frontend-integration)
 
 ---
 

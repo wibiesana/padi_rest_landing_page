@@ -9,13 +9,13 @@ Setting up Padi REST API is engineered to be as smooth as the framework itself. 
 ## 📋 Table of Contents
 
 - [🏗️ Professional Infrastructure Deployment](#professional-infrastructure-deployment)
-- [Requirements](#requirements)
-- [Installation Steps](#installation-steps)
-- [Optional Dependencies (Suggestions)](#optional-dependencies-suggestions)
-- [Verify Installation](#verify-installation)
-- [Alternative: Automated Setup](#alternative-automated-setup)
-- [Next Steps](#next-steps)
-- [Troubleshooting](#troubleshooting)
+- [⚙️ Requirements](#requirements)
+- [📦 Installation Steps](#installation-steps)
+- [🧩 Optional Dependencies (Suggestions)](#optional-dependencies-suggestions)
+- [✅ Verify Installation](#verify-installation)
+- [🤖 Alternative: Automated Setup](#alternative-automated-setup)
+- [👣 Next Steps](#next-steps)
+- [❓ Troubleshooting](#troubleshooting)
 
 ---
 
