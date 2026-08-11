@@ -97,26 +97,26 @@ class ProductResource extends Resource
 
 This is the main method where you define the output structure. You can access properties of the resource directly using `$this->property` because the base class uses the `__get` magic method.
 
-### `wrap($data)` (or `make($data)`)
+### `wrap($data)`
 
-Used for transforming a single item (object or array). `wrap()` is recommended to avoid IDE Intelephense conflicts.
+Used for transforming a single item (object or array).
 
 ```php
 $user = User::find(1);
 return UserResource::wrap($user);
 ```
 
-### `collect($data)` (or `collection($data)`)
+### `wraps($data)`
 
-Used for transforming a list of items. `collect()` is recommended to avoid IDE Intelephense conflicts. It automatically detects if the data is a flat array or a paginated result from `paginate()`.
+Used for transforming a list of items (plural). It automatically detects if the data is a flat array or a paginated result from `paginate()`.
 
 ```php
 $users = User::all();
-return UserResource::collect($users);
+return UserResource::wraps($users);
 
 // Paginated result
 $paginatedUsers = User::paginate(1, 10);
-return UserResource::collect($paginatedUsers);
+return UserResource::wraps($paginatedUsers);
 ```
 
 ---
@@ -156,14 +156,14 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::paginate(20);
-        return ProductResource::collect($products);
+        $results = Product::paginate(20);
+        return ProductResource::wraps($results);
     }
 
     public function show($id)
     {
-        $product = Product::find($id);
-        return ProductResource::wrap($product);
+        $result = Product::find($id);
+        return ProductResource::wrap($result);
     }
 }
 ```

@@ -471,7 +471,7 @@ public function customIndex()
 
 #### C. Custom Response with API Resource Transformer
 
-Combine `return [...]` with [API Resources](./RESOURCES.md) (`ProductResource::wrap()` or `ProductResource::collect()`) to transform and sanitize model attributes while using your custom response format.
+Combine `return [...]` with [API Resources](./RESOURCES.md) (`ProductResource::wrap()` or `ProductResource::wraps()`) to transform and sanitize model attributes while using your custom response format.
 
 **Controller Code:**
 ```php
@@ -498,7 +498,7 @@ public function customResourceIndex()
         'code'    => 200,
         'message' => 'Transformed product list',
         'count'   => count($products),
-        'records' => ProductResource::collect($products)->resolve()
+        'records' => ProductResource::wraps($products)
     ];
 }
 ```

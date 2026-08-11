@@ -123,16 +123,16 @@ The base controller provides `$this->query($modelClass, $withRelations)` to auto
 public function index()
 {
     // Auto handles search, sort_by, order, and eager loading
-    $result = $this->query(Product::class, $this->withRelations)->paginate();
+    $results = $this->query(Product::class, $this->withRelations)->paginate();
 
-    return ProductResource::collect($result);
+    return ProductResource::wraps($results);
 }
 
 public function all()
 {
     $results = $this->query(Product::class, $this->withRelations)->all();
 
-    return ProductResource::collect($results);
+    return ProductResource::wraps($results);
 }
 ```
 
