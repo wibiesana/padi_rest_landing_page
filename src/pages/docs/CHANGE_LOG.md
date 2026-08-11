@@ -2,6 +2,17 @@
 
 ## v2.1.7 (2026-08-11)
 
+### ⚠️ Migration & Upgrade Notice (v2.1.5 -> v2.1.7)
+
+If upgrading existing projects to v2.1.7, please update your controllers with the following method replacements:
+
+1. **`findOrFailByPk($id)` $\rightarrow$ `findOrFail($id)`**:
+   - Replace legacy `Model::findOrFailByPk($id)` with `Model::findOrFail($id)`.
+2. **`Resource::make($data)` $\rightarrow$ `Resource::wrap($data)`**:
+   - Replace `YourResource::make($data)` with `YourResource::wrap($data)` to prevent Intelephense IDE false-positive stub errors.
+3. **`Resource::collection($data)` $\rightarrow$ `Resource::collect($data)`**:
+   - Replace `YourResource::collection($data)` with `YourResource::collect($data)` to prevent Intelephense IDE false-positive stub errors.
+
 ### 🐛 Setup Wizard Banner Syntax & FrankenPHP Worker Mode Root Fix
 
 - **SetupWizard Banner Parse Error Fix**: Fixed a PHP parse syntax error in `SetupWizard::banner()` caused by unclosed string padding during version synchronization. Standardized banner version string formatting with dynamic `str_pad("Version {$version}", 64, ' ', STR_PAD_BOTH)`.
