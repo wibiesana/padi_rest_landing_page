@@ -491,7 +491,7 @@ Email templates can be customized in `AuthController`:
 ### Email Not Received
 
 1. Check email configuration in `.env`
-2. Check if the queue worker is running: `php scripts/queue-worker.php`
+2. Check if the queue worker is running: `php padi queue:work`
 3. Check spam/junk folder
 4. Verify SMTP credentials
 

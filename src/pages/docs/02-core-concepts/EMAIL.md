@@ -106,7 +106,7 @@ Queue::push(SendEmailJob::class, [
 Ensure your queue worker is running to process the emails:
 
 ```bash
-php scripts/queue-worker.php
+php padi queue:work
 ```
 
 ---
@@ -125,7 +125,7 @@ php scripts/queue-worker.php
 
 ### 3. Queue worker not processing
 
-- Ensure `php scripts/queue-worker.php` is running.
+- Ensure `php padi queue:work` is running.
 - Check the log files in `storage/logs/` for any queue or email-related errors.
 
 ---

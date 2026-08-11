@@ -91,7 +91,7 @@ Run the script from your project root directory:
 
 ```bash
 # Process jobs on the default queue
-php scripts/queue-worker.php default
+php padi queue:work default
 ```
 
 ---
@@ -112,7 +112,7 @@ After=network.target
 Type=simple
 User=www-data
 WorkingDirectory=/var/www/my-padi-app
-ExecStart=/usr/bin/php scripts/queue-worker.php default
+ExecStart=/usr/bin/php padi queue:work default
 Restart=always
 RestartSec=3
 
@@ -140,20 +140,25 @@ services:
   # Queue Worker container
   queue-worker:
     build: .
-    command: php scripts/queue-worker.php default
+    command: php padi queue:work default
     restart: always
     depends_on:
       - db
 ```
 
-### C. Windows Server Task Scheduler
-1. Open **Task Scheduler** and select **Create Basic Task**.
-2. Set Trigger to **When the computer starts**.
-3. Set Action to **Start a program**.
-4. Set Program/script to `php`.
-5. Add arguments: `scripts/queue-worker.php default`.
-6. Set Start in to your project root folder (e.g. `C:\inetpub\wwwroot\my-padi-app`).
-7. In the task settings, uncheck power/battery restrictions to keep it running continuously.
+### D. Shared Hosting (cPanel Cron Job)
+For shared hosting environments where continuous background daemons are not allowed, configure a cPanel Cron Job to run every minute with `--once` or `--stop-when-empty`:
+
+```bash
+* * * * * cd /home/username/public_html && php padi queue:work default --once > /dev/null 2>&1
+```
+
+- `--once`: Process 1 available job and terminate cleanly.
+- `--stop-when-empty`: Process all pending jobs sequentially until queue is 0, then terminate.
+
+#### ⚡ Handling Large Queues (High Volume Jobs)
+- **VPS / Docker**: Use `php padi queue:work` (long-running daemon with Supervisor/Docker).
+- **Shared Hosting**: Use `php padi queue:work --stop-when-empty` via cPanel Cron Job. This processes all pending jobs in a single run instead of just 1 job per minute.
 
 ---
 
