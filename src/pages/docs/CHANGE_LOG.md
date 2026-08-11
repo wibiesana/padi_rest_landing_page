@@ -6,6 +6,7 @@
 
 - **SetupWizard Banner Parse Error Fix**: Fixed a PHP parse syntax error in `SetupWizard::banner()` caused by unclosed string padding during version synchronization. Standardized banner version string formatting with dynamic `str_pad("Version {$version}", 64, ' ', STR_PAD_BOTH)`.
 - **FrankenPHP CLI Worker Document Root Fix (`Console.php`)**: Added the missing `-r "public"` (document root) flag to `frankenphp php-server` command in worker mode (`php padi serve:worker`). Omitting `-r "public"` previously caused FrankenPHP to serve requests from project root instead of `public`, resulting in `404 Not Found` when accessing `http://localhost:8085/`.
+- **API Resource IDE Stub Conflict Fix (`Resource.php` & `Generator.php`)**: Added `Resource::wrap($resource)` and `Resource::collect($resource)` static alias methods to `Resource.php` to avoid false-positive IDE/Intelephense static analyzer errors ("Too many arguments. Expected 0. Found 1.") caused by built-in Laravel stub method name collisions (`JsonResource::make` & `JsonResource::collection`). Updated `Generator.php` controller templates to generate `Resource::wrap()` and `Resource::collect()` by default. Enhanced `Resource::collection()` to automatically detect and transform any array containing a `'data'` key.
 
 ## v2.1.6 (2026-08-11)
 

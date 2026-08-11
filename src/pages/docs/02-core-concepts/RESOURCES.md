@@ -97,26 +97,26 @@ class ProductResource extends Resource
 
 This is the main method where you define the output structure. You can access properties of the resource directly using `$this->property` because the base class uses the `__get` magic method.
 
-### `make($data)`
+### `wrap($data)` (or `make($data)`)
 
-Used for transforming a single item (object or array).
+Used for transforming a single item (object or array). `wrap()` is recommended to avoid IDE Intelephense conflicts.
 
 ```php
 $user = User::find(1);
-return UserResource::make($user);
+return UserResource::wrap($user);
 ```
 
-### `collection($data)`
+### `collect($data)` (or `collection($data)`)
 
-Used for transforming a list of items. It automatically detects if the data is a standard array or a paginated result from `paginate()`.
+Used for transforming a list of items. `collect()` is recommended to avoid IDE Intelephense conflicts. It automatically detects if the data is a flat array or a paginated result from `paginate()`.
 
 ```php
 $users = User::all();
-return UserResource::collection($users);
+return UserResource::collect($users);
 
 // Paginated result
 $paginatedUsers = User::paginate(1, 10);
-return UserResource::collection($paginatedUsers);
+return UserResource::collect($paginatedUsers);
 ```
 
 ---
@@ -156,23 +156,14 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('category')->get();
-
-        // Return a collection of resources
-        return ProductResource::collection($products);
+        $products = Product::paginate(20);
+        return ProductResource::collect($products);
     }
 
-    public function show()
+    public function show($id)
     {
-        $id = $this->request->param('id');
         $product = Product::find($id);
-
-        if (!$product) {
-            throw new \Exception("Product not found", 404);
-        }
-
-        // Return a single resource
-        return ProductResource::make($product);
+        return ProductResource::wrap($product);
     }
 }
 ```
