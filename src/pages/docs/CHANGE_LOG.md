@@ -19,6 +19,12 @@ If upgrading existing projects to v2.1.7, please update your controllers with th
 - **FrankenPHP CLI Worker Document Root Fix (`Console.php`)**: Added the missing `-r "public"` (document root) flag to `frankenphp php-server` command in worker mode (`php padi serve:worker`). Omitting `-r "public"` previously caused FrankenPHP to serve requests from project root instead of `public`, resulting in `404 Not Found` when accessing `http://localhost:8085/`.
 - **API Resource IDE Stub Conflict Fix (`Resource.php` & `Generator.php`)**: Added `Resource::wrap($resource)` and `Resource::collect($resource)` static alias methods to `Resource.php` to avoid false-positive IDE/Intelephense static analyzer errors ("Too many arguments. Expected 0. Found 1.") caused by built-in Laravel stub method name collisions (`JsonResource::make` & `JsonResource::collection`). Updated `Generator.php` controller templates to generate `Resource::wrap()` and `Resource::collect()` by default. Enhanced `Resource::collection()` to automatically detect and transform any array containing a `'data'` key.
 
+### 💎 ActiveRecord Enhancements & Query Hardening
+
+- **ActiveRecord Dynamic Static Invocation (`__callStatic`)**: Enhanced dynamic static invocation on `ActiveRecord` models allowing direct calls like `Model::create($data)`, `Model::update($id, $data)`, `Model::delete($id)`, `Model::paginate()`, `Model::batchInsert()`, and `Model::upsert()`.
+- **Unified Query Builder `findOrFail()`**: Standardized primary key lookup logic across static calls and fluent builder chains (e.g. `Model::findOrFail($id)` and `Model::find()->with(...)->findOrFail($id)`), deprecating legacy `findOrFailByPk()`.
+- **Strict Return Types on Fluent Queries**: Standardized `ActiveRecord::find()` to return `ModelQuery` exclusively for predictable method chaining (`with()`, `where()`, `orderBy()`), ensuring optimal IDE autocompletion and static analysis.
+
 ## v2.1.6 (2026-08-11)
 
 ### 🧹 Template Migration Cleanup & Setup Wizard Alignment
