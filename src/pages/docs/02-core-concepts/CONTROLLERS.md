@@ -115,7 +115,28 @@ return $this->raw($data);
 return $this->databaseError('Could not save data', $exception);
 ```
 
-### 3. Status Code Control
+### 3. Automatic Request Query Builder (`query()`)
+
+The base controller provides `$this->query($modelClass, $withRelations)` to automatically handle HTTP query string parameters (`search`, `sort_by`, `order`) and eager load relations:
+
+```php
+public function index()
+{
+    // Auto handles search, sort_by, order, and eager loading
+    $result = $this->query(Product::class, $this->withRelations)->paginate();
+
+    return ProductResource::collect($result);
+}
+
+public function all()
+{
+    $results = $this->query(Product::class, $this->withRelations)->all();
+
+    return ProductResource::collect($results);
+}
+```
+
+### 4. Status Code Control
 
 ```php
 $this->setStatusCode(202); // Accepted

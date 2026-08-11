@@ -1,5 +1,13 @@
 # CHANGE LOG
 
+## v2.1.8 (2026-08-12)
+
+### 💎 Core Controller Query Engine & Universal Model Search
+
+- **Core Controller `$this->query()` Helper**: Added `$this->query(Model::class, $withRelations)` method to `Wibiesana\Padi\Core\Controller`. It automatically parses HTTP request parameters (`search`, `sort_by`, `order`) and applies eager loading, reducing controller `index()` and `all()` actions down to a single line.
+- **Universal ActiveRecord Static `search()` Scope**: Added static `search(string $keyword)` scope directly into `Wibiesana\Padi\Core\ActiveRecord`. It automatically searches across all `$fillable` columns as well as audit user relations (`createdBy` / `updatedBy` usernames) and supports custom relation searching via `$searchableRelations`.
+- **Code Generator (`Generator.php`) Refactoring**: Updated controller and model generation templates to use `$this->query()` and core `search()` scope by default. Removed over 70+ lines of redundant join/sort boilerplate per generated controller and model.
+
 ## v2.1.7 (2026-08-11)
 
 ### ⚠️ Migration & Upgrade Notice (v2.1.5 -> v2.1.7)
