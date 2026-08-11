@@ -1,6 +1,13 @@
 # CHANGE LOG
 
-## v2.1.5 (2026-08-09)
+## v2.1.5 (2026-08-11)
+
+### 💎 Static Model Invocation & CRUD Generator Optimization
+
+- **ActiveRecord Dynamic Static Invocation (`__callStatic`)**: Added `ActiveRecord::__callStatic()` support allowing static invocation of instance CRUD and query methods directly on Model classes (e.g. `Model::create($data)`, `Model::update($id, $data)`, `Model::delete($id)`, `Model::paginate()`, `Model::batchInsert()`, `Model::upsert()`). Eliminates the need for parenthesized direct instantiation wrappers `(new Model())->create($data)`.
+- **Unified `findOrFail()` Method on Query Builder**: Added `findOrFail($id)` to `ModelQuery` class to unify naming conventions across static and builder calls. Both `Product::findOrFail($id)` (static check) and `Product::find()->with(...)->findOrFail($id)` (builder with eager loading) now use `findOrFail($id)` exclusively (`findOrFailByPk()` has been completely removed).
+- **Code Generator (`Generator.php`) Enhancement**: Updated `Generator::getBaseControllerTemplate()` so all generated controllers utilize static model calls (`Model::create()`, `Model::update()`, `Model::delete()`) and `Model::find()->with(...)->findOrFail($id)` directly in `store()`, `update()`, and `destroy()` actions. Removed unnecessary `$this->model` property instantiation from generated base controllers to optimize memory and execution.
+- **Template & Documentation Alignment**: Updated starter template controllers (`UserController.php`, `AuthController.php`, `ExampleRBACController.php`) and framework documentation (`ACTIVE_RECORD.md`, `RESPONSE_STRUCTURE.md`, `DATABASE.md`, `CACHE.md`) with clean, static ActiveRecord usage examples.
 
 ### ⚡ Realtime Service FrankenPHP Worker Mode Optimization & Robustness
 

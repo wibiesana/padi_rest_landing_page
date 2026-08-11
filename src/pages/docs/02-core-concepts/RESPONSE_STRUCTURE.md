@@ -272,7 +272,7 @@ public function store()
     ]);
 
     // Insert data and obtain primary key ID
-    $productId = (new Product())->create($validated);
+    $productId = Product::create($validated);
 
     // Optional: Set HTTP Status 201 Created
     $this->response->status(201);
@@ -314,7 +314,7 @@ public function update($id)
         'price' => 'numeric|min:0',
     ]);
 
-    (new Product())->update($id, $validated);
+    Product::update($id, $validated);
 
     return Product::findOne($id);
 }
@@ -345,7 +345,7 @@ public function update($id)
 public function destroy($id)
 {
     Product::findOrFail($id);
-    (new Product())->delete($id);
+    Product::delete($id);
 
     return [
         'message' => 'Product deleted successfully'
@@ -370,7 +370,7 @@ public function destroy($id)
 public function destroyNoContent($id)
 {
     Product::findOrFail($id);
-    (new Product())->delete($id);
+    Product::delete($id);
 
     // Returns HTTP 204 No Content with completely empty response body
     $this->noContent();

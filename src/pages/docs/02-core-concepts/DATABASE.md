@@ -146,7 +146,7 @@ public function store()
         Database::beginTransaction('mysql');
         Database::beginTransaction('pgsql');
 
-        $id = (new Product())->create($data);
+        $id = Product::create($data);
         (new Analytics())->log('product_created', ['id' => $id]);
 
         Database::commit('mysql');

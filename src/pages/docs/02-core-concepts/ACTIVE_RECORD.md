@@ -245,16 +245,16 @@ $searchResults = Product::search($keyword)->paginate(1, 25);
 
 
 > [!NOTE]
-> ### 💡 `findOrFail()` vs `findOrFailByPk()`
-> While both helpers search for a single record by primary key and automatically throw an HTTP 404 Exception if the record doesn't exist, they are designed for different calling styles:
+> ### 💡 Using `findOrFail($id)`
+> `findOrFail($id)` searches for a single record by primary key and automatically throws an HTTP 404 Exception if the record doesn't exist. You can call it either statically or on the fluent query builder:
 > 
-> * **`Product::findOrFail($id)`** (Static Helper): Called statically directly on the Model class. It is simple and concise, but **cannot be chained** with relationship eager loading.
+> * **Static Call (Simple Check)**:
 >   ```php
 >   $product = Product::findOrFail(5);
 >   ```
-> * **`Product::find()->findOrFailByPk($id)`** (Builder Helper): Called on the fluent `ModelQuery` builder returned by `find()`. It is perfect when you need to **eager load relations** or apply other custom scopes before fetching the record.
+> * **Builder Chaining (With Eager Loading)**:
 >   ```php
->   $product = Product::find()->with('category', 'tags')->findOrFailByPk(5);
+>   $product = Product::find()->with('category', 'tags')->findOrFail(5);
 >   ```
 
 ### ✍️ Writing Data (Create, Update, Delete)
@@ -288,7 +288,7 @@ class ProductController extends Controller
 
         // 2. Insert into database using validated data
         // Note: create() returns the newly created primary key ID (int|string), not the model object
-        $productId = (new Product())->create($validated);
+        $productId = Product::create($validated);
 
         // 3. Fetch the full record with database-generated fields (id, timestamps, default values)
         $product = Product::findOne($productId);
@@ -323,7 +323,7 @@ public function update($id)
     ]);
 
     // 3. Execute update operation
-    (new Product())->update($id, $validated);
+    Product::update($id, $validated);
 
     // 4. Return updated record directly
     return Product::findOne($id);
@@ -345,7 +345,7 @@ public function destroy($id)
     Product::findOrFail($id);
 
     // 2. Delete the record
-    (new Product())->delete($id);
+    Product::delete($id);
 
     // 3. Return response array directly
     return [
@@ -376,10 +376,10 @@ $page = (int)$this->request->query('page', 1);
 $perPage = (int)$this->request->query('per_page', 15);
 
 // 1. Simple pagination
-$results = (new Product())->paginate($page, $perPage);
+$results = Product::paginate($page, $perPage);
 
 // 2. Pagination with conditions and custom ordering
-$results = (new Product())->paginate(
+$results = Product::paginate(
     $page,
     $perPage,
     ['status' => 'active'],
@@ -415,7 +415,7 @@ Perform high-performance bulk inserts or updates.
 
 ```php
 // Batch Insert
-(new Product())->batchInsert([
+Product::batchInsert([
     ['name' => 'Item A', 'price' => 10],
     ['name' => 'Item B', 'price' => 20],
 ]);
@@ -423,16 +423,16 @@ Perform high-performance bulk inserts or updates.
 // Batch Insert with custom chunk size (v2.0.3)
 // Automatically splits into multiple INSERT statements
 // to respect max_allowed_packet limit on shared hosting
-(new Product())->batchInsert($thousandItems, chunkSize: 200);
+Product::batchInsert($thousandItems, chunkSize: 200);
 
 // Update All matching conditions
-$affectedRows = (new Product())->updateAll(
+$affectedRows = Product::updateAll(
     ['status' => 'discontinued'],
     ['stock' => 0]
 );
 
 // Upsert - Insert or Update on duplicate key (v2.0.3, MariaDB/MySQL)
-(new Product())->upsert(
+Product::upsert(
     ['sku' => 'PRD-001', 'name' => 'Coffee', 'price' => 15.00],
     ['name', 'price'] // columns to update on duplicate
 );
@@ -770,10 +770,10 @@ Shared hosting often has low `max_allowed_packet` limits. The `batchInsert()` me
 
 ```php
 // Default chunk size: 500 rows per INSERT
-(new Product())->batchInsert($largeDataset);
+Product::batchInsert($largeDataset);
 
 // Custom chunk size for constrained environments
-(new Product())->batchInsert($largeDataset, chunkSize: 100);
+Product::batchInsert($largeDataset, chunkSize: 100);
 ```
 
 ### Upsert (INSERT ON DUPLICATE KEY UPDATE)
@@ -782,13 +782,13 @@ Atomic insert-or-update for MariaDB/MySQL:
 
 ```php
 // Insert new record, or update 'name' and 'price' if duplicate key
-(new Product())->upsert(
+Product::upsert(
     ['sku' => 'PRD-001', 'name' => 'Premium Coffee', 'price' => 15.00],
     ['name', 'price'] // columns to update on conflict
 );
 
 // Update ALL columns on conflict (omit second parameter)
-(new Product())->upsert(['sku' => 'PRD-001', 'name' => 'Coffee', 'price' => 14.50]);
+Product::upsert(['sku' => 'PRD-001', 'name' => 'Coffee', 'price' => 14.50]);
 ```
 
 ---

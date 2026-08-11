@@ -488,7 +488,7 @@ class SettingController extends \Base\SettingController
     {
         $data = $this->validate(['value' => 'required']);
 
-        (new SettingModel())->update($id, $data);
+        SettingModel::update($id, $data);
 
         // Invalidate so next getAllSettings() re-reads from DB
         Cache::delete('app:settings');
