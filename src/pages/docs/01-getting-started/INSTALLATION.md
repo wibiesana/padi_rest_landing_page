@@ -201,7 +201,7 @@ Use the automated setup script for faster installation:
 
 ```bash
 # Run automated setup
-php scripts/init.php
+php padi init
 
 # Or on Windows
 init_app.bat

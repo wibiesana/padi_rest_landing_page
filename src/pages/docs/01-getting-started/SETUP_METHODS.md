@@ -151,7 +151,7 @@ Continue to next step? (y/n) [y]:
 
 ### Startup Process:
 
-**PHP CLI (`init.php`):**
+**PHP CLI (`php padi init`):**
 
 ```bash
 $ php padi init
