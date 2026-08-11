@@ -1,5 +1,17 @@
 # CHANGE LOG
 
+## v2.1.6 (2026-08-11)
+
+### 🧹 Template Migration Cleanup & Setup Wizard Alignment
+
+- **Removal of Default Example Migrations**: Removed legacy example migrations (`posts`, `tags`, `post_tags`, `comments`) from `padi_template/database/migrations/` to streamline starter migrations (`users` and `password_resets` only).
+- **Setup Wizard & Queue Worker Core Integration**: Migrated the interactive setup wizard (`Wibiesana\Padi\Core\SetupWizard`) and Queue Worker CLI (`php padi queue:work [queue]`) directly into `padi_core`. Removed standalone script files (`init.php` and `queue-worker.php`).
+
+### ⚙️ Core Queue Worker & Deployment Architecture
+
+- **Core CLI Queue Worker (`php padi queue:work`)**: Integrated queue worker execution into core CLI (`php padi queue:work [queue]`).
+- **Shared Hosting & VPS Compatibility**: Added `--once` (processes single job and exits) and `--stop-when-empty` flags to allow running queue workers safely on Shared Hosting cPanel Cron Jobs without memory leaks, while maintaining long-running daemon support for VPS/Docker setups (`php padi queue:work`).
+
 ## v2.1.5 (2026-08-11)
 
 ### 💎 Static Model Invocation & CRUD Generator Optimization
@@ -21,16 +33,6 @@
 
 - **ActiveRecord CRUD Guide Improvements**: Enhanced Create, Update, and Delete documentation in `ACTIVE_RECORD.md` with beginner-friendly, real-world controller examples and input validation (`$this->validate()`).
 - **Response Engine Documentation**: Expanded `RESPONSE_STRUCTURE.md` with complete controller methods and matching HTTP JSON payloads (including Single Item, Paginated, Collection, Custom Array Return `return [...]`, and API Resource Transformers).
-
-### 🧹 Template Migration Cleanup & Setup Wizard Alignment
-
-- **Removal of Default Example Migrations**: Removed legacy example migrations (`posts`, `tags`, `post_tags`, `comments`) from `padi_template/database/migrations/` to streamline starter migrations (`users` and `password_resets` only).
-- **Setup Wizard & Queue Worker Core Integration**: Migrated the interactive setup wizard (`Wibiesana\Padi\Core\SetupWizard`) and Queue Worker CLI (`php padi queue:work [queue]`) directly into `padi_core`. Removed standalone script files (`init.php` and `queue-worker.php`).
-
-### ⚙️ Core Queue Worker & Deployment Architecture
-
-- **Core CLI Queue Worker (`php padi queue:work`)**: Integrated queue worker execution into core CLI (`php padi queue:work [queue]`).
-- **Shared Hosting & VPS Compatibility**: Added `--once` (processes single job and exits) and `--stop-when-empty` flags to allow running queue workers safely on Shared Hosting cPanel Cron Jobs without memory leaks, while maintaining long-running daemon support for VPS/Docker setups (`php padi queue:work`).
 
 ## v2.1.4 (2026-08-09)
 
