@@ -1,5 +1,11 @@
 # CHANGE LOG
 
+## v2.1.7 (2026-08-11)
+
+### 🐛 Setup Wizard Banner Syntax Fix & Sync Script Optimization
+
+- **SetupWizard Banner Parse Error Fix**: Fixed a PHP parse syntax error in `SetupWizard::banner()` caused by unclosed string padding during version synchronization. Standardized banner version string formatting with dynamic `str_pad("Version {$version}", 64, ' ', STR_PAD_BOTH)`.
+
 ## v2.1.6 (2026-08-11)
 
 ### 🧹 Template Migration Cleanup & Setup Wizard Alignment
