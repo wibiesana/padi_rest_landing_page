@@ -2,9 +2,10 @@
 
 ## v2.1.7 (2026-08-11)
 
-### 🐛 Setup Wizard Banner Syntax Fix & Sync Script Optimization
+### 🐛 Setup Wizard Banner Syntax & FrankenPHP Worker Mode Root Fix
 
 - **SetupWizard Banner Parse Error Fix**: Fixed a PHP parse syntax error in `SetupWizard::banner()` caused by unclosed string padding during version synchronization. Standardized banner version string formatting with dynamic `str_pad("Version {$version}", 64, ' ', STR_PAD_BOTH)`.
+- **FrankenPHP CLI Worker Document Root Fix (`Console.php`)**: Added the missing `-r "public"` (document root) flag to `frankenphp php-server` command in worker mode (`php padi serve:worker`). Omitting `-r "public"` previously caused FrankenPHP to serve requests from project root instead of `public`, resulting in `404 Not Found` when accessing `http://localhost:8085/`.
 
 ## v2.1.6 (2026-08-11)
 
