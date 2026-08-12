@@ -7,7 +7,10 @@
 - **Core Controller `$this->query()` Helper**: Added `$this->query(Model::class, $withRelations)` method to `Wibiesana\Padi\Core\Controller`. It automatically parses HTTP request parameters (`search`, `sort_by`, `order`) and applies eager loading, reducing controller `index()` and `all()` actions down to a single line.
 - **Universal ActiveRecord Static `search()` Scope**: Added static `search(string $keyword)` scope directly into `Wibiesana\Padi\Core\ActiveRecord`. It automatically searches across all `$fillable` columns as well as audit user relations (`createdBy` / `updatedBy` usernames) and supports custom relation searching via `$searchableRelations`.
 - **API Resource `wrap()` & `wraps()` Standardization**: Standardized `Wibiesana\Padi\Core\Resource` with clean singular/plural static methods: `Resource::wrap($data)` for single records and `Resource::wraps($data)` for collection/array/paginated records.
-- **Code Generator (`Generator.php`) Variable & Query Standardization**: Updated generator templates to use `$this->query()` and `Resource::wraps()`/`Resource::wrap()`. Standardized generated controller variables (`$results` for plural collections, `$result` for singular objects) and auto-detects primary key columns for `sort_by` query parameters.
+- **SQLite Setup Wizard & Database Path Resolution Fix**:
+  - Fixed relative path calculation in `config/database.php` which previously used `dirname(__DIR__, 2)`, causing SQLite database files to be created outside the project root directory.
+  - Enhanced `SetupWizard` to explicitly touch/create the SQLite database file and parent directory if missing.
+  - Updated `Env::load()` with force reload capability and `updateEnv()` to sync runtime environment variables (`$_ENV` & `putenv`) and reset `DatabaseManager` cache, allowing seamless SQLite connection testing and migration execution during `php padi init`.
 
 ## v2.1.7 (2026-08-11)
 
