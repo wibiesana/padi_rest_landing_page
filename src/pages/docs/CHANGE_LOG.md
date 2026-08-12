@@ -10,6 +10,9 @@
 - **SQLite & PostgreSQL Multi-Database CRUD Generator (`Generator.php`)**:
   - Updated schema introspection methods (`getAllTables()`, `getTableSchema()`, `getTableForeignKeys()`, `isColumnUnique()`, `modelNameToTableName()`) in `Generator.php` to support SQLite (`sqlite_master`, `PRAGMA table_info`, `PRAGMA foreign_key_list`, `PRAGMA index_list`) and PostgreSQL (`information_schema`, `pg_tables`) in addition to MySQL.
   - Previously, MySQL-specific syntax (`SHOW TABLES`, `DESCRIBE`, `SHOW INDEX`) caused `php padi generate:crud` (`php padi g`) and `php padi generate:crud-all` (`php padi ga`) to fail silently and generate no files when using SQLite.
+- **SetupWizard Interactive Sub-process Prompt Hang Fix**:
+  - Fixed a hanging issue in `SetupWizard.php` where selecting "Generate for all tables" (choice 1) executed `php padi generate:crud-all` without `--realtime=false` flag, causing the child CLI process to prompt interactively for Mercure realtime settings while STDIN was non-interactive/redirected.
+  - SetupWizard now explicitly passes `--realtime=false` or `--realtime=true` to child CLI commands, allowing smooth, instant generation without requiring manual keypresses (Enter/Space).
 - **SQLite Setup Wizard & Database Path Resolution Fix**:
   - Fixed relative path calculation in `config/database.php` which previously used `dirname(__DIR__, 2)`, causing SQLite database files to be created outside the project root directory.
   - Enhanced `SetupWizard` to explicitly touch/create the SQLite database file and parent directory if missing.
