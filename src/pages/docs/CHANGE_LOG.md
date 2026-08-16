@@ -17,6 +17,29 @@
 - **Controller Record Fetch Standardization (`User::findOrFail($id)`)**:
   - Fixed an Intelephense/IDE type warning and potential runtime type mismatch in `AuthController.php`, `UserController.php`, and `ExampleRBACController.php` where `$this->model->find($id)` was called instead of `User::findOrFail($id)`.
   - Calling `Model::find()` with 0 parameters returns a `ModelQuery` builder instance, whereas `User::findOrFail($id)` or `User::findOne($id)` returns the record data `array`. Updated template controllers to use `User::findOrFail($id)`.
+- **Code Generator Validation Rules & Pivot Table Fix (`Generator.php`)**:
+  - Fixed an issue where pivot tables with composite primary keys (such as `exercise_group`, `exam_class`, `classroom_member`, `assignment_class`) resulted in empty validation rules (`$this->validate([])`) in generated Base Controllers because all PK columns were previously excluded from validation.
+  - Refined exclusion logic in `generateValidationRules()` to only exclude single/auto-increment primary keys, ensuring composite FK/PK columns on junction/pivot tables are properly validated.
+  - Added schema fallback mechanism (`buildSchemaFromModelFillable()`) to `generateController()` and `generateResource()`: when database schema is temporarily unreachable during generation, the generator parses existing Base Model `$fillable` declarations to construct fallback validation rules and resource field mappings instead of outputting empty arrays.
+- **Code Generator PascalCase Input Normalization Fix (`Generator.php`)**:
+  - Fixed two related bugs triggered when passing a PascalCase model name (e.g. `php padi g Article`) instead of a snake_case table name (e.g. `php padi g article`):
+    1. **Wrong table name in generated model**: `protected string $table` was set to `'Article'` instead of `'article'`, causing all queries to fail at runtime.
+    2. **Missing inverse relations**: `hasMany`/`hasOne` relations were silently dropped because `getInverseRelations()` compared `REFERENCED_TABLE_NAME` (lowercase from DB) against the PascalCase input, always returning no matches.
+  - Added automatic normalization at the entry point of `generateCrud()` and `generateModel()`: if the input starts with an uppercase letter, it is first converted to the correct DB table name via `modelNameToTableName()` before any further processing.
+  - Both `php padi g Article` and `php padi g article` now produce identical, correct output.
+- **Code Generator Name Convention Simplification (`Generator.php`)**:
+  - Removed all plural/singular guessing logic from `modelNameToTableName()` and `tableNameToModelName()`. English pluralization rules (`company→companies`, `class→classes`) and singularization patterns were unreliable for non-English table names (e.g. Indonesian: `buah_mangis`, `data_pegawai`) and caused wrong model/table name mappings.
+  - Both functions now do simple, predictable one-way conversion only: snake_case ↔ PascalCase, using the table name exactly as defined in the database.
+  - Examples: `companies` → `Companies`, `buah_mangis` → `BuahMangis`, `job_vacancies` → `JobVacancies`.
+  - Users are now free to name their tables in any language or convention; the generator will always respect the exact table name.
+- **Code Generator `$fillable` Preservation in `generateModel()` (`Generator.php`)**:
+  - Fixed an issue where regenerating a model when the given table name doesn't match DB (e.g. `php padi g company` when DB table is `companies`) would silently overwrite `$fillable` with an empty array `['']`.
+  - Extended the `buildSchemaFromModelFillable()` fallback to `generateModel()`: when `getTableColumns()` returns empty, the generator now parses the existing Base Model file and restores its `$fillable` declaration instead of overwriting it with nothing.
+- **Code Generator Table Existence Validation (`generateCrud()` in `Generator.php`)**:
+  - Fixed a silent failure where `php padi g Company` (or any non-existent table name) would generate files with wrong/empty schema without any error message.
+  - `generateCrud()` now validates the resolved table name against the actual DB table list **before** writing any files. If the DB is reachable and the table is not found, generation is aborted with a clear error message.
+  - A "Did you mean?" suggestion is shown when a similarly-named table is found (e.g. typing `company` when DB has `companies`).
+  - If the DB is not reachable at all, generation proceeds in offline/fallback mode with a warning, preserving existing behavior for development without DB access.
 
 ## v2.1.8 (2026-08-12)
 
