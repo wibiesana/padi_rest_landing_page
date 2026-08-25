@@ -9,12 +9,10 @@
   - Added `isProtectedTable()` check to `generateResource()` — now all three methods (`generateModel`, `generateController`, `generateResource`) consistently skip protected tables (`users`, `password_resets`, `migrations`) unless `--force` flag is passed.
   - Improved warning messages in `generateModel()` and `generateController()` to explicitly show which default file already exists (e.g. `app/Models/User.php`, `app/Controllers/UserController.php`).
 
-- **User model: Auto-detect `timestampFormat` based on active database driver (`app/Models/User.php`)**:
-  - `$timestampFormat` was previously hardcoded to `'unix'`, which only matches the SQLite migration (`INTEGER DEFAULT strftime('%s', 'now')`).
-  - MySQL and PostgreSQL use `TIMESTAMP DEFAULT CURRENT_TIMESTAMP`, so the correct format is `'datetime'`.
-  - Format is now **auto-detected** in `__construct()`: SQLite → `'unix'`, MySQL/PostgreSQL → `'datetime'` (default).
-  - Added `use Wibiesana\Padi\Core\DatabaseManager` import for driver detection.
-  - Detection result is cached in `static ?string $resolvedTimestampFormat` — resolved **once per process lifecycle**, optimal for FrankenPHP worker mode where `User` may be instantiated hundreds of times per worker.
+- **User model & Migrations: Standardize to Unix Integer Timestamps across all databases (`app/Models/User.php`, `001_create_users_table.php`)**:
+  - Standardized timestamp format to `'unix'` (Integer UTC epoch) across **SQLite**, **MySQL/MariaDB**, and **PostgreSQL**.
+  - Updated `001_create_users_table.php` migration so `created_at`, `updated_at`, `email_verified_at`, and `last_login_at` use `BIGINT` / `INTEGER` across all database drivers.
+  - Ensures 100% database engine consistency, eliminates timezone drift, and optimizes storage and indexing performance without requiring driver branching.
 
 ### 🔒 Security & Performance Fixes
 

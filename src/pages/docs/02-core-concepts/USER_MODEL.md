@@ -238,9 +238,9 @@ users
 ├── status (varchar 20, default: 'active')
 ├── email_verified_at (timestamp, nullable)
 ├── remember_token (varchar 100, nullable) ← Hidden in API response
-├── last_login_at (timestamp, nullable)
-├── created_at (timestamp)
-└── updated_at (timestamp)
+├── last_login_at (bigint/integer, nullable)
+├── created_at (bigint/integer)
+└── updated_at (bigint/integer)
 ```
 
 ---
@@ -249,73 +249,38 @@ users
 
 The `$timestampFormat` property controls how `created_at`, `updated_at`, and other timestamp fields are stored and read by the ActiveRecord.
 
-> [!TIP]
-> `User` model sudah menggunakan **deteksi otomatis** — tidak perlu konfigurasi manual.
-
 ```php
-// Auto-detected di constructor User.php
-protected string $timestampFormat = 'datetime'; // default
-
-public function __construct()
-{
-    parent::__construct();
-    if (DatabaseManager::getDriver() === 'sqlite') {
-        $this->timestampFormat = 'unix'; // override untuk SQLite
-    }
-}
+protected string $timestampFormat = 'unix'; // Default: Integer Unix Epoch (UTC)
 ```
 
-### Perbedaan Format
+### Format Comparison
 
-| Format | Tipe Kolom DB | Contoh Nilai | Cocok Untuk |
+| Format | DB Column Type | Example Value | Description |
 |---|---|---|---|
-| `'datetime'` | `TIMESTAMP`, `DATETIME` | `2026-08-25 15:30:00` | **MySQL, PostgreSQL** ✅ |
-| `'unix'` | `INTEGER`, `BIGINT` | `1756088200` | SQLite (integer epoch) |
+| `'unix'` | `INTEGER`, `BIGINT` | `1756142840` | **Uniform Default** — UTC integer epoch across SQLite, MySQL, PostgreSQL ✅ |
+| `'datetime'` | `TIMESTAMP`, `DATETIME` | `2026-08-25 17:30:00` | Human-readable string timestamp |
 
-### Kapan Gunakan `'datetime'`?
+### Why Padi Uses Unix Integer Epoch by Default
+1. **100% Consistent Across DBs**: SQLite, MySQL, MariaDB, and PostgreSQL behave identically.
+2. **Zero Timezone Drift**: Unix epoch is universally in UTC seconds.
+3. **High Performance**: Fast indexing, compact storage, and native conversion in JavaScript/frontend clients via `new Date(ts * 1000)`.
 
-Gunakan `'datetime'` (default) jika kolom timestamp di migrasi bertipe **TIMESTAMP** atau **DATETIME**:
-
+### Migration Schema (Standardized across all DBs)
 ```sql
--- MySQL / MariaDB
-created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-
--- PostgreSQL
-created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- SQLite, MySQL/MariaDB, and PostgreSQL
+created_at BIGINT NULL,
+updated_at BIGINT NULL,
+email_verified_at BIGINT NULL,
+last_login_at BIGINT NULL
 ```
 
-### Kapan Gunakan `'unix'`?
-
-Gunakan `'unix'` hanya jika kolom timestamp di migrasi bertipe **INTEGER** (umumnya SQLite):
-
-```sql
--- SQLite
-created_at INTEGER DEFAULT (strftime('%s', 'now'))
-updated_at INTEGER DEFAULT (strftime('%s', 'now'))
-```
-
-> [!IMPORTANT]
-> Migration default Padi (`001_create_users_table.php`) menggunakan `TIMESTAMP` untuk **MySQL** dan **PostgreSQL**, dan `INTEGER` hanya untuk **SQLite**.
-> `User` model sudah menangani ini secara otomatis — tidak perlu konfigurasi tambahan.
-
-### ✅ Sudah Diimplementasikan di `User.php`
-
-Deteksi otomatis **sudah aktif** di `User` model:
+### Switching to `'datetime'` (Optional)
+If your legacy database already uses `TIMESTAMP` / `DATETIME` columns, simply configure `$timestampFormat = 'datetime'` in your model:
 
 ```php
-use Wibiesana\Padi\Core\DatabaseManager;
-
-protected string $timestampFormat = 'datetime'; // default MySQL/PostgreSQL
-
-public function __construct()
+class CustomModel extends ActiveRecord
 {
-    parent::__construct();
-    // SQLite menyimpan timestamp sebagai INTEGER (unix epoch)
-    if (DatabaseManager::getDriver() === 'sqlite') {
-        $this->timestampFormat = 'unix';
-    }
+    protected string $timestampFormat = 'datetime';
 }
 ```
 
