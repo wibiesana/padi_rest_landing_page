@@ -15,6 +15,7 @@ The Padi REST API User Model is more than just a data structure—it is a **Soph
 - [🔐 Enhanced AuthController](#enhanced-authcontroller)
 - [💡 Usage Examples](#usage-examples)
 - [🗂️ Database Table Structure](#database-table-structure)
+- [🕐 Timestamp Format: unix vs datetime](#timestamp-format-unix-vs-datetime)
 - [🎨 Possible User Statuses](#possible-user-statuses)
 - [🔒 Security Features](#security-features)
 - [🎭 Role-Based Access Control](#role-based-access-control)
@@ -244,6 +245,103 @@ users
 
 ---
 
+## 🕐 Timestamp Format: `unix` vs `datetime`
+
+The `$timestampFormat` property controls how `created_at`, `updated_at`, and other timestamp fields are stored and read by the ActiveRecord.
+
+> [!TIP]
+> `User` model sudah menggunakan **deteksi otomatis** — tidak perlu konfigurasi manual.
+
+```php
+// Auto-detected di constructor User.php
+protected string $timestampFormat = 'datetime'; // default
+
+public function __construct()
+{
+    parent::__construct();
+    if (DatabaseManager::getDriver() === 'sqlite') {
+        $this->timestampFormat = 'unix'; // override untuk SQLite
+    }
+}
+```
+
+### Perbedaan Format
+
+| Format | Tipe Kolom DB | Contoh Nilai | Cocok Untuk |
+|---|---|---|---|
+| `'datetime'` | `TIMESTAMP`, `DATETIME` | `2026-08-25 15:30:00` | **MySQL, PostgreSQL** ✅ |
+| `'unix'` | `INTEGER`, `BIGINT` | `1756088200` | SQLite (integer epoch) |
+
+### Kapan Gunakan `'datetime'`?
+
+Gunakan `'datetime'` (default) jika kolom timestamp di migrasi bertipe **TIMESTAMP** atau **DATETIME**:
+
+```sql
+-- MySQL / MariaDB
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+-- PostgreSQL
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+```
+
+### Kapan Gunakan `'unix'`?
+
+Gunakan `'unix'` hanya jika kolom timestamp di migrasi bertipe **INTEGER** (umumnya SQLite):
+
+```sql
+-- SQLite
+created_at INTEGER DEFAULT (strftime('%s', 'now'))
+updated_at INTEGER DEFAULT (strftime('%s', 'now'))
+```
+
+> [!IMPORTANT]
+> Migration default Padi (`001_create_users_table.php`) menggunakan `TIMESTAMP` untuk **MySQL** dan **PostgreSQL**, dan `INTEGER` hanya untuk **SQLite**.
+> `User` model sudah menangani ini secara otomatis — tidak perlu konfigurasi tambahan.
+
+### ✅ Sudah Diimplementasikan di `User.php`
+
+Deteksi otomatis **sudah aktif** di `User` model:
+
+```php
+use Wibiesana\Padi\Core\DatabaseManager;
+
+protected string $timestampFormat = 'datetime'; // default MySQL/PostgreSQL
+
+public function __construct()
+{
+    parent::__construct();
+    // SQLite menyimpan timestamp sebagai INTEGER (unix epoch)
+    if (DatabaseManager::getDriver() === 'sqlite') {
+        $this->timestampFormat = 'unix';
+    }
+}
+```
+
+### Membuat Model Custom dengan Auto-Detection yang Sama
+
+Jika Anda membuat model lain yang juga perlu auto-detect, gunakan pola yang sama:
+
+```php
+use Wibiesana\Padi\Core\DatabaseManager;
+
+class Article extends ActiveRecord
+{
+    protected string $timestampFormat = 'datetime';
+
+    public function __construct()
+    {
+        parent::__construct();
+        if (DatabaseManager::getDriver() === 'sqlite') {
+            $this->timestampFormat = 'unix';
+        }
+    }
+}
+```
+
+---
+
 ## 🎨 Possible User Statuses
 
 You can use any status, for example:
@@ -343,14 +441,15 @@ if ($user['role'] === 'admin') {
 
 ## 🆗 Summary
 
-| Feature                     | Status | Notes                    |
-| --------------------------- | ------ | ------------------------ |
-| **Enhanced table**          | ✅     | Migration created        |
-| **Updated fillable**        | ✅     | All new fields included  |
-| **Hidden sensitive fields** | ✅     | password, remember_token |
-| **Helper methods**          | ✅     | 10+ new methods added    |
-| **AuthController updated**  | ✅     | Uses new features        |
-| **Backward compatible**     | ✅     | Old code still works     |
+| Feature                     | Status | Notes                                        |
+| --------------------------- | ------ | -------------------------------------------- |
+| **Enhanced table**          | ✅     | Migration created                            |
+| **Updated fillable**        | ✅     | All new fields included                      |
+| **Hidden sensitive fields** | ✅     | password, remember_token                     |
+| **Helper methods**          | ✅     | 10+ new methods added                        |
+| **AuthController updated**  | ✅     | Uses new features                            |
+| **Timestamp format**        | ✅     | `datetime` untuk MySQL/PostgreSQL, `unix` untuk SQLite |
+| **Backward compatible**     | ✅     | Old code still works                         |
 
 ---
 

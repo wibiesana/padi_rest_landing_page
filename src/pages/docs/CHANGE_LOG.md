@@ -1,5 +1,40 @@
 # CHANGE LOG
 
+## v2.1.10 (2026-08-25)
+
+### 🐛 Generator Protected Table & User Model Timestamp Fix
+
+- **Generator: Skip resource generation for protected tables (`Generator.php`)**:
+  - `generateResource()` previously had no protected-table guard, causing `User`, `PasswordReset`, and `Migrations` resources to be auto-generated even though those models have custom hand-crafted logic.
+  - Added `isProtectedTable()` check to `generateResource()` — now all three methods (`generateModel`, `generateController`, `generateResource`) consistently skip protected tables (`users`, `password_resets`, `migrations`) unless `--force` flag is passed.
+  - Improved warning messages in `generateModel()` and `generateController()` to explicitly show which default file already exists (e.g. `app/Models/User.php`, `app/Controllers/UserController.php`).
+
+- **User model: Auto-detect `timestampFormat` based on active database driver (`app/Models/User.php`)**:
+  - `$timestampFormat` was previously hardcoded to `'unix'`, which only matches the SQLite migration (`INTEGER DEFAULT strftime('%s', 'now')`).
+  - MySQL and PostgreSQL use `TIMESTAMP DEFAULT CURRENT_TIMESTAMP`, so the correct format is `'datetime'`.
+  - Format is now **auto-detected** in `__construct()`: SQLite → `'unix'`, MySQL/PostgreSQL → `'datetime'` (default).
+  - Added `use Wibiesana\Padi\Core\DatabaseManager` import for driver detection.
+  - Detection result is cached in `static ?string $resolvedTimestampFormat` — resolved **once per process lifecycle**, optimal for FrankenPHP worker mode where `User` may be instantiated hundreds of times per worker.
+
+### 🔒 Security & Performance Fixes
+
+- **`Cache::increment()` — Atomic file lock to prevent race conditions (`Cache.php`)**:
+  - Previously, the file driver performed read → compute → write as three separate operations without a lock, allowing concurrent processes to overwrite each other's values.
+  - Replaced with `fopen('c+')` + `flock(LOCK_EX)` so the entire read-modify-write operation is **atomic** per process.
+  - Redis driver is unchanged — `INCRBY` is natively atomic.
+  - L1 memory cache is also updated after a successful write for consistency.
+
+- **`Request::ip()` — Trusted Proxy Whitelist to prevent IP spoofing (`Request.php`)**:
+  - Previously all proxy headers (`X-Forwarded-For`, `CF-Connecting-IP`, `X-Real-IP`) were always trusted, allowing clients to spoof their IP address.
+  - Proxy headers are now **only read if `REMOTE_ADDR` is a registered trusted proxy**.
+  - Trusted proxies are configured via the `TRUSTED_PROXIES` env variable (comma-separated IPs or CIDR ranges, default: `127.0.0.1,::1`).
+  - Added `isTrustedProxy()` and `ipInCidr()` helpers — supports both IPv4 and IPv6 CIDR notation (e.g. `10.0.0.0/8`, `172.16.0.0/12`).
+  - Parsed proxy list is cached in `static ?array $trustedProxies` — resolved once per process lifecycle, zero re-parsing overhead in FrankenPHP worker mode.
+  - Added dev-mode warning log (`APP_ENV=development`) when proxy headers are present but `REMOTE_ADDR` is not a trusted proxy. The warning includes the exact `.env` fix needed (e.g. `TRUSTED_PROXIES=127.0.0.1,::1,10.0.0.5`), catching misconfiguration before it causes rate limiting to be shared across all users behind a proxy.
+  - **Upgrading from a previous version:** If `TRUSTED_PROXIES` is not defined in your `.env`, the framework defaults to `127.0.0.1,::1` (localhost) — no breaking change for standard setups. If your reverse proxy runs on a different IP (e.g. `10.0.0.1`), add it: `TRUSTED_PROXIES=127.0.0.1,10.0.0.1`.
+
+---
+
 ## v2.1.9 (2026-08-12)
 
 ### 🐛 SQLite, Multi-DB Generator & Setup Wizard Fixes
