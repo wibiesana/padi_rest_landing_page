@@ -9,9 +9,18 @@
   - Added `isProtectedTable()` check to `generateResource()` — now all three methods (`generateModel`, `generateController`, `generateResource`) consistently skip protected tables (`users`, `password_resets`, `migrations`) unless `--force` flag is passed.
   - Improved warning messages in `generateModel()` and `generateController()` to explicitly show which default file already exists (e.g. `app/Models/User.php`, `app/Controllers/UserController.php`).
 
-- **User model & Migrations: Standardize to Unix Integer Timestamps across all databases (`app/Models/User.php`, `001_create_users_table.php`)**:
+- **Generator: Foreign Key Relation Model Mapping for Core Tables (`Generator.php`)**:
+  - Previously, `tableNameToModelName('users')` produced `Users` (`\App\Models\Users`), causing runtime errors (`Class "App\Models\Users" not found`) when other tables with foreign keys to `users` (e.g. `teacher.user_id`, `created_by`) tried to eager load relations.
+  - Added special core table mapping (`$specialTableToModel = ['users' => 'User', 'password_resets' => 'PasswordReset']`) so relationships correctly reference `\App\Models\User::class` and `\App\Models\PasswordReset::class`.
+
+- **Eager Loading: Fix `Array to string conversion` in `loadRelations()` (`ActiveRecord.php`)**:
+  - Fixed an `Array to string conversion` error when calling `array_unique()` during relation eager loading if the local key is a composite array or if data contains nested arrays.
+  - Added scalar filtering (`is_scalar($id)`) and composite key guard before running `array_unique()` on related IDs.
+
+- **User & Auth Models, Controllers & Migrations: Standardize to Unix Integer Timestamps across all databases (`app/Models/User.php`, `001_create_users_table.php`, `002_create_password_resets_table.php`)**:
   - Standardized timestamp format to `'unix'` (Integer UTC epoch) across **SQLite**, **MySQL/MariaDB**, and **PostgreSQL**.
-  - Updated `001_create_users_table.php` migration so `created_at`, `updated_at`, `email_verified_at`, and `last_login_at` use `BIGINT` / `INTEGER` across all database drivers.
+  - Updated `001_create_users_table.php` (`created_at`, `updated_at`, `email_verified_at`, `last_login_at`) and `002_create_password_resets_table.php` (`created_at`, `expires_at`) migrations to use `BIGINT` / `INTEGER` across all database drivers.
+  - Updated `PasswordReset.php` and `PasswordResetController.php` to use `time()` for expiry calculations and token validation.
   - Ensures 100% database engine consistency, eliminates timezone drift, and optimizes storage and indexing performance without requiring driver branching.
 
 ### 🔒 Security & Performance Fixes
