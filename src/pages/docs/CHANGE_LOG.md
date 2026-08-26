@@ -1,5 +1,16 @@
 # CHANGE LOG
 
+## v2.1.11 (2026-08-26)
+
+### 🐛 PasswordReset Controller Static Method & Model Import Fixes
+
+- **PasswordResetController Model Method Calls & Imports (`PasswordResetController.php`)**:
+  - Fixed `Undefined method 'create'` and `Undefined method 'update'` static analysis issues in `PasswordResetController`.
+  - In `ActiveRecord`, `create()` and `update()` are static wrapper methods. Updated calls to use static invocations: `PasswordReset::create(...)` and `User::update(...)`.
+  - Added clean `use` import statements (`use App\Models\PasswordReset;`, `use App\Models\User;`, `use Wibiesana\Padi\Core\Env;`) at the top of `PasswordResetController` and removed verbose inline fully-qualified class names.
+
+---
+
 ## v2.1.10 (2026-08-25)
 
 ### 🐛 Generator Protected Table & User Model Timestamp Fix
