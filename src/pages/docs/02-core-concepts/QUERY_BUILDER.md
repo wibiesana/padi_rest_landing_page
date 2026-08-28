@@ -351,6 +351,73 @@ $result = Student::find()
     ->paginate(25, $page);
 ```
 
+### `OR LIKE` & `AND LIKE` Multi-Column Search Shorthand (v2.1.11)
+
+Search for a single keyword across multiple columns simultaneously without manually writing nested `OR` conditions:
+
+```php
+// Search keyword across name, email, and phone:
+$query->where(['OR LIKE', ['name', 'email', 'phone'], $search]);
+// SQL: WHERE (name LIKE '%search%' OR email LIKE '%search%' OR phone LIKE '%search%')
+
+// When combined with filterWhere(), automatically skips if $search is null or '':
+$query->andFilterWhere(['OR LIKE', ['title', 'content', 'author_name'], $keyword]);
+
+// Supports negation and AND grouping:
+$query->where(['AND LIKE', ['first_name', 'last_name'], 'john']);
+$query->where(['OR NOT LIKE', ['sku', 'barcode'], 'TMP-']);
+```
+
+### `whereNot()`, `andWhereNot()`, `orWhereNot()` & `['NOT', [...]]` (v2.1.11)
+
+Negate entire condition blocks or hash arrays with clean syntax:
+
+```php
+// Shorthand helpers:
+$query->whereNot(['status' => 'banned']);
+// SQL: WHERE NOT (status = 'banned')
+
+$query->where(['role' => 'editor'])
+      ->andWhereNot(['id' => [1, 2, 3]])
+      ->orWhereNot(['is_verified' => 1]);
+
+// Array syntax:
+$query->where(['NOT', ['status' => ['suspended', 'deleted']]]);
+// SQL: WHERE NOT (status IN ('suspended', 'deleted'))
+```
+
+### Row Locking: `forUpdate()` & `forShare()` (v2.1.11)
+
+Pessimistic concurrency control for critical transactions (e.g. e-commerce checkout, wallet balance, inventory deduction):
+
+```php
+use App\Models\Wallet;
+use Wibiesana\Padi\Core\Database;
+
+// Exclusive lock: prevents concurrent transactions from modifying or locking selected rows
+Database::transaction(function() use ($userId, $transferAmount) {
+    $wallet = Wallet::find()
+        ->where(['user_id' => $userId])
+        ->forUpdate()
+        ->one();
+
+    if ($wallet['balance'] < $transferAmount) {
+        throw new \Exception("Insufficient balance", 400);
+    }
+
+    Wallet::update($wallet['id'], [
+        'balance' => $wallet['balance'] - $transferAmount
+    ]);
+});
+// SQL: SELECT * FROM wallets WHERE user_id = ? FOR UPDATE
+
+// Shared lock: allows reads by others, but prevents writes/deletes
+$product = Product::find()->where(['id' => 5])->forShare()->one();
+
+// Custom lock clause:
+$orders = Order::find()->where(['status' => 'pending'])->lock('LOCK IN SHARE MODE')->all();
+```
+
 ### Table Joins (`leftJoin`, `rightJoin`, `innerJoin`, `join`)
 
 Connects external database tables using explicit JOIN clauses:

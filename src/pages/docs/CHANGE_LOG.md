@@ -57,7 +57,22 @@
         ->where(['class' => '10A'])
         ->andWhereExists($subquery)
         ->all();
-    ```
+- **`whereNot()` / `andWhereNot()` / `orWhereNot()` & `['NOT', [...]]` Operator (`Query.php`)**:
+  - Added dedicated helper methods for negating conditions and full support for `['NOT', [...]]` nested array conditions.
+  - Automatically wraps negated clauses: `->whereNot(['status' => 'banned'])` → `WHERE NOT (status = 'banned')`.
+  - Supports `filterWhere(['NOT', ...])` to skip null/empty values automatically without leaving empty `NOT ()` clauses.
+
+- **`OR LIKE` & `AND LIKE` Multi-Column Shorthand (`Query.php`)**:
+  - Added shorthand condition format `['OR LIKE', ['col1', 'col2', ...], $search]` to search across multiple columns simultaneously in a single expression.
+  - Generates parameterized grouped SQL: `(col1 LIKE :p_0 OR col2 LIKE :p_1)` with automatic `%` wildcard wrapping and PostgreSQL `ILIKE` conversion.
+  - Also supports `AND LIKE`, `OR NOT LIKE`, and `AND NOT LIKE`.
+  - Fully integrated with `filterWhere()` — if `$search` is `null` or `''`, the entire search clause is skipped automatically.
+
+- **Pessimistic Row Locking (`forUpdate()`, `forShare()`, `lock()`) (`Query.php`, `ModelQuery.php`)**:
+  - Added `forUpdate()` for exclusive locking (`SELECT ... FOR UPDATE`), essential for financial transactions, wallet balances, stock reservation, and preventing race conditions.
+  - Added `forShare()` for shared locks (`SELECT ... FOR SHARE`).
+  - Added `lock(string $clause)` for custom locking syntax (e.g., `LOCK IN SHARE MODE`, `FOR UPDATE NOWAIT`, `FOR UPDATE SKIP LOCKED`).
+  - `reset()` method clears lock state, ensuring safety when reusing query objects in FrankenPHP worker mode.
 
 ### 🐛 `SiteController` Version Default Inconsistency Fix (`SiteController.php`)
 
