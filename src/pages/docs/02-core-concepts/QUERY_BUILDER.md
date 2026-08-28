@@ -388,35 +388,60 @@ $query->where(['NOT', ['status' => ['suspended', 'deleted']]]);
 
 ### Row Locking: `forUpdate()` & `forShare()` (v2.1.11)
 
-Pessimistic concurrency control for critical transactions (e.g. e-commerce checkout, wallet balance, inventory deduction):
+**Pessimistic Concurrency Control** for critical transactions where concurrent access could cause **Race Conditions** (e.g. e-wallet balances, checkout inventory, flash sale ticket booking).
+
+#### 🛑 The Problem: Race Conditions without Locking
+
+Imagine two checkout requests hitting your API at the exact same millisecond when an item has **stock = 1**:
+
+1. **Request A** reads stock: `1` (Available ✅)
+2. **Request B** reads stock: `1` (Available ✅)
+3. **Request A** updates stock: `1 - 1 = 0`
+4. **Request B** updates stock: `1 - 1 = 0` (Oversold! ❌ 2 items sold with only 1 in stock)
+
+#### 🛡️ The Solution: `forUpdate()` within a Transaction
+
+When using `forUpdate()` inside a transaction, the database locks the selected rows until the current transaction commits or rolls back. Any other concurrent request trying to read or update the same row will wait in line:
 
 ```php
 use App\Models\Wallet;
 use Wibiesana\Padi\Core\Database;
 
-// Exclusive lock: prevents concurrent transactions from modifying or locking selected rows
+// Exclusive lock: prevents concurrent transactions from reading/modifying selected rows
 Database::transaction(function() use ($userId, $transferAmount) {
     $wallet = Wallet::find()
         ->where(['user_id' => $userId])
-        ->forUpdate()
+        ->forUpdate() // Appends: FOR UPDATE
         ->one();
 
     if ($wallet['balance'] < $transferAmount) {
         throw new \Exception("Insufficient balance", 400);
     }
 
+    // Safe from double spending:
     Wallet::update($wallet['id'], [
         'balance' => $wallet['balance'] - $transferAmount
     ]);
 });
-// SQL: SELECT * FROM wallets WHERE user_id = ? FOR UPDATE
+// Generated SQL: SELECT * FROM wallets WHERE user_id = ? FOR UPDATE
+```
 
-// Shared lock: allows reads by others, but prevents writes/deletes
+#### 🔍 `forUpdate()` vs `forShare()` Comparison
+
+| Method | SQL Clause | Lock Type | Behavior | Best Use Cases |
+| :--- | :--- | :--- | :--- | :--- |
+| **`forUpdate()`** | `FOR UPDATE` | **Exclusive Lock** | Blocks other transactions from modifying, deleting, or locking the rows until completed. | Balance deductions, inventory decrements, seat reservations. |
+| **`forShare()`** | `FOR SHARE` | **Shared Lock** | Allows other transactions to read, but prevents them from modifying or deleting the rows. | Validating a discount voucher during an order so admin cannot delete/change it mid-checkout. |
+| **`lock($clause)`** | Custom SQL | **Custom Lock** | Allows driver-specific clauses like `LOCK IN SHARE MODE`, `FOR UPDATE NOWAIT`, `FOR UPDATE SKIP LOCKED`. | High-throughput queues and custom DB engines. |
+
+```php
+// Shared lock example:
 $product = Product::find()->where(['id' => 5])->forShare()->one();
 
-// Custom lock clause:
-$orders = Order::find()->where(['status' => 'pending'])->lock('LOCK IN SHARE MODE')->all();
+// Custom lock clause (e.g. MySQL 5.7 / Postgres NOWAIT):
+$orders = Order::find()->where(['status' => 'pending'])->lock('FOR UPDATE NOWAIT')->all();
 ```
+
 
 ### Table Joins (`leftJoin`, `rightJoin`, `innerJoin`, `join`)
 
