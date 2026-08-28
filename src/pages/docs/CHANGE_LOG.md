@@ -9,6 +9,68 @@
   - In `ActiveRecord`, `create()` and `update()` are static wrapper methods. Updated calls to use static invocations: `PasswordReset::create(...)` and `User::update(...)`.
   - Added clean `use` import statements (`use App\Models\PasswordReset;`, `use App\Models\User;`, `use Wibiesana\Padi\Core\Env;`) at the top of `PasswordResetController` and removed verbose inline fully-qualified class names.
 
+### ✨ Query Builder: `filterWhere()` & `EXISTS` Support (`Query.php`, `ActiveRecord.php`)
+
+- **`filterWhere()` / `andFilterWhere()` / `orFilterWhere()` — Skip null/empty conditions automatically (`Query.php`)**:
+  - Added three new methods that behave exactly like `where()` / `andWhere()` / `orWhere()` but **silently skip** any condition where the value is `null`, `''` (empty string), or `[]` (empty array).
+  - Eliminates repetitive `if ($value) ->andWhere(...)` guards in controller index actions — especially useful for REST API search/filter endpoints where query parameters are optional.
+  - Supports all three condition formats: **hash** (`['col' => $val]`), **operator** (`['col', 'LIKE', $val]`), and **AND/OR groups** (recursively filtered, with automatic unwrapping of single-condition groups).
+  - Private `filterCondition()` helper handles all format detection and recursive pruning internally.
+  - `ActiveRecord` also gains a `filterWhere(array $conditions, array $columns)` **instance method** that delegates to `find()->filterWhere()` for a consistent instance-level API alongside the existing `where()`.
+  - Example:
+    ```php
+    // Before: manual null-guards
+    $query = Model::find();
+    if ($search) $query->andWhere(['name', 'LIKE', $search]);
+    if ($status) $query->andWhere(['status' => $status]);
+
+    // After: declarative, no boilerplate
+    Model::find()
+        ->andFilterWhere(['name', 'LIKE', $search])
+        ->andFilterWhere(['status' => $status])
+        ->paginate($perPage, $page);
+    ```
+
+- **`whereExists()` / `whereNotExists()` / `andWhereExists()` / `andWhereNotExists()` / `orWhereExists()` / `orWhereNotExists()` — Subquery existence checks (`Query.php`)**:
+  - Added six new methods for `EXISTS` / `NOT EXISTS` subquery conditions, covering the full `where` / `andWhere` / `orWhere` matrix.
+  - Subquery is **automatically rewritten to `SELECT 1`** for maximum efficiency — the database stops at the first matching row.
+  - Subquery parameters are **merged into the main query** with a unique `_ex{n}` suffix on all placeholder names, preventing collisions.
+  - More efficient than `WHERE id IN (SELECT ...)` for large datasets because `EXISTS` short-circuits on first match.
+  - Since `ModelQuery extends Query`, all six methods are **automatically available** on `Model::find()` chains.
+  - Example:
+    ```php
+    // Students who have at least one violation:
+    Student::find()
+        ->whereExists(
+            (new Query())->from('violations')->where('violations.student_id = students.id')
+        )->all();
+    // → WHERE EXISTS (SELECT 1 FROM violations WHERE violations.student_id = students.id)
+
+    // Students with NO violations:
+    Student::find()
+        ->whereNotExists(
+            (new Query())->from('violations')->where('violations.student_id = students.id')
+        )->paginate(25, $page);
+
+    // Combined with other conditions:
+    Student::find()
+        ->where(['class' => '10A'])
+        ->andWhereExists($subquery)
+        ->all();
+    ```
+
+### 🐛 `SiteController` Version Default Inconsistency Fix (`SiteController.php`)
+
+- **`health()` and `info()` endpoints returned different default version strings**:
+  - `health()` defaulted to `'2.1.10'` while `info()` defaulted to `'2.0.0'`.
+  - Standardized both endpoints to use `Env::get('APP_VERSION', '2.1.10')` consistently.
+
+### 🔧 `sync-version.cjs` — Global Regex for `SiteController` Version Sync
+
+- **`sync-version.cjs` only replaced the first `version` occurrence in `SiteController.php`**:
+  - The regex for `SiteController.php` lacked the `/g` flag, so only the `health()` version was updated; `info()` was silently skipped.
+  - Added `/g` flag to replace **all occurrences** in a single pass, keeping both endpoints in sync with the `VERSION` file.
+
 ---
 
 ## v2.1.10 (2026-08-25)

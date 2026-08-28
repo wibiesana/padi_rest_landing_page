@@ -21,6 +21,7 @@ The `ActiveRecord` class is the **Industrial-Grade Backbone** of the Padi REST A
 - [🪝 Lifecycle Hooks (Yii Style)](#lifecycle-hooks)
 - [🌐 Database Connection Switching](#database-connection-switching)
 - [🚀 Worker Mode & Shared Hosting (v2.0.3)](#worker-mode-shared-hosting-v203)
+- [🔎 Smart Filter Queries (`filterWhere`)](#smart-filter-queries-filterwhere)
 
 ---
 
@@ -242,7 +243,98 @@ $activeProducts = Product::findAll(['status' => 'active']);
 $searchResults = Product::search($keyword)->paginate(1, 25);
 ```
 
+---
 
+## 🔎 Smart Filter Queries (`filterWhere`)
+
+The `filterWhere()` / `andFilterWhere()` / `orFilterWhere()` methods behave exactly like their `where()` counterparts but **automatically skip any condition where the value is `null`, `''` (empty string), or `[]` (empty array)**.
+
+This is the recommended pattern for building REST API search/filter endpoints where query parameters are optional — it eliminates verbose `if` guards and keeps your controller clean.
+
+### ❌ Without `filterWhere` (Verbose)
+
+```php
+public function index()
+{
+    $page    = (int)$this->request->query('page', 1);
+    $perPage = (int)$this->request->query('per_page', 25);
+    $search  = $this->request->query('search');       // may be null
+    $status  = $this->request->query('status');       // may be null
+    $typeId  = $this->request->query('type_id');      // may be null
+
+    $query = Violation::find()->with('student', 'violationType');
+
+    // Manual null-guards — repetitive and easy to forget
+    if ($search)  $query->andWhere(['note', 'LIKE', $search]);
+    if ($status)  $query->andWhere(['status' => $status]);
+    if ($typeId)  $query->andWhere(['violation_type_id' => $typeId]);
+
+    return $query->paginate($perPage, $page);
+}
+```
+
+### ✅ With `filterWhere` (Clean & Declarative)
+
+```php
+public function index()
+{
+    $page    = (int)$this->request->query('page', 1);
+    $perPage = (int)$this->request->query('per_page', 25);
+    $search  = $this->request->query('search');
+    $status  = $this->request->query('status');
+    $typeId  = $this->request->query('type_id');
+
+    return Violation::find()
+        ->with('student', 'violationType')
+        ->andFilterWhere(['note', 'LIKE', $search])          // skipped if null/''
+        ->andFilterWhere(['status' => $status])              // skipped if null/''
+        ->andFilterWhere(['violation_type_id' => $typeId])   // skipped if null/''
+        ->paginate($perPage, $page);
+}
+```
+
+### Supported Condition Formats
+
+```php
+// 1. Hash format — drops any key whose value is null/''/[]
+Model::find()->filterWhere([
+    'status'  => $status,   // skipped if null
+    'type_id' => $typeId,   // skipped if null
+]);
+
+// 2. Operator format — skipped entirely if value is null/''/[]
+Model::find()->andFilterWhere(['name', 'LIKE', $search]);
+Model::find()->andFilterWhere(['category_id', 'IN', $categoryIds]); // skipped if []
+
+// 3. AND/OR group — sub-conditions pruned recursively
+Model::find()->filterWhere(['OR',
+    ['name', 'LIKE', $search],   // removed if null
+    ['code', 'LIKE', $search],   // removed if null
+]); // entire OR group removed if both are null
+```
+
+### Instance Method (Same API as `where()`)
+
+```php
+// Instance usage mirrors the existing where() API:
+$model = new Violation();
+$results = $model->filterWhere([
+    'status'             => $status,
+    'violation_type_id'  => $typeId,
+]);
+// → equivalent to all() if both values are null
+```
+
+> [!TIP]
+> Combine `filterWhere()` with `search()` for a complete search + filter endpoint:
+> ```php
+> $query = $keyword
+>     ? Violation::search($keyword)->andFilterWhere(['status' => $status])
+>     : Violation::find()->filterWhere(['status' => $status]);
+> return $query->paginate($perPage, $page);
+> ```
+
+---
 
 > [!NOTE]
 > ### 💡 Using `findOrFail($id)`
@@ -798,6 +890,7 @@ Product::upsert(['sku' => 'PRD-001', 'name' => 'Coffee', 'price' => 14.50]);
 1. **Use Fluent ModelQuery**: For complex chaining, use static `Model::find()` which returns a `ModelQuery` builder instance bridging raw SQL queries with ActiveRecord models.
 2. **Use findOrFail()**: In controllers, prefer `findOrFail()` over `find()` + manual null check for cleaner code.
 3. **Hide Sensitive Data**: Always add `password`, `token`, etc. to the `$hidden` array.
+4. **Use filterWhere() for Search Endpoints**: Replace manual `if ($value) ->andWhere(...)` chains with `->andFilterWhere()` for cleaner, declarative filter logic in index/search controllers.
 4. **Reference in beforeSave**: The `$data` parameter is passed by reference (`&$data`). Use it to modify values before they hit the database.
 5. **Fail Fast**: Return `false` in `beforeDelete` if a record has active dependencies to maintain data integrity.
 6. **Use upsert() for sync**: When importing or syncing data, prefer `upsert()` over separate find-then-update logic.

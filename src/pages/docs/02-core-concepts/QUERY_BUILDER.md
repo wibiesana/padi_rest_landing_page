@@ -15,6 +15,8 @@ The `Wibiesana\Padi\Core\Query` class is an **Industrial-Grade Data Engine** des
 - [💡 Real-World Examples](#real-world-examples)
 - [🔒 Security](#security)
 - [🌐 Worker Mode Notes (v2.0.3)](#worker-mode-notes-v203)
+- [🔎 Smart Filtering (`filterWhere`)](#smart-filtering-filterwhere)
+- [🔍 Subquery Existence (`whereExists`)](#subquery-existence-whereexists)
 
 ---
 
@@ -249,6 +251,106 @@ $query = Query::find()
     ->whereRaw('DATEDIFF(NOW(), created_at) <= :days', [':days' => 30]);
 ```
 
+### `filterWhere()`, `andFilterWhere()`, `orFilterWhere()` (v2.1.11)
+
+Same as `where()` / `andWhere()` / `orWhere()` but **automatically skip conditions where value is `null`, `''`, or `[]`**.
+
+The ideal pattern for optional REST API filter parameters — no more manual `if ($value)` guards.
+
+```php
+// ❌ Before: verbose manual null-checks
+$query = Query::find()->from('violations');
+if ($search) $query->andWhere(['note', 'LIKE', $search]);
+if ($status) $query->andWhere(['status' => $status]);
+if ($typeId) $query->andWhere(['violation_type_id' => $typeId]);
+
+// ✅ After: declarative, all in one chain
+$result = Query::find()
+    ->from('violations')
+    ->andFilterWhere(['note', 'LIKE', $search])          // skipped if null/''
+    ->andFilterWhere(['status' => $status])              // skipped if null/''
+    ->andFilterWhere(['violation_type_id' => $typeId])   // skipped if null/''
+    ->paginate($perPage, $page);
+```
+
+**Supported condition formats:**
+
+```php
+// Hash format — per-key filtering
+->filterWhere(['status' => $status, 'type_id' => $typeId]);
+// → builds WHERE only for non-null/non-empty values
+
+// Operator format — entire condition skipped if value is empty
+->andFilterWhere(['name', 'LIKE', $search]);
+->andFilterWhere(['ids', 'IN', $idList]);  // skipped if $idList = []
+
+// OR group — sub-conditions pruned recursively; entire group removed if all empty
+->filterWhere(['OR',
+    ['name', 'LIKE', $keyword],
+    ['code', 'LIKE', $keyword],
+]);
+```
+
+### `whereExists($subquery)` and `whereNotExists($subquery)` (v2.1.11)
+
+Checks whether a subquery returns any rows. More efficient than `WHERE id IN (SELECT ...)` for large datasets because the database **stops at the first matching row**.
+
+Available in 6 variants: `whereExists`, `whereNotExists`, `andWhereExists`, `andWhereNotExists`, `orWhereExists`, `orWhereNotExists`.
+
+```php
+use Wibiesana\Padi\Core\Query;
+
+// Students who have at least one violation:
+$students = Query::find()
+    ->from('students')
+    ->whereExists(
+        (new Query())->from('violations')->where('violations.student_id = students.id')
+    )
+    ->all();
+// SQL: SELECT * FROM students
+//      WHERE EXISTS (SELECT 1 FROM violations WHERE violations.student_id = students.id)
+
+// Students with NO violations:
+$cleanStudents = Query::find()
+    ->from('students')
+    ->whereNotExists(
+        (new Query())->from('violations')->where('violations.student_id = students.id')
+    )
+    ->paginate(25, $page);
+// SQL: WHERE NOT EXISTS (SELECT 1 FROM violations WHERE ...)
+
+// Combine with other conditions:
+$result = Query::find()
+    ->from('students')
+    ->where(['class' => '10A'])
+    ->andWhereExists(
+        (new Query())->from('violations')
+                     ->where('violations.student_id = students.id')
+                     ->andWhere(['violations.type_id' => 1])
+    )
+    ->orderBy('name ASC')
+    ->all();
+// SQL: WHERE class = '10A'
+//      AND EXISTS (SELECT 1 FROM violations WHERE student_id = students.id AND type_id = 1)
+```
+
+> [!TIP]
+> **`EXISTS` vs `IN`**: Use `EXISTS` when checking relationship existence (e.g. "has at least one order"). Use `IN` when you need to match against a small fixed list of values.
+
+**When used via `Model::find()`**, all 6 EXISTS methods are inherited automatically:
+
+```php
+use App\Models\Student;
+
+// Via ModelQuery — with eager loading, pagination, hidden fields, afterLoad hooks:
+$result = Student::find()
+    ->with('class', 'violations')
+    ->whereExists(
+        (new Query())->from('violations')->where('violations.student_id = students.id')
+    )
+    ->paginate(25, $page);
+```
+
 ### Table Joins (`leftJoin`, `rightJoin`, `innerJoin`, `join`)
 
 Connects external database tables using explicit JOIN clauses:
@@ -443,6 +545,62 @@ if ($exists) {
 $total = Post::find()
     ->where(['category_id' => 5])
     ->count();
+```
+
+### REST API Search + Filter Endpoint (Recommended Pattern)
+
+Combining `filterWhere()` with `search()` for a fully-featured `GET /resources?search=&status=&type=` endpoint:
+
+```php
+public function index()
+{
+    $page    = (int)$this->request->query('page', 1);
+    $perPage = (int)$this->request->query('per_page', 25);
+    $keyword = $this->request->query('search');     // null if not sent
+    $status  = $this->request->query('status');     // null if not sent
+    $typeId  = $this->request->query('type_id');    // null if not sent
+
+    // Branch: full-text search OR standard query
+    $query = $keyword
+        ? Violation::search($keyword)    // searches across all fillable columns
+        : Violation::find();
+
+    return $query
+        ->with('student', 'violationType', 'createdBy')
+        ->andFilterWhere(['status' => $status])             // skipped if null
+        ->andFilterWhere(['violation_type_id' => $typeId])  // skipped if null
+        ->paginate($perPage, $page);
+    // If nothing is filtered → returns all with pagination
+    // If only status=1 → WHERE status = 1
+    // If search + type → WHERE (OR LIKE on all fillable) AND type_id = ?
+}
+```
+
+### Report: Records With Related Rows (`whereExists`)
+
+```php
+// Show only products that have at least one active order:
+$products = Query::find()
+    ->from('products')
+    ->select(['products.*'])
+    ->whereExists(
+        (new Query())
+            ->from('order_items')
+            ->leftJoin('orders', 'orders.id = order_items.order_id')
+            ->where('order_items.product_id = products.id')
+            ->andWhere(['orders.status' => 'completed'])
+    )
+    ->orderBy('products.name ASC')
+    ->all();
+// SQL:
+// SELECT products.* FROM products
+// WHERE EXISTS (
+//   SELECT 1 FROM order_items
+//   LEFT JOIN orders ON orders.id = order_items.order_id
+//   WHERE order_items.product_id = products.id
+//     AND orders.status = 'completed'
+// )
+// ORDER BY products.name ASC
 ```
 
 ---
