@@ -1,5 +1,17 @@
 # CHANGE LOG
 
+## v2.1.12 (2026-09-19)
+
+### 🐛 CORS Wildcard `*` Support & Router Property Typing (`Application.php`)
+
+- **Explicit Wildcard (`*`) Support in `CORS_ALLOWED_ORIGINS`**:
+  - Previously, setting `CORS_ALLOWED_ORIGINS=*` in `.env` resulted in client connection errors because the origin was strictly matched against literal entries in `$allowedOrigins` via `in_array()`, and direct `Access-Control-Allow-Origin: *` conflicts with `Access-Control-Allow-Credentials: true`.
+  - Added detection for `*` in `CORS_ALLOWED_ORIGINS` via a dedicated `$allowAllOrigins` flag.
+  - When wildcard mode is active, the incoming request's `Origin` is dynamically reflected back in the `Access-Control-Allow-Origin` header alongside `Access-Control-Allow-Credentials: true` and `Vary: Origin`, allowing clients from any origin to connect properly while preserving credential/cookie support.
+
+- **Strict Type Hinting for Application Router Property**:
+  - Added type declaration `private ?Router $router = null;` to `Application.php` to resolve missing type information static analysis warnings.
+
 ## v2.1.11 (2026-08-26)
 
 ### 🐛 PasswordReset Controller Static Method & Model Import Fixes
