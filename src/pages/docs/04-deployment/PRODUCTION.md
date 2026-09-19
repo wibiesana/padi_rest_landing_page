@@ -53,11 +53,12 @@ Before going live, ensure every item on this list is completed:
 - [ ] Automated daily database backups configured and tested
 - [ ] Database indexes added to frequently queried columns
 
-### 4. Performance & Optimization
+### 4. Performance & Optimization (Mandatory for Production)
 
-- [ ] `composer install --no-dev --optimize-autoloader`
-- [ ] PHP OPcache enabled and configured
-- [ ] Redis configured for caching (if using high traffic)
+- [ ] `composer install --no-dev -o --classmap-authoritative` (Instant $O(1)$ class lookup)
+- [ ] PHP OPcache enabled with production flags (`validate_timestamps=0`, JIT tracing)
+- [ ] FrankenPHP Worker mode or PHP-FPM configured with proper process limits
+- [ ] Redis configured for caching and rate limiting (recommended for high traffic / multi-instance clusters)
 - [ ] Response compression (`ENABLE_COMPRESSION=true`) enabled
 
 ---
@@ -275,22 +276,69 @@ error_log = /var/www/api/storage/logs/php_error.log
 
 ---
 
-## Performance Optimization
+## Performance Optimization (Mandatory for Production)
 
-### PHP OPcache
+To achieve maximum throughput and sub-millisecond response latency in production, all of the following optimizations should be enabled:
 
-Crucial for production speed. In `php.ini`:
+### 1. Composer Autoload Optimization
 
-```ini
-opcache.enable=1
-opcache.memory_consumption=128
-opcache.max_accelerated_files=10000
-opcache.revalidate_freq=60
+Never use the development autoloader in a live production environment. Generate an authoritative classmap that maps all classes directly into memory:
+
+```bash
+composer install --no-dev --optimize-autoloader --classmap-authoritative
+# or if dependencies are already installed:
+composer dump-autoload -o --no-dev --classmap-authoritative
 ```
 
-### Response Compression
+> **Benefit:** Eliminates all filesystem I/O checks when loading PHP classes (`$O(1)$` instant lookup via `autoload_static.php`).
 
-Enable Gzip compression in your `.env`:
+---
+
+### 2. PHP OPcache & JIT (PHP 8.2+)
+
+OPcache stores precompiled script bytecode in shared memory, eliminating the overhead of loading and parsing PHP scripts on each request.
+
+Add the following configuration to your production PHP configuration file (`php.ini` or `/etc/php/8.x/fpm/conf.d/10-opcache.ini`):
+
+```ini
+; Core OPcache
+opcache.enable=1
+opcache.enable_cli=0
+opcache.memory_consumption=256
+opcache.interned_strings_buffer=16
+opcache.max_accelerated_files=20000
+
+; Production Locking: Disable file timestamp checks to avoid disk I/O
+opcache.validate_timestamps=0
+
+; JIT (Just-In-Time) Compiler for maximum throughput
+opcache.jit_buffer_size=128M
+opcache.jit=tracing
+```
+
+> ⚠️ **Important:** Because `opcache.validate_timestamps=0` disables file change detection on disk, you **must reload/restart the server or worker process** after every new code deployment (e.g., `systemctl reload php8.4-fpm` or restarting your FrankenPHP container).
+
+---
+
+### 3. In-Memory Cache & Rate Limiting (Redis)
+
+By default, Padi Framework uses disk storage (`storage/cache/`) for file caching and rate limiting. For high concurrency or multi-instance deployments:
+- Use **Redis** to eliminate disk I/O bottlenecks.
+- Ensures rate limiters and cached data are synchronized in real-time across workers and distributed instances.
+
+Enable the Redis driver in `.env`:
+```env
+CACHE_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+REDIS_PASSWORD=null
+```
+
+---
+
+### 4. Response Compression
+
+Enable Gzip compression to reduce JSON API response payloads by up to 70–80%, saving network bandwidth and accelerating client download times:
 
 ```env
 ENABLE_COMPRESSION=true
