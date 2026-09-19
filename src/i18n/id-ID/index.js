@@ -41,7 +41,7 @@ export default {
       },
       i: {
         t: 'Intuitif (Intuitive)',
-        d: 'Desain API bergaya Yii2 yang bersih dan fasih yang terasa familier sekaligus menyegarkan.'
+        d: 'Desain API yang bersih dan fasih yang terasa familier sekaligus menyegarkan.'
       }
     }
   },
