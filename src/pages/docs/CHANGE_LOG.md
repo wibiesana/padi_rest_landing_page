@@ -2,6 +2,18 @@
 
 ## v2.1.13 (2026-10-17)
 
+### 🔒 Enhanced Sensitive Field Masking & Single-Record Support (`ActiveRecord.php`)
+
+- **Adaptive Single & Multi-Record `hideFields()` (`ActiveRecord.php`)**:
+  - Previously, `hideFields(array $data)` executed `array_map()` assuming `$data` was always a 2D list of rows (`[0 => [...], 1 => [...]]`). Passing a single associative record (e.g., `$user = ['id' => 1, ...]`) passed scalar values to the callback, failing to strip sensitive keys and risking offset errors.
+  - Enhanced `hideFields()` with automatic structure detection using `!array_is_list($data) || !is_array(reset($data))`. It now seamlessly handles both single records (associative arrays) and collections of records.
+  - Added public getter `getHidden(): array` to allow programmatic inspection of a model's hidden attribute list.
+
+- **Automated Sensitive Token Hiding (`Generator.php`, `User.php`, `AuthController.php`)**:
+  - **Generator Pattern Matching (`Generator.php`)**: Updated sensitive column detection from strict equality to substring matching (`str_contains`). Columns such as `remember_token`, `access_token`, `refresh_token`, `api_token`, and `secret_key` are now automatically appended to `$hidden` when generating models.
+  - **User Model Security (`User.php`)**: Added `'remember_token'` to `$hidden` alongside `'password'` so token credentials are automatically stripped from all query results, active record serialization, and API outputs.
+  - **Auth Response Hardening (`AuthController.php`)**: Filtered user payloads across `login()`, `register()`, and `refresh()` with `hideFields()`, preventing `remember_token` and `password` from ever leaking inside the `user` object. The `remember_token` remains accessible strictly at `item.remember_token` when requested via `remember_me`.
+
 ### 💎 Clean API Resource Generation & Removal of Flattened Fields (`Generator.php`)
 
 - **Generator: Clean API Resource Template (`Generator.php`)**:
