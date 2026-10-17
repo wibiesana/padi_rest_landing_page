@@ -1,5 +1,14 @@
 # CHANGE LOG
 
+## v2.1.13 (2026-10-17)
+
+### 💎 Clean API Resource Generation & Removal of Flattened Fields (`Generator.php`)
+
+- **Generator: Clean API Resource Template (`Generator.php`)**:
+  - **Removed Artificial Flattened Fields**: Removed the generation of flattened relation fields (`'{$method}_name' => $this->{$method}['{$displayCol}'] ?? null`). Previously, accessing un-eager-loaded relations via array access could introduce unintended null values or clutter API responses with redundant keys.
+  - **Standardized Relation Inlining**: Foreign key relationships are now strictly represented through `$this->whenLoaded('{$method}')`, adhering to modern REST API standards where related resources are conditionally included only when explicitly eager-loaded.
+  - **Conditional Relation Comments**: Added `if (!empty($relations))` check so that models without foreign keys no longer output redundant `// Relations` comment blocks and superfluous newlines.
+
 ## v2.1.12 (2026-09-19)
 
 ### 🐛 CORS Wildcard `*` Support & Router Property Typing (`Application.php`)
