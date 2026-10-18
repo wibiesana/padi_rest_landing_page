@@ -159,29 +159,38 @@ try {
 
 ```json
 {
-  "success": false,
-  "message": "Failed to create user",
-  "message_code": "DATABASE_ERROR",
-  "database_error": {
-    "type": "query_error",
-    "message": "Duplicate entry 'john@example.com' for key 'users_email_unique'",
-    "code": 1062,
-    "file": "/app/core/ActiveRecord.php",
-    "line": 295,
-    "query": "INSERT INTO users (username, email, password) VALUES (:username, :email, :password)",
-    "params": {
-      "username": "john",
-      "email": "john@example.com",
-      "password": "***REDACTED***"
-    }
+  "success": true,
+  "message": "Success",
+  "message_code": "SUCCESS",
+  "item": { ... },
+  "debug": {
+    "env": "development",
+    "execution_time": "18.61ms",
+    "memory_usage": "1.9MB",
+    "queries_count": 2,
+    "queries": [
+      {
+        "sql": "SELECT COUNT(*) AS aggregate FROM works",
+        "bindings": [],
+        "duration": "1.81ms",
+        "duration_ms": 1.81
+      },
+      {
+        "sql": "SELECT * FROM works ORDER BY id DESC LIMIT 25 OFFSET 0",
+        "bindings": [],
+        "duration": "1.99ms",
+        "duration_ms": 1.99
+      }
+    ],
+    "timestamp": "2026-10-18T21:58:53.923+07:00"
   }
 }
 ```
 
-### New Environment Variables
+### Environment Variables
 
+- `DEBUG_SHOW_QUERIES=true` - Show raw SQL queries in the debug metadata (default: `true` in development).
 - `DEBUG_SHOW_ALL_DB_ERRORS=true` - Display all database errors in the response.
-- `DEBUG_SHOW_QUERIES=true` - Show raw SQL queries in the debug metadata.
 
 ---
 

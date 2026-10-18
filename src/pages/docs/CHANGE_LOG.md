@@ -1,5 +1,33 @@
 # CHANGE LOG
 
+## v2.1.14 (2026-10-18)
+
+### 🚀 Standardized Telemetry & Query Debug Profiling (`Response.php`, `Database.php`)
+
+- **Cross-Framework Unified Debug Envelope (`Response.php`)**:
+  - Aligned PHP's API `debug` metadata block with the Padi Go and Rust frameworks.
+  - Added `'env'` key (`development` / `production`) reflecting active environment mode.
+  - Added `'queries_count'` (pluralized) alongside existing `'query_count'` for complete backward compatibility.
+  - Added `'timestamp'` in extended ISO 8601 / RFC 3339 format (e.g. `2026-10-18T21:46:41.514758+07:00`).
+  - Switched `DEBUG_SHOW_QUERIES` fallback from `'false'` to `'true'` in development mode (`APP_DEBUG=true` and `APP_ENV=development`), so detailed query telemetry is automatically available during local development without requiring explicit `.env` configuration.
+
+- **Structured Query Telemetry Schema (`Database.php`, `Response.php`)**:
+  - Standardized the query object payload within `debug.queries` to match the tri-framework convention:
+    - `sql`: The prepared SQL query statement string.
+    - `bindings`: Sanitized parameter array with sensitive keys (e.g., `password`, `token`, `secret`, `api_key`, `auth`) automatically masked as `***REDACTED***`.
+    - `duration`: Formatted execution latency (e.g., `"1.81ms"`).
+    - `duration_ms`: Floating-point execution latency in milliseconds (e.g., `1.81`).
+  - Retained internal backward-compatible fields (`query`, `params`, `time`).
+
+### ⚡ Real-Time Query Execution Profiling (`Query.php`, `ActiveRecord.php`)
+
+- **Microsecond Execution Duration Measurement (`Query.php`)**:
+  - Enhanced `bindAndExecute()` to capture high-precision execution time using `microtime(true)` and return the execution duration in milliseconds (`float`).
+  - Updated all query execution methods in `Query.php` (`all()`, `one()`, `scalar()`, `column()`, `insert()`, `update()`, and `delete()`) to forward the real execution duration directly to `Database::logQuery($sql, $params, $duration)`.
+
+- **ActiveRecord ORM Query Profiling Integration (`ActiveRecord.php`)**:
+  - Added real-time timing to ActiveRecord operations and pagination queries (`SELECT COUNT(*)` and paginated `SELECT * LIMIT ... OFFSET ...`), ensuring accurate query execution telemetry for all ORM-driven requests.
+
 ## v2.1.13 (2026-10-17)
 
 ### 🔒 Enhanced Sensitive Field Masking & Single-Record Support (`ActiveRecord.php`)

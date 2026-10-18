@@ -208,7 +208,7 @@ Here is the complete reference table for all available environment variables in 
 | `APP_URL` | _(auto)_ | Explicit base URL. Leave empty to auto-detect from requests. |
 | `RESPONSE_FORMAT` | `full` | Format style: `full` (standard), `simple` (flat), or `raw`. |
 | `ENABLE_COMPRESSION` | `true` | Enable gzip compression on HTTP responses. |
-| `DEBUG_SHOW_QUERIES` | `true` | Appends SQL execution queries list in API response payload. |
+| `DEBUG_SHOW_QUERIES` | `true` | Appends SQL execution queries list in API response debug payload (default: `true` in development). |
 | `DEBUG_SHOW_ALL_DB_ERRORS` | `false` | Expose raw database connection errors in response. |
 
 ### 2. Database Connections
