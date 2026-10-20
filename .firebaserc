@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "padi-rest-landing",
+    "default": "padisoftware-e1f85",
     "prod": "padisoftware-e1f85"
   },
   "targets": {},
