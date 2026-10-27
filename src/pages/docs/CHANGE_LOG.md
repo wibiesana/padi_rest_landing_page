@@ -1,5 +1,18 @@
 # CHANGE LOG
 
+## v2.1.15 (2026-10-27)
+
+### 🐛 Robust Input & Cache Stream Handling for Modern SAPI & Worker Runtimes (`Request.php`, `Cache.php`)
+
+- **JSON Payload Stream Validation & Type Safety (`Request.php`)**:
+  - Fixed a critical `TypeError` (`json_decode(): Argument #1 ($json) must be of type string, false given`) occurring when reading `php://input` on application servers with aggressive stream isolation or connection drop handling (e.g., FrankenPHP v1.13.2+ / v1.13.4 under HTTPS).
+  - In earlier versions, `if ($this->rawInput !== '')` allowed boolean `false` (returned by `file_get_contents('php://input')` on empty payload, stream EOF, or interrupted client connection) to pass through to `json_decode()`, triggering an uncaught 500 `TypeError` in PHP 8+.
+  - Added strict validation `($raw !== false && $raw !== '') ? $raw : null` ensuring `json_decode()` is only executed against valid string content, falling back to an empty request body gracefully.
+
+- **Redis Miss Detection & Atomic File Stream Decoding (`Cache.php`)**:
+  - **Redis Driver Miss Handling (`Cache.php`)**: Fixed a `TypeError` in `Cache::get()` when using `ext-redis` (`phpredis`). In `phpredis`, cache misses return boolean `false` rather than `null`. Updated the miss condition to `if ($raw === null || $raw === false)` so non-existent cache keys (such as new IP hits in `RateLimitMiddleware` during login) return cleanly instead of forwarding `false` into `json_decode()`.
+  - **Atomic File Stream Decoding (`Cache.php`)**: Hardened `stream_get_contents($fp)` decoding in file-based cache atomic mutations (`increment()` / `decrement()`) with `($raw !== false && $raw !== '')` check to prevent passing boolean `false` to `json_decode()`.
+
 ## v2.1.14 (2026-10-18)
 
 ### 🚀 Standardized Telemetry & Query Debug Profiling (`Response.php`, `Database.php`)
