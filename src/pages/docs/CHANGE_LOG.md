@@ -1,5 +1,45 @@
 # CHANGE LOG
 
+## v2.1.16 (2026-11-27)
+
+### 🐘 PHP 8.5 / 8.6 Compatibility & Strict Type Safety (`File.php`, `Realtime.php`, `Database.php`, `DatabaseManager.php`, `Env.php`, `Console.php`, `SetupWizard.php`, `Generator.php`, `Router.php`)
+
+- **Deprecated Resource-Closing Calls Removed (`File.php`, `Realtime.php`)**:
+  - Removed deprecated `finfo_close($finfo)` in `File::upload()` and `curl_close($ch)` in `Realtime::curlPost()` (both deprecated in PHP 8.5; `\finfo` and `\CurlHandle` objects are freed automatically since PHP 8.0+).
+  - Added strict `finfo_open()` and `is_string($mimeType)` guards in `File::upload()`, and handled empty file extensions cleanly without trailing dots.
+  - Added `declare(strict_types=1);` to `Realtime.php`.
+- **Throwable & Strict-Type Hardening (`Database.php`, `DatabaseManager.php`, `Env.php`, `Console.php`, `SetupWizard.php`, `Generator.php`, `Router.php`)**:
+  - Updated `Database::logQueryError()` and `DatabaseManager::logError()` to accept `\Throwable` instead of `\Exception`, preventing `TypeError` when handling `\Error` instances.
+  - Guarded `file()` returning `false` in `Env::load()`, `getcwd()` returning `false` in `Console` and `SetupWizard`, and empty table names in `Generator`.
+  - Added explicit parameter type hints (`\PDO $db`, `snakeToCamel(string $string): string` in `Generator`, and `callable|string $handler`, `string|callable|array $middleware`, `mixed $data` in `Router`).
+
+### 🔒 Core Security Hardening (`File.php`, `Realtime.php`, `Response.php`, `Application.php`, `Router.php`, `Controller.php`, `Request.php`, `Console.php`, `Query.php`, `ActiveRecord.php`)
+
+- **Path Traversal & Command Injection Fixes (`File.php`, `Console.php`)**:
+  - Fixed sibling-directory prefix bypass in `File::delete()` by checking `$uploadsReal . DIRECTORY_SEPARATOR`.
+  - Validated `$host` and `$port` (`1..65535`) and wrapped shell arguments with `escapeshellarg()` in `Console::serve()` and `Console::serveFrankenphp()`.
+- **Header, Redirect & CORS Injection Protection (`Response.php`, `Application.php`)**:
+  - Stripped `\r`, `\n`, and `\0` in `Response::header()` and rejected CRLF in `Application::handleCors()`.
+  - Hardened `Response::redirect()` to reject CRLF, protocol-relative URLs (`//...`), and non-`http(s)` schemes.
+  - Updated `Response::download()` to check `is_file()` and `is_readable()`.
+- **Production Secret & Error Disclosure Protection (`Realtime.php`, `Router.php`)**:
+  - Removed silent default Mercure secret fallback in production (`Realtime.php`); fallback is now restricted to `APP_ENV=development`.
+  - Redacted internal `PDOException` and 5xx exception messages in `Router::handleException()` when `APP_DEBUG` is disabled.
+- **SQL Identifier, Operator & CIDR Validation (`Query.php`, `ActiveRecord.php`, `Controller.php`, `Request.php`)**:
+  - Validated column identifiers across `ActiveRecord` (`insertRecord`, `updateRecord`, `batchInsert`, `updateAll`, `upsert`, `loadRelations`) and `Query` (`insert`, `update`), and sanitized `sort_by` in `Controller::query()`.
+  - Whitelisted `Query::lock()` clauses and 3-element `Query::parseCondition()` operators, and safely handled empty `IN` (`1 = 0`) / `NOT IN` (`1 = 1`) arrays.
+  - Fixed dotted column parameter names in `ActiveRecord::where()`, `updateAll()`, and `count()`, and added `0..128` / `0..32` CIDR prefix bounds validation in `Request::ipInCidr()`.
+
+### ⚡ Performance & Lightweight Optimizations (`Router.php`, `Cache.php`, `Realtime.php`, `Application.php`, `Validator.php`, `ActiveRecord.php`, `Response.php`, `Logger.php`)
+
+- **O(1) Static Route Dispatch (`Router.php`)**: Separated parameterless static routes into a hash-indexed `$staticRoutes[$method][$uri]` lookup before falling back to dynamic regex matching.
+- **Reduced Redis RTT & Safer L1/File Cache (`Cache.php`)**: Eliminated redundant `ping()` round-trips before every Redis command in `redisOp()` (reconnects only on failure), set bounded L1 TTL for Redis-promoted entries, used unique temp filenames in `fileWrite()`, and fixed `@unlink()` suppression in `clear()`.
+- **Keep-Alive Batching & Worker Tuning (`Realtime.php`, `Application.php`)**: Reused a single `\CurlHandle` across `Realtime::publishBatch()`, added configurable `DB_HEALTH_CHECK_INTERVAL` cooldown (default `30s`) in `Application::healthCheckConnections()`, and cleared query/error logs in `cleanupRequest()`.
+- **Zero-Allocation JSON Validation & Lightweight Queries (`Validator.php`, `ActiveRecord.php`, `Response.php`, `Logger.php`)**:
+  - Switched `Validator::validateJson()` to native `json_validate()` and `Validator::checkUnique()` to `SELECT 1 ... LIMIT 1`.
+  - Optimized `ActiveRecord::getTableColumns()` to `LIMIT 0`, `getLikeOperator()` to in-memory driver lookup, `paginate()` to `hash('xxh3', ...)` with `perPage >= 1` / `from` edge-case guards, and added `unset($result)` after reference loops.
+  - Tuned JSON gzip compression in `Response::json()` to `gzencode(..., 4)` and avoided duplicate `date()` calls in `Logger::log()`.
+
 ## v2.1.15 (2026-10-27)
 
 ### 🐛 Robust Input & Cache Stream Handling for Modern SAPI & Worker Runtimes (`Request.php`, `Cache.php`)
