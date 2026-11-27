@@ -25,6 +25,28 @@ The Padi REST API File Engine is not just about storage—it's about **Strategic
 
 By default, files are uploaded to the `uploads/` directory in the project root with **0750 permissions**.
 
+### Customizing the Base Upload Directory
+
+You can change the base directory globally via `.env` or dynamically at runtime (all paths are sanitized against directory traversal):
+
+```env
+# .env (relative to project root; defaults to 'uploads')
+UPLOAD_DIR=storage/uploads
+```
+
+```php
+use Wibiesana\Padi\Core\File;
+
+// Override at runtime (priority: setUploadDir() > UPLOAD_DIR env > 'uploads')
+File::setUploadDir('media/files');
+
+// Inspect active base upload directory
+$dir = File::getUploadDir(); // 'media/files'
+
+// Reset back to UPLOAD_DIR env / 'uploads' default
+File::setUploadDir(null);
+```
+
 > **Note**: For security and public access, it is recommended to ensure your web server can serve this directory or use a symbolic link if your web root is `public/`.
 
 ---
@@ -167,7 +189,7 @@ $deleted = File::delete($oldPath);
 // Returns true on success, false if file doesn't exist or path traversal detected
 ```
 
-> **Security**: The `delete()` method uses `realpath()` to verify the resolved path is still within the `uploads/` directory before unlinking.
+> **Security**: The `delete()` method uses `realpath()` and checks the `$uploadsReal . DIRECTORY_SEPARATOR` boundary to verify the resolved path is strictly inside the active upload directory (preventing sibling-directory prefix traversal) before unlinking.
 
 ---
 

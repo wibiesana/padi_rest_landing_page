@@ -17,6 +17,7 @@
 
 - **Path Traversal & Command Injection Fixes (`File.php`, `Console.php`)**:
   - Fixed sibling-directory prefix bypass in `File::delete()` by checking `$uploadsReal . DIRECTORY_SEPARATOR`.
+  - Added configurable base upload directory via `UPLOAD_DIR` env and `File::setUploadDir()` / `File::getUploadDir()` (defaults to `'uploads'`).
   - Validated `$host` and `$port` (`1..65535`) and wrapped shell arguments with `escapeshellarg()` in `Console::serve()` and `Console::serveFrankenphp()`.
 - **Header, Redirect & CORS Injection Protection (`Response.php`, `Application.php`)**:
   - Stripped `\r`, `\n`, and `\0` in `Response::header()` and rejected CRLF in `Application::handleCors()`.
