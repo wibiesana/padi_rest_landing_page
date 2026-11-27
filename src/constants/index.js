@@ -1,5 +1,5 @@
 export const APP_CONFIG = {
-  version: '2.1.15',
+  version: '2.1.16',
   name: 'Padi REST API',
   cliName: 'padi-core-cli',
 }
