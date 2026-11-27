@@ -34,6 +34,7 @@
 
 - **O(1) Static Route Dispatch (`Router.php`)**: Separated parameterless static routes into a hash-indexed `$staticRoutes[$method][$uri]` lookup before falling back to dynamic regex matching.
 - **Reduced Redis RTT & Safer L1/File Cache (`Cache.php`)**: Eliminated redundant `ping()` round-trips before every Redis command in `redisOp()` (reconnects only on failure), set bounded L1 TTL for Redis-promoted entries, used unique temp filenames in `fileWrite()`, and fixed `@unlink()` suppression in `clear()`.
+- **Cache Diagnostics & Redis Health Check (`Cache.php`)**: Added `Cache::getDriver()`, `Cache::isRedisConnected()`, and `Cache::getStatus()` to inspect the active cache driver, verify live Redis connectivity (`PING`), detect silent fallback to `file`, and expose L1 cache metrics for health endpoints.
 - **Keep-Alive Batching & Worker Tuning (`Realtime.php`, `Application.php`)**: Reused a single `\CurlHandle` across `Realtime::publishBatch()`, added configurable `DB_HEALTH_CHECK_INTERVAL` cooldown (default `30s`) in `Application::healthCheckConnections()`, and cleared query/error logs in `cleanupRequest()`.
 - **Zero-Allocation JSON Validation & Lightweight Queries (`Validator.php`, `ActiveRecord.php`, `Response.php`, `Logger.php`)**:
   - Switched `Validator::validateJson()` to native `json_validate()` and `Validator::checkUnique()` to `SELECT 1 ... LIMIT 1`.

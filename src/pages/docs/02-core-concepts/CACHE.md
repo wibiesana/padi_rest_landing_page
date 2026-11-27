@@ -17,6 +17,7 @@ The Padi REST API Caching System is a **Precision-Engineered Performance Acceler
 - [🔢 Counters](#counters)
 - [📦 Bulk Operations](#bulk-operations)
 - [💾 Memory Management](#memory-management)
+- [🩺 Diagnostics & Connection Check](#diagnostics--connection-check)
 - [🧹 Clearing the Cache](#clearing-the-cache)
 - [⚡ Worker Mode](#worker-mode)
 - [🛡️ Security](#security)
@@ -244,6 +245,35 @@ The L1 cache automatically:
 - Evicts the oldest 25% of entries when `CACHE_L1_MAX` is reached
 - Checks TTL expiry on every `get()` call
 - Promotes L2 hits to L1 for subsequent fast access
+
+---
+
+## 🩺 Diagnostics & Connection Check
+
+Verify which cache driver is actually active at runtime (including whether Redis fell back to `file` due to a missing extension or connection failure):
+
+```php
+use Wibiesana\Padi\Core\Cache;
+
+// 1. Check active driver ('redis' or 'file')
+$driver = Cache::getDriver();
+
+// 2. Verify live Redis connection (sends PING)
+$isRedisUp = Cache::isRedisConnected();
+
+// 3. Full diagnostics summary
+$status = Cache::getStatus();
+/*
+[
+    'configured_driver' => 'redis',      // from CACHE_DRIVER in .env
+    'active_driver'     => 'redis',      // 'redis' or 'file' (if fallback occurred)
+    'redis_connected'   => true,         // true if Redis responds to PING
+    'redis_client'      => 'ext-redis',  // 'ext-redis', 'predis', or null
+    'l1_entries'        => 42,
+    'l1_max_entries'    => 1000,
+]
+*/
+```
 
 ---
 
@@ -543,10 +573,7 @@ class HealthController extends Controller
         return $this->raw([
             'status'     => 'ok',
             'timestamp'  => date('c'),
-            'cache'      => [
-                'l1_entries' => Cache::getMemorySize(),
-                'driver'     => $_ENV['CACHE_DRIVER'] ?? 'file',
-            ],
+            'cache'      => Cache::getStatus(),
             'database'   => DatabaseManager::getStatus(),
         ]);
     }
@@ -582,8 +609,11 @@ class HealthController extends Controller
 | `decrement`     | `decrement(string $key, int $step = 1): int\|false`          | Atomic counter decrement               |
 | `clear`         | `clear(): bool`                                              | Clear all cache (L1 + L2)              |
 | `cleanup`       | `cleanup(): int`                                             | Remove expired file cache entries      |
-| `clearMemory`   | `clearMemory(): void`                                        | Clear L1 in-memory cache only          |
-| `getMemorySize` | `getMemorySize(): int`                                       | Get current L1 entry count             |
-| `reset`         | `reset(): void`                                              | Worker cleanup hook (no-op by design)  |
+| `clearMemory`      | `clearMemory(): void`                                        | Clear L1 in-memory cache only                        |
+| `getMemorySize`    | `getMemorySize(): int`                                       | Get current L1 entry count                           |
+| `getDriver`        | `getDriver(): string`                                        | Get active driver (`redis` or `file`)                |
+| `isRedisConnected` | `isRedisConnected(): bool`                                   | Check if Redis is active and responds to `PING`      |
+| `getStatus`        | `getStatus(): array`                                         | Get full cache driver, Redis, and L1 status summary  |
+| `reset`            | `reset(): void`                                              | Worker cleanup hook (no-op by design)                |
 
 ---
